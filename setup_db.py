@@ -152,7 +152,7 @@ def main():
                 "versions": '[{"v": "v2", "date": "Jun 8", "note": "version_revised_cta"}, {"v": "v1", "date": "Jun 5", "note": "version_initial_upload"}]',
                 "ai_remarks": "RAG analysis: Color palette matches primary brand palette (82%). Typography is consistent with brand style guide. Safe zone margin for logo is checked.",
                 "ai_suggestions": "1. Consider checking color contrast on the CTA button.\n2. Verify the font weight of headings is standard.",
-                "org_id": "nexus"
+                "org_id": "Bio Factor"
             },
             {
                 "name": "Q3 Product Brochure", "type": "brochure", "emoji": "📄", "designer": "Diana (Director)", "campaign": "Q3 Launch", "folder": "Campaigns/In-Store/POS Materials",
@@ -161,7 +161,7 @@ def main():
                 "versions": '[{"v": "v1", "date": "Jun 7", "note": "version_initial_upload"}]',
                 "ai_remarks": "RAG analysis: Excellent alignment with brand standards (91%). Text fonts and layout dimensions are fully approved.",
                 "ai_suggestions": "1. Layout and assets are highly compliant. No immediate changes needed.",
-                "org_id": "nexus"
+                "org_id": "Bio Factor"
             },
             {
                 "name": "Event Announcement Poster", "type": "poster", "emoji": "🪧", "designer": "Diana (Director)", "campaign": "Annual Conference", "folder": "Campaigns/Promotions/Flyers",
@@ -170,7 +170,7 @@ def main():
                 "versions": '[{"v": "v1", "date": "Jun 5", "note": "version_initial_upload"}]',
                 "ai_remarks": "RAG analysis: Color palette contrast is too low (58%). Logo rules not met (stretching/busy background). Action required: adjust contrast ratio to at least 4.5:1.",
                 "ai_suggestions": "1. Increase background contrast to at least 4.5:1 ratio.\n2. Adjust logo placement to respect the 20px safe-zone margin.",
-                "org_id": "nexus"
+                "org_id": "Bio Factor"
             },
             {
                 "name": "Retail POS Banner", "type": "banner", "emoji": "🏳", "designer": "Diana (Director)", "campaign": "Retail 2025", "folder": "Campaigns/Promotions/Flyers",
@@ -179,7 +179,7 @@ def main():
                 "versions": '[{"v": "v2", "date": "Jun 3", "note": "version_final"}, {"v": "v1", "date": "May 30", "note": "version_initial"}]',
                 "ai_remarks": "RAG analysis: Highly compliant (95%) with all in-store branding parameters.",
                 "ai_suggestions": "1. Highly compliant. Ready for production usage.",
-                "org_id": "nexus"
+                "org_id": "Bio Factor"
             },
             {
                 "name": "Social Media Bundle", "type": "banner", "emoji": "📱", "designer": "Diana (Director)", "campaign": "Social June", "folder": "Campaigns/Digital/Social Media",
@@ -188,7 +188,7 @@ def main():
                 "versions": '[{"v": "v1", "date": "Jun 1", "note": "version_initial"}]',
                 "ai_remarks": "RAG analysis: Social media dimensions and colors are verified and compliant.",
                 "ai_suggestions": "1. Ensure dimensions match social platform specifications.",
-                "org_id": "nexus"
+                "org_id": "Bio Factor"
             },
             {
                 "name": "Leaflet — New Services", "type": "leaflet", "emoji": "📃", "designer": "Diana (Director)", "campaign": "Service Launch", "folder": "Campaigns/Promotions/Flyers",
@@ -197,7 +197,7 @@ def main():
                 "versions": '[{"v": "v1", "date": "May 28", "note": "version_initial"}]',
                 "ai_remarks": "RAG analysis: Layout and image selections are aligned.",
                 "ai_suggestions": "1. Tweak spacing around subheadings for better readability.",
-                "org_id": "nexus"
+                "org_id": "Bio Factor"
             }
         ]
 
@@ -262,16 +262,16 @@ def main():
         ]
 
         org_folder_paths = {
-            "nexus": common_paths,
-            "verde": common_paths,
-            "summit": common_paths,
-            "pulse": common_paths,
-            "arc": common_paths,
-            "horizon": common_paths
+            "Bio Factor": common_paths,
+            "Ferty Base": common_paths,
+            "Aqua": common_paths,
+            "One Health Centre": common_paths,
+            "Water Links": common_paths,
+            "Beyond Organic": common_paths
         }
 
         # Seed default materials for all standard organisations
-        for org in ["nexus", "verde", "summit", "pulse", "arc", "horizon"]:
+        for org in ["Bio Factor", "Ferty Base", "Aqua", "One Health Centre", "Water Links", "Beyond Organic"]:
             paths = org_folder_paths[org]
             for idx, bm in enumerate(base_materials):
                 # Try to assign folder based on type

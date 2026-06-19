@@ -83,8 +83,28 @@ def startup_event():
             );
         """)
         
+        # Migrate existing org_id values from old names to new present names
+        migrations = [
+            ('nexus', 'Bio Factor'),
+            ('verde', 'Ferty Base'),
+            ('summit', 'Aqua'),
+            ('pulse', 'One Health Centre'),
+            ('arc', 'Water Links'),
+            ('horizon', 'Beyond Organic')
+        ]
+        for old_id, new_id in migrations:
+            cur.execute("SELECT org_id FROM organization_folders WHERE org_id = %s", (old_id,))
+            exists_old = cur.fetchone()
+            cur.execute("SELECT org_id FROM organization_folders WHERE org_id = %s", (new_id,))
+            exists_new = cur.fetchone()
+            if exists_old and not exists_new:
+                cur.execute("UPDATE organization_folders SET org_id = %s WHERE org_id = %s", (new_id, old_id))
+            elif exists_old and exists_new:
+                cur.execute("DELETE FROM organization_folders WHERE org_id = %s", (old_id,))
+            cur.execute("UPDATE materials SET org_id = %s WHERE org_id = %s", (new_id, old_id))
+            
         conn.commit()
-        print("Materials, notifications, and folders table structures verified.")
+        print("Materials, notifications, and folders table structures verified and migrated.")
     except Exception as e:
         print(f"Error checking tables on startup: {e}")
     finally:
@@ -1149,6 +1169,48 @@ def rename_folder(data: FolderRenameRequest, current_user=Depends(get_current_us
         print(f"Error renaming folder: {e}")
         raise HTTPException(status_code=500, detail="Database error occurred while renaming folder")
 
+class FolderDeleteRequest(BaseModel):
+    org_id: str
+    folder_path: str
+    folder_tree: list
+
+@app.post("/api/folders/delete")
+def delete_folder(data: FolderDeleteRequest, current_user=Depends(get_current_user), db=Depends(get_db)):
+    role_name = current_user['role'].lower()
+    if role_name != 'admin':
+        raise HTTPException(status_code=403, detail="Not authorized to delete folders")
+        
+    try:
+        cur = db.cursor()
+        # 1. Update the folder tree JSON
+        cur.execute("""
+            INSERT INTO organization_folders (org_id, folder_tree)
+            VALUES (%s, %s)
+            ON CONFLICT (org_id) DO UPDATE SET folder_tree = EXCLUDED.folder_tree;
+        """, (data.org_id, json.dumps(data.folder_tree)))
+        
+        # 2. Delete all materials in the folder and its subfolders
+        folder_prefix = data.folder_path
+        
+        # Exact match
+        cur.execute("""
+            DELETE FROM materials 
+            WHERE folder = %s AND org_id = %s;
+        """, (folder_prefix, data.org_id))
+        
+        # Nested subfolders
+        cur.execute("""
+            DELETE FROM materials 
+            WHERE folder LIKE %s AND org_id = %s;
+        """, (folder_prefix + "/%", data.org_id))
+        
+        db.commit()
+        cur.close()
+        return {'success': True, 'message': 'Folder and database records deleted successfully'}
+    except Exception as e:
+        print(f"Error deleting folder: {e}")
+        raise HTTPException(status_code=500, detail="Database error occurred while deleting folder")
+
 # Rename material (file name) endpoint
 
 class MaterialRenameRequest(BaseModel):
@@ -1181,6 +1243,109 @@ def rename_material(material_id: int, data: MaterialRenameRequest, current_user=
     except Exception as e:
         print(f"Error renaming material: {e}")
         raise HTTPException(status_code=500, detail="Database error occurred while renaming material")
+
+@app.post("/api/materials/{material_id}/reupload")
+async def reupload_material(
+    material_id: int,
+    file: UploadFile = File(...),
+    current_user=Depends(get_current_user),
+    db=Depends(get_db)
+):
+    try:
+        import secrets
+        import shutil
+        import datetime
+        
+        cur = db.cursor()
+        cur.execute("SELECT * FROM materials WHERE material_id = %s", (material_id,))
+        m = cur.fetchone()
+        if not m:
+            cur.close()
+            raise HTTPException(status_code=404, detail="Material not found")
+            
+        file_ext = os.path.splitext(file.filename)[1]
+        unique_filename = f"{secrets.token_hex(8)}{file_ext}"
+        new_file_path = os.path.join(UPLOAD_DIR, unique_filename)
+        
+        # Save file contents
+        with open(new_file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+            
+        # Re-run brand compliance checks
+        ai_score, ai_remarks, ai_suggestions = check_brand_compliance(m['org_id'], m['name'], m['type'])
+        ai_insights = ["ai_new_color_ok", "ai_new_logo_ok", "ai_new_typography_ok", "ai_new_imagery_ok"]
+        
+        # Reset votes
+        votes = {
+            "admin": "pending",
+            "ceo": "pending",
+            "coo": "pending",
+            "director": "pending"
+        }
+        
+        # Update versions history
+        now = datetime.datetime.utcnow()
+        short_date = now.strftime("%b %d")
+        
+        # Parse current versions list from DB
+        current_versions = m['versions']
+        if isinstance(current_versions, str):
+            current_versions = json.loads(current_versions)
+            
+        next_v_num = len(current_versions) + 1
+        new_version_info = {
+            "v": f"v{next_v_num}",
+            "date": short_date,
+            "note": f"Revised version uploaded"
+        }
+        current_versions.append(new_version_info)
+        
+        # Update database
+        cur.execute("""
+            UPDATE materials
+            SET file_path = %s,
+                status = 'pending',
+                ai_score = %s,
+                ai_insights = %s,
+                votes = %s,
+                versions = %s,
+                ai_remarks = %s,
+                ai_suggestions = %s,
+                created_at = CURRENT_TIMESTAMP
+            WHERE material_id = %s
+        """, (
+            new_file_path,
+            ai_score,
+            json.dumps(ai_insights),
+            json.dumps(votes),
+            json.dumps(current_versions),
+            ai_remarks,
+            ai_suggestions,
+            material_id
+        ))
+        
+        # Loop and insert notifications for standard roles: admin, ceo, coo, director
+        designer_name = current_user.get('name', 'Unknown')
+        notif_roles = ['admin', 'ceo', 'coo', 'director']
+        notif_icon = '🔄'
+        notif_message = f"Revised version {new_version_info['v']} of '{m['name']}' uploaded by {designer_name}. AI Score: {ai_score}/100."
+        
+        for r in notif_roles:
+            cur.execute("""
+                INSERT INTO notifications (user_role, icon, message, material_id, is_read)
+                VALUES (%s, %s, %s, %s, FALSE)
+            """, (r, notif_icon, notif_message, material_id))
+            
+        db.commit()
+        cur.close()
+        
+        return {
+            'success': True,
+            'message': 'Revised version uploaded successfully'
+        }
+    except Exception as e:
+        print(f"Error reuploading material: {e}")
+        raise HTTPException(status_code=500, detail="Database error occurred while reuploading material")
 
 if __name__ == '__main__':
     import uvicorn

@@ -1537,14 +1537,11 @@
       <div class="step-dot active">1</div>
       <div class="step-line"></div>
       <div class="step-dot idle">2</div>
-      <div class="step-line"></div>
-      <div class="step-dot idle">3</div>
-      <span id="org-path-label" style="font-size:12px;color:var(--text2);margin-left:8px">Organisation → Language →
-        Portal</span>
+      <span id="org-path-label" style="font-size:12px;color:var(--text2);margin-left:8px">Organisation → Portal</span>
     </div>
     <div class="sel-grid" id="org-grid"></div>
     <button class="sel-btn" id="org-next-btn" disabled onclick="gotoLangScreen()">
-      Continue to Language &nbsp;→
+      Enter Portal &nbsp;→
     </button>
   </div>
 
@@ -1568,7 +1565,8 @@
     <div class="lang-grid" id="lang-grid"></div>
     <div style="display:flex;gap:12px;margin-top:28px;width:100%;max-width:480px">
       <button class="sel-back" id="back-btn" onclick="backToOrg()"
-        style="flex: 1; padding: 10px 0; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; height: 40px; box-sizing: border-box;">← Back</button>
+        style="flex: 1; padding: 10px 0; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; height: 40px; box-sizing: border-box;">←
+        Back</button>
       <button class="sel-btn" id="lang-next-btn" disabled onclick="enterPortal()"
         style="flex: 1; margin-top: 0; padding: 10px 0; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; height: 40px; box-sizing: border-box;">
         Enter Portal &nbsp;→
@@ -1687,7 +1685,8 @@
         <div class="sb-section">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
             <div class="sb-label" id="sb-folder-label" style="margin:0;">Folders</div>
-            <span id="sb-create-root-btn" title="Create Root Folder" onclick="adminCreateFolder('')" style="cursor:pointer;opacity:0.6;font-size:12px;margin-right:12px;display:none;">📁➕</span>
+            <span id="sb-create-root-btn" title="Create Root Folder" onclick="adminCreateFolder('')"
+              style="cursor:pointer;opacity:0.6;font-size:12px;margin-right:12px;display:none;">📁➕</span>
           </div>
           <div class="folder-tree" id="folder-tree"></div>
         </div>
@@ -1817,8 +1816,10 @@
               <div class="card">
                 <div class="upload-zone" onclick="triggerFileInput()" id="upload-zone">
                   <div style="font-size:34px;margin-bottom:10px">📎</div>
-                  <p id="upload-zone-title" style="font-size:14px;font-weight:600;margin-bottom:5px">Click to select a file</p>
-                  <p id="upload-zone-hint" style="font-size:11px;color:var(--text3)">PDF, PNG, JPG, AI, PSD — up to 50MB</p>
+                  <p id="upload-zone-title" style="font-size:14px;font-weight:600;margin-bottom:5px">Click to select a
+                    file</p>
+                  <p id="upload-zone-hint" style="font-size:11px;color:var(--text3)">PDF, PNG, JPG, AI, PSD — up to 50MB
+                  </p>
                 </div>
                 <input type="file" id="upload-file-input" style="display: none;" onchange="handleFileSelected(event)">
                 <div class="form-group" style="margin-top:14px">
@@ -1938,7 +1939,8 @@
                   <input type="password" id="reg-password" class="form-control" placeholder="Optional" />
                 </div>
                 <button type="submit" class="btn btn-primary"
-                  style="height: 38px; grid-column: 1 / -1; margin-top: 6px; justify-content: center; width: 180px; justify-self: center;">Create User</button>
+                  style="height: 38px; grid-column: 1 / -1; margin-top: 6px; justify-content: center; width: 180px; justify-self: center;">Create
+                  User</button>
               </form>
               <div id="reg-error" style="color:var(--red); font-size:12px; margin-top:8px;"></div>
             </div>
@@ -2112,12 +2114,12 @@
     // ═══════════════════════════════════════════
 
     const ORGANISATIONS = [
-      { id: 'nexus', name: 'Bio Factor', icon: '🔬', sector: 'Technology', sectorKey: 'sector_technology', color: '#58a6ff', accent: '#1f6feb' },
-      { id: 'verde', name: 'Ferty Base', icon: '🌾', sector: 'Retail & FMCG', sectorKey: 'sector_retail_fmcg', color: '#3fb950', accent: '#238636' },
-      { id: 'summit', name: 'Aqua', icon: '💧', sector: 'Financial Services', sectorKey: 'sector_financial_services', color: '#d29922', accent: '#9e6a03' },
-      { id: 'pulse', name: 'One Health Centre', icon: '🏥', sector: 'Healthcare', sectorKey: 'sector_healthcare', color: '#f85149', accent: '#6e1936' },
-      { id: 'arc', name: 'Water Links', icon: '🚰', sector: 'Education', sectorKey: 'sector_education', color: '#a371f7', accent: '#7c3aed' },
-      { id: 'horizon', name: 'Beyond Organic', icon: '🥬', sector: 'Logistics & Supply', sectorKey: 'sector_logistics_supply', color: '#39d353', accent: '#1a7f37' },
+      { id: 'Bio Factor', name: 'Bio Factor', icon: '🔬', sector: 'Technology', sectorKey: 'sector_technology', color: '#58a6ff', accent: '#1f6feb' },
+      { id: 'Ferty Base', name: 'Ferty Base', icon: '🌾', sector: 'Retail & FMCG', sectorKey: 'sector_retail_fmcg', color: '#3fb950', accent: '#238636' },
+      { id: 'Aqua', name: 'Aqua', icon: '💧', sector: 'Financial Services', sectorKey: 'sector_financial_services', color: '#d29922', accent: '#9e6a03' },
+      { id: 'One Health Centre', name: 'One Health Centre', icon: '🏥', sector: 'Healthcare', sectorKey: 'sector_healthcare', color: '#f85149', accent: '#6e1936' },
+      { id: 'Water Links', name: 'Water Links', icon: '🚰', sector: 'Education', sectorKey: 'sector_education', color: '#a371f7', accent: '#7c3aed' },
+      { id: 'Beyond Organic', name: 'Beyond Organic', icon: '🥬', sector: 'Logistics & Supply', sectorKey: 'sector_logistics_supply', color: '#39d353', accent: '#1a7f37' },
     ];
 
     const LANGUAGES = [
@@ -2125,6 +2127,9 @@
       { id: 'mr', name: 'Marathi', flag: '🇮🇳', native: 'मराठी' },
       { id: 'te', name: 'Telugu', flag: '🇮🇳', native: 'తెలుగు' },
       { id: 'hi', name: 'Hindi', flag: '🇮🇳', native: 'हिन्दी' },
+      { id: 'ta', name: 'Tamil', flag: '🇮🇳', native: 'தமிழ்' },
+      { id: 'kn', name: 'Kannada', flag: '🇮🇳', native: 'ಕನ್ನಡ' },
+      { id: 'gu', name: 'Gujarati', flag: '🇮🇳', native: 'ગુજરાતી' },
     ];
 
     const COMMON_FOLDERS = [
@@ -2181,12 +2186,12 @@
 
     // Folder structures — each org has its own tree
     const ORG_FOLDERS = {
-      nexus: COMMON_FOLDERS,
-      verde: COMMON_FOLDERS,
-      summit: COMMON_FOLDERS,
-      pulse: COMMON_FOLDERS,
-      arc: COMMON_FOLDERS,
-      horizon: COMMON_FOLDERS
+      "Bio Factor": COMMON_FOLDERS,
+      "Ferty Base": COMMON_FOLDERS,
+      "Aqua": COMMON_FOLDERS,
+      "One Health Centre": COMMON_FOLDERS,
+      "Water Links": COMMON_FOLDERS,
+      "Beyond Organic": COMMON_FOLDERS
     };
 
     function getLeafPaths(folders, prefix = '') {
@@ -2208,12 +2213,12 @@
 
     // Brand colors — per org
     const ORG_BRAND_COLORS = {
-      nexus: [{ name: 'Bio Factor Blue', hex: '#1E40AF', use: 'Primary brand' }, { name: 'Sky', hex: '#0EA5E9', use: 'Secondary' }, { name: 'Amber', hex: '#F59E0B', use: 'CTA accent' }, { name: 'Dark', hex: '#1E293B', use: 'Text' }],
-      verde: [{ name: 'Ferty Base Green', hex: '#16A34A', use: 'Primary brand' }, { name: 'Lime', hex: '#84CC16', use: 'Fresh accent' }, { name: 'Cream', hex: '#FEF9C3', use: 'Backgrounds' }, { name: 'Earth', hex: '#78350F', use: 'Contrast' }],
-      summit: [{ name: 'Gold', hex: '#B45309', use: 'Premium brand' }, { name: 'Navy', hex: '#1E3A5F', use: 'Trust & authority' }, { name: 'Silver', hex: '#94A3B8', use: 'Secondary' }, { name: 'White', hex: '#F8FAFC', use: 'Clean backgrounds' }],
-      pulse: [{ name: 'One Health Centre Red', hex: '#DC2626', use: 'Urgency & care' }, { name: 'Calm Blue', hex: '#2563EB', use: 'Trust & medical' }, { name: 'Soft Green', hex: '#10B981', use: 'Health & wellbeing' }, { name: 'Light', hex: '#F0FDF4', use: 'Clean panels' }],
-      arc: [{ name: 'Water Links Purple', hex: '#7C3AED', use: 'Knowledge & creativity' }, { name: 'Teal', hex: '#0D9488', use: 'Innovation' }, { name: 'Warm Yellow', hex: '#F59E0B', use: 'Energy & youth' }, { name: 'Charcoal', hex: '#1F2937', use: 'Readable text' }],
-      horizon: [{ name: 'Beyond Organic Teal', hex: '#0F766E', use: 'Primary brand' }, { name: 'Orange', hex: '#EA580C', use: 'Energy & speed' }, { name: 'Steel', hex: '#475569', use: 'Industrial' }, { name: 'White', hex: '#F8FAFC', use: 'Clean layouts' }],
+      "Bio Factor": [{ name: 'Bio Factor Blue', hex: '#1E40AF', use: 'Primary brand' }, { name: 'Sky', hex: '#0EA5E9', use: 'Secondary' }, { name: 'Amber', hex: '#F59E0B', use: 'CTA accent' }, { name: 'Dark', hex: '#1E293B', use: 'Text' }],
+      "Ferty Base": [{ name: 'Ferty Base Green', hex: '#16A34A', use: 'Primary brand' }, { name: 'Lime', hex: '#84CC16', use: 'Fresh accent' }, { name: 'Cream', hex: '#FEF9C3', use: 'Backgrounds' }, { name: 'Earth', hex: '#78350F', use: 'Contrast' }],
+      "Aqua": [{ name: 'Gold', hex: '#B45309', use: 'Premium brand' }, { name: 'Navy', hex: '#1E3A5F', use: 'Trust & authority' }, { name: 'Silver', hex: '#94A3B8', use: 'Secondary' }, { name: 'White', hex: '#F8FAFC', use: 'Clean backgrounds' }],
+      "One Health Centre": [{ name: 'One Health Centre Red', hex: '#DC2626', use: 'Urgency & care' }, { name: 'Calm Blue', hex: '#2563EB', use: 'Trust & medical' }, { name: 'Soft Green', hex: '#10B981', use: 'Health & wellbeing' }, { name: 'Light', hex: '#F0FDF4', use: 'Clean panels' }],
+      "Water Links": [{ name: 'Water Links Purple', hex: '#7C3AED', use: 'Knowledge & creativity' }, { name: 'Teal', hex: '#0D9488', use: 'Innovation' }, { name: 'Warm Yellow', hex: '#F59E0B', use: 'Energy & youth' }, { name: 'Charcoal', hex: '#1F2937', use: 'Readable text' }],
+      "Beyond Organic": [{ name: 'Beyond Organic Teal', hex: '#0F766E', use: 'Primary brand' }, { name: 'Orange', hex: '#EA580C', use: 'Energy & speed' }, { name: 'Steel', hex: '#475569', use: 'Industrial' }, { name: 'White', hex: '#F8FAFC', use: 'Clean layouts' }],
     };
 
     // UI translations for 4 languages
@@ -2237,7 +2242,7 @@
         selected: 'selected', file_ready_submit: 'File ready — fill in details and submit', enter_material_name: 'Please enter a material name', running_precheck: '🤖 Running AI brand pre-check for {org}…', precheck_complete: '✅ Pre-check complete — Score 81/100', sent_to_approvers: '"{name}" sent to approvers at {org} 📨',
         edit_access_button: 'Edit Access', access_saved: 'Access permissions saved', save_changes: 'Save Changes', configure_access_for: 'Configure folder access for this user within {org}.', comment_added: 'Comment added',
         version_compare_info: 'Version compare — full build feature', material_fully_approved: '"{material}" fully approved! 🎉', revision_requested: 'Revision requested on "{material}"', approval_recorded: 'Approval recorded ✅', revision_request_sent: 'Revision request sent ⚠️',
-        org_nexus: 'Bio Factor', org_verde: 'Ferty Base', org_summit: 'Aqua', org_pulse: 'One Health Centre', org_arc: 'Water Links', org_horizon: 'Beyond Organic',
+        "org_Bio Factor": 'Bio Factor', "org_Ferty Base": 'Ferty Base', "org_Aqua": 'Aqua', "org_One Health Centre": 'One Health Centre', "org_Water Links": 'Water Links', "org_Beyond Organic": 'Beyond Organic',
         user_admin: 'Admin', user_ceo: 'CEO', user_coo: 'COO', user_director: 'Director',
         role_admin: 'Admin', role_ceo: 'CEO', role_coo: 'COO', role_director: 'Director',
         perm_upload: 'Upload', perm_approve: 'Approve', perm_delete: 'Delete', perm_manage_users: 'Manage Users', perm_all_folders: 'All Folders', perm_view_all: 'View All', perm_final_approve: 'Final Approve', perm_manage_campaigns: 'Manage Campaigns', perm_assigned_folders: 'Assigned Folders', perm_view_brand_guide: 'View Brand Guide',
@@ -2294,7 +2299,7 @@
         selected: 'निवडले', file_ready_submit: 'फाइल तयार आहे — तपशील भरा आणि सादर करा', enter_material_name: 'कृपया साहित्याचे नाव प्रविष्ट करा', running_precheck: '🤖 {org} साठी AI ब्रँड पूर्व-तपासणी चालू आहे…', precheck_complete: '✅ पूर्व-तपासणी पूर्ण — गुण 81/100', sent_to_approvers: '"{name}" {org} येथील मंजूरकर्त्यांना पाठवले 📨',
         edit_access_button: 'प्रवेश संपादित करा', access_saved: 'प्रवेश परवानग्या जतन केल्या', save_changes: 'बदल जतन करा', configure_access_for: 'या वापरकर्त्यासाठी {org} मध्ये फोल्डर प्रवेश सेट करा.', comment_added: 'टिप्पणी जोडली',
         version_compare_info: 'आवृत्ती तुलना — पूर्ण बांधणी वैशिष्ट्य', material_fully_approved: '"{material}" पूर्णपणे मंजूर! 🎉', revision_requested: '"{material}" वर सुधारणा विनंती केली', approval_recorded: 'मंजुरी नोंदवली ✅', revision_request_sent: 'सुधारणा विनंती पाठवली ⚠️',
-        org_nexus: 'Bio Factor', org_verde: 'Ferty Base', org_summit: 'Aqua', org_pulse: 'One Health Centre', org_arc: 'Water Links', org_horizon: 'Beyond Organic',
+        "org_Bio Factor": 'Bio Factor', "org_Ferty Base": 'Ferty Base', "org_Aqua": 'Aqua', "org_One Health Centre": 'One Health Centre', "org_Water Links": 'Water Links', "org_Beyond Organic": 'Beyond Organic',
         user_admin: 'अॅलेक्स', user_ceo: 'कॅरोल', user_coo: 'ओमर', user_director: 'डायना',
         role_admin: 'प्रशासक', role_ceo: 'CEO', role_coo: 'COO', role_director: 'संचालक',
         perm_upload: 'अपलोड', perm_approve: 'मंजूर करा', perm_delete: 'हटवा', perm_manage_users: 'वापरकर्ते व्यवस्थापित करा', perm_all_folders: 'सर्व फोल्डर', perm_view_all: 'सर्व पहा', perm_final_approve: 'अंतिम मंजुरी', perm_manage_campaigns: 'मोहिमा व्यवस्थापित करा', perm_assigned_folders: 'नियुक्त फोल्डर', perm_view_brand_guide: 'ब्रँड गाइड पहा',
@@ -2351,7 +2356,7 @@
         selected: 'ఎంచుకున్నారు', file_ready_submit: 'ఫైల్ సిద్ధంగా ఉంది — వివరాలు పూరించి సమర్పించండి', enter_material_name: 'దయచేసి మెటీరియల్ పేరు నమోదు చేయండి', running_precheck: '🤖 {org} కోసం AI బ్రాండ్ ముందస్తు తనిఖీ జరుగుతోంది…', precheck_complete: '✅ ముందస్తు తనిఖీ పూర్తైంది — స్కోర్ 81/100', sent_to_approvers: '"{name}" ని {org} లో ఆమోదకులకు పంపారు 📨',
         edit_access_button: 'యాక్సెస్ సవరించండి', access_saved: 'యాక్సెస్ అనుమతులు సేవ్ చేయబడ్డాయి', save_changes: 'మార్పులు సేవ్ చేయండి', configure_access_for: 'ఈ వినియోగదారుకు {org} లో ఫోల్డర్ యాక్సెస్ కాన్ఫిగర్ చేయండి.', comment_added: 'వ్యాఖ్య జోడించబడింది',
         version_compare_info: 'వెర్షన్ పోలిక — పూర్తి నిర్మాణ ఫీచర్', material_fully_approved: '"{material}" పూర్తిగా ఆమోదించబడింది! 🎉', revision_requested: '"{material}" పై సవరణ అభ్యర్థించారు', approval_recorded: 'ఆమోదం నమోదు చేయబడింది ✅', revision_request_sent: 'సవరణ అభ్యర్థన పంపబడింది ⚠️',
-        org_nexus: 'Bio Factor', org_verde: 'Ferty Base', org_summit: 'Aqua', org_pulse: 'One Health Centre', org_arc: 'Water Links', org_horizon: 'Beyond Organic',
+        "org_Bio Factor": 'Bio Factor', "org_Ferty Base": 'Ferty Base', "org_Aqua": 'Aqua', "org_One Health Centre": 'One Health Centre', "org_Water Links": 'Water Links', "org_Beyond Organic": 'Beyond Organic',
         user_admin: 'అలెక్స్', user_ceo: 'కారోల్', user_coo: 'ఒమర్', user_director: 'డయానా',
         role_admin: 'అడ్మిన్', role_ceo: 'CEO', role_coo: 'COO', role_director: 'డైరెక్టర్',
         perm_upload: 'అప్‌లోడ్', perm_approve: 'ఆమోదించు', perm_delete: 'తొలగించు', perm_manage_users: 'వినియోగదారులను నిర్వహించు', perm_all_folders: 'అన్ని ఫోల్డర్లు', perm_view_all: 'అన్నీ చూడు', perm_final_approve: 'తుది ఆమోదం', perm_manage_campaigns: 'ప్రచారాలు నిర్వహించు', perm_assigned_folders: 'కేటాయించిన ఫోల్డర్లు', perm_view_brand_guide: 'బ్రాండ్ గైడ్ చూడు',
@@ -2408,7 +2413,7 @@
         selected: 'चयनित', file_ready_submit: 'फ़ाइल तैयार है — विवरण भरें और सबमिट करें', enter_material_name: 'कृपया सामग्री का नाम दर्ज करें', running_precheck: '🤖 {org} के लिए AI ब्रांड पूर्व-जांच चल रही है…', precheck_complete: '✅ पूर्व-जांच पूर्ण — स्कोर 81/100', sent_to_approvers: '"{name}" को {org} में अनुमोदकों के पास भेज दिया गया 📨',
         edit_access_button: 'पहुंच संपादित करें', access_saved: 'पहुँच अनुमतियाँ सहेजी गईं', save_changes: 'परिवर्तनों को सहेजें', configure_access_for: 'इस उपयोगकर्ता के लिए {org} के भीतर फ़ोल्डर एक्सेस कॉन्फ़िगर करें।', comment_added: 'टिप्पणी जोड़ी गई',
         version_compare_info: 'संस्करण तुलना — पूर्ण निर्माण सुविधा', material_fully_approved: '"{material}" को पूरी तरह से मंज़ूरी मिली! 🎉', revision_requested: '"{material}" पर संशोधन का अनुरोध किया गया', approval_recorded: 'अनुमोदन दर्ज किया गया ✅', revision_request_sent: 'संशोधन अनुरोध भेजा गया ⚠️',
-        org_nexus: 'Bio Factor', org_verde: 'Ferty Base', org_summit: 'Aqua', org_pulse: 'One Health Centre', org_arc: 'Water Links', org_horizon: 'Beyond Organic',
+        "org_Bio Factor": 'Bio Factor', "org_Ferty Base": 'Ferty Base', "org_Aqua": 'Aqua', "org_One Health Centre": 'One Health Centre', "org_Water Links": 'Water Links', "org_Beyond Organic": 'Beyond Organic',
         user_admin: 'व्यवस्थापक', user_ceo: 'CEO', user_coo: 'COO', user_director: 'निदेशक',
         role_admin: 'व्यवस्थापक', role_ceo: 'CEO', role_coo: 'COO', role_director: 'निदेशक',
         perm_upload: 'अपलोड', perm_approve: 'अनुमोदन', perm_delete: 'हटाएँ', perm_manage_users: 'उपयोगकर्ताओं का प्रबंधन करें', perm_all_folders: 'सभी फ़ोल्डर', perm_view_all: 'सभी देखें', perm_final_approve: 'अंतिम अनुमोदन', perm_manage_campaigns: 'कैम्पेन प्रबंधित करें', perm_assigned_folders: 'आवंटित फ़ोल्डर', perm_view_brand_guide: 'ब्रांड गाइड देखें',
@@ -2448,6 +2453,240 @@
         ai_m6_1: '✅ ब्रांड रंग सही', ai_m6_2: '⚠️ एक छवि 300dpi से नीचे', ai_m6_3: '✅ टाइपोग्राफी नियमों का पालन',
         ai_new_color_ok: '✅ रंग पैलेट ब्रांड दिशानिर्देशों से मेल खाता है', ai_new_logo_ok: '✅ लोगो प्लेसमेंट स्वीकृत दिशानिर्देशों में है', ai_new_typography_ok: '✅ टाइपोग्राफी ब्रांड गाइड के अनुरूप', ai_new_imagery_ok: '✅ छवि ब्रांड मानकों को पूरा करती है', ai_new_score_note: '⚠️ स्कोर सीमा से ऊपर — समीक्षा के लिए तैयार',
         ai_new_color_warn: '⚠️ मामूली रंग विविधताएँ पाई गईं', ai_new_clearspace_warn: '⚠️ लोगो क्लियरस्पेस न्यूनतम से थोड़ा कम', ai_new_font_warn: '⚠️ फ़ॉन्ट आकार समायोजन की आवश्यकता हो सकती है'
+      },
+      ta: {
+        dashboard: 'டாஷ்போர்டு', materials: 'பொருட்கள் நூலகம்', approvals: 'ஒப்புதல்கள்', upload: 'அப்லோட் மெட்டீரியல்',
+        users: 'பயனர் அணுகல்', brand: 'பிராண்ட் வழிகாட்டுதல்கள்', activity: 'செயல்பாட்டு பதிவு', folders: 'கோப்புறைகள்',
+        admin: 'நிர்வாகி', welcome: 'மீண்டும் வரவேற்கிறோம்', overview: 'சந்தைப்படுத்தல் பொருட்கள் கண்ணோட்டம்', pending: 'அனுமதி நிலுவையில் உள்ளது',
+        approved: 'அங்கீகரிக்கப்பட்டது', revision: 'திருத்தம் தேவை', total: 'மொத்த பொருட்கள்', designed_by: 'வடிவமைத்தவர்',
+        uploaded: 'பதிவேற்றப்பட்டது', status: 'நிலை', campaign: 'பிரச்சாரம்', approve: 'ஒப்புதல்',
+        request_revision: 'மறுபரிசீலனை கோரிக்கை', close: 'மூடு', submit: 'ஒப்புதலுக்காக சமர்ப்பிக்கவும்', all_types: 'அனைத்து வகைகளும்',
+        search_placeholder: 'பெயர், வடிவமைப்பாளர், வகை மூலம் தேடுங்கள்...', recent_materials: 'சமீபத்திய பொருட்கள்', material_name_1: 'கோடைகால விற்பனை ஃப்ளையர்', material_name_2: 'Q3 தயாரிப்பு சிற்றேடு',
+        material_name_3: 'நிகழ்வு அறிவிப்பு சுவரொட்டி', material_name_4: 'சில்லறை POS பேனர்', material_name_5: 'சமூக ஊடகத் தொகுப்பு', material_name_6: 'துண்டு பிரசுரம் - புதிய சேவைகள்',
+        admin_section: 'நிர்வாகி', folder_label: 'கோப்புறை', lang_name: 'Tamil', login_error_password: 'உங்கள் கடவுச்சொல்லை உள்ளிடவும்.',
+        login_error_invalid: 'தவறான பயனர்பெயர் அல்லது கடவுச்சொல்.', login_subtitle: 'உங்கள் போர்ட்டலில் தொடர உள்நுழையவும்', login_user: 'பயனர்', login_password: 'கடவுச்சொல்',
+        login_button: 'உள்நுழைக', signed_in_as: '{user} ஆக உள்நுழைந்துள்ளீர்கள்', switched_to: '{org}க்கு மாற்றப்பட்டது', viewing_as: 'இவ்வாறு பார்க்கிறது: {user}',
+        logged_out: 'நீங்கள் வெளியேறிவிட்டீர்கள்', language_changed: 'மொழி {lang} க்கு மாற்றப்பட்டது', switch_user_view: 'பயனர் பார்வையை மாற்றவும்', logout: 'வெளியேறு',
+        selected: 'தேர்ந்தெடுக்கப்பட்டது', file_ready_submit: 'கோப்பு தயார் - விவரங்களைப் பூர்த்தி செய்து சமர்ப்பிக்கவும்', enter_material_name: 'பொருள் பெயரை உள்ளிடவும்', running_precheck: '🤖 இயங்கும் AI பிராண்ட் {org}க்கான முன் சோதனை...',
+        precheck_complete: '✅ முன் சரிபார்ப்பு முடிந்தது - மதிப்பெண் 81/100', sent_to_approvers: '{org} 📨 இல் அனுமதியளிப்பவர்களுக்கு "{name}" அனுப்பப்பட்டது', edit_access_button: 'அணுகலைத் திருத்து', access_saved: 'அணுகல் அனுமதிகள் சேமிக்கப்பட்டன',
+        save_changes: 'மாற்றங்களைச் சேமிக்கவும்', configure_access_for: '{org} இல் இந்தப் பயனருக்கான கோப்புறை அணுகலை உள்ளமைக்கவும்.', comment_added: 'கருத்து சேர்க்கப்பட்டது', version_compare_info: 'பதிப்பு ஒப்பீடு - முழு உருவாக்க அம்சம்',
+        material_fully_approved: '"{material}" முழுமையாக அங்கீகரிக்கப்பட்டது! 🎉', revision_requested: '"{material}" இல் திருத்தம் கோரப்பட்டது', approval_recorded: 'ஒப்புதல் பதிவு செய்யப்பட்டது ✅', revision_request_sent: 'மறுசீரமைப்பு கோரிக்கை அனுப்பப்பட்டது ⚠️',
+        "org_Bio Factor": 'உயிர் காரணி', "org_Ferty Base": 'ஃபெர்ட்டி பேஸ்', "org_Aqua": 'அக்வா', "org_One Health Centre": 'ஒரு சுகாதார மையம்',
+        "org_Water Links": 'நீர் இணைப்புகள்', "org_Beyond Organic": 'ஆர்கானிக் தாண்டி', user_admin: 'நிர்வாகி', user_ceo: 'CEO',
+        user_coo: 'சிஓஓ', user_director: 'இயக்குனர்', role_admin: 'நிர்வாகி', role_ceo: 'CEO',
+        role_coo: 'சிஓஓ', role_director: 'இயக்குனர்', perm_upload: 'பதிவேற்றவும்', perm_approve: 'ஒப்புதல்',
+        perm_delete: 'நீக்கு', perm_manage_users: 'பயனர்களை நிர்வகிக்கவும்', perm_all_folders: 'அனைத்து கோப்புறைகள்', perm_view_all: 'அனைத்தையும் பார்க்கவும்',
+        perm_final_approve: 'இறுதி ஒப்புதல்', perm_manage_campaigns: 'பிரச்சாரங்களை நிர்வகிக்கவும்', perm_assigned_folders: 'ஒதுக்கப்பட்ட கோப்புறைகள்', perm_view_brand_guide: 'பிராண்ட் கையேட்டைப் பார்க்கவும்',
+        sector_technology: 'தொழில்நுட்பம்', sector_retail_fmcg: 'சில்லறை & FMCG', sector_financial_services: 'நிதி சேவைகள்', sector_healthcare: 'சுகாதாரம்',
+        sector_education: 'கல்வி', sector_logistics_supply: 'தளவாடங்கள் & வழங்கல்', select_org_subtitle: 'தொடர, உங்கள் நிறுவனத்தைத் தேர்ந்தெடுக்கவும்', select_lang_subtitle: 'வேலை செய்யும் மொழியைத் தேர்ந்தெடுக்கவும்',
+        continue_to_language: 'மொழிக்கு தொடரவும் →', back: '← பின்', enter_portal: 'போர்ட்டலை உள்ளிடவும் →', selection_flow_path: 'அமைப்பு → மொழி → போர்டல்',
+        switch_org: 'அமைப்பு மாறவும்', switch_lang: 'மொழி மாறவும்', upload_new: '+ புதிதாக பதிவேற்றவும்', material_name: 'பொருள் பெயர்',
+        type: 'வகை', campaign_project: 'பிரச்சாரம் / திட்டம்', designer_notes: 'வடிவமைப்பாளர் குறிப்புகள்', folder_location: 'கோப்புறை இருப்பிடம்',
+        upload_title: 'புதிய மெட்டீரியலைப் பதிவேற்றவும்', upload_description: 'மதிப்பாய்விற்காக வடிவமைப்பைச் சமர்ப்பிக்கவும் - AI முன் சரிபார்ப்பு தானாகவே இயங்கும்', click_to_select: 'கோப்பைத் தேர்ந்தெடுக்க கிளிக் செய்யவும்', file_types_hint: 'PDF, PNG, JPG, AI, PSD - 50MB வரை',
+        precheck_title: '🤖 AI முன் சரிபார்ப்பு', precheck_description: 'அனுமதியளிப்பவர்களைப் பெறுவதற்கு முன், உங்கள் வடிவமைப்பு தானாகவே பிராண்ட் வழிகாட்டுதல்களுக்கு எதிராகச் சரிபார்க்கப்படும்.', precheck_color_compliance: '✅ வண்ணத் தட்டு இணக்கம்', precheck_logo_placement: '✅ லோகோ இடம் & பாதுகாப்பான மண்டலம்',
+        precheck_typography_consistency: '✅ அச்சுக்கலை நிலைத்தன்மை', precheck_previous_approved: '✅ முந்தைய அங்கீகரிக்கப்பட்ட வடிவமைப்புகளுடன் ஒப்பீடு', precheck_score: '✅ பிராண்ட் வழிகாட்டுதல்கள் மதிப்பெண் (0–100)', workflow_title: '📋 பணிப்பாய்வு',
+        workflow_step1: 'பதிவேற்றம் + AI முன் சரிபார்ப்பு', workflow_step2: 'CEO, COO & இயக்குனர் அறிவிக்கப்பட்டது', workflow_step3: 'ஒவ்வொரு ஒப்புதல் அளிப்பவர்: ஒப்புதல் / திருத்தம்', workflow_step4: 'அனைத்து ஒப்புதல் → நூலகத்தில் வெளியிடப்பட்டது',
+        filter_flyers: '🖼 ஃபிளையர்கள்', filter_brochures: '📄 பிரசுரங்கள்', filter_leaflets: '📃 துண்டு பிரசுரங்கள்', filter_posters: '🪧 சுவரொட்டிகள்',
+        filter_banners: '🏳 பதாகைகள்', filter_approved: '✅ அங்கீகரிக்கப்பட்டது', type_flyer: 'ஃப்ளையர்', type_brochure: 'சிற்றேடு',
+        type_leaflet: 'துண்டு பிரசுரம்', type_poster: 'சுவரொட்டி', type_banner: 'பேனர்', type_social: 'சமூக ஊடக கிராஃபிக்',
+        no_materials_stage: 'இந்த கட்டத்தில் பொருட்கள் இல்லை', user_access: 'பயனர் அணுகல் கட்டுப்பாடு', folder_access_matrix: 'கோப்புறை அணுகல் மேட்ரிக்ஸ்', brand_guidelines: 'பிராண்ட் வழிகாட்டுதல்கள்',
+        color_palette: '🎨 வண்ணத் தட்டு', typography: '🔤 அச்சுக்கலை', logo_rules: '📐 லோகோ விதிகள்', imagery: '🖼 படங்கள்',
+        brand_typography_display: 'காட்சி', brand_typography_body: 'உடல்', brand_typography_caption: 'தலைப்பு', brand_typography_display_font: '{org} காட்சி எழுத்துரு',
+        brand_typography_body_example: 'இண்டர் ரெகுலர் - 16px, 1.6 வரி உயரம்', brand_typography_caption_example: 'இண்டர் லைட் - 12px, டிராக்கிங் +0.3', brand_logo_clearspace: '✅ குறைந்தபட்ச இடைவெளி: அனைத்து பக்கங்களிலும் 2× லோகோ உயரம்', brand_logo_minimum_size: '✅ குறைந்தபட்ச அளவு: 80px டிஜிட்டல் / 20mm பிரிண்ட்',
+        brand_logo_approved_bg: '✅ அங்கீகரிக்கப்பட்ட bg: வெள்ளை, பிராண்ட் முதன்மை, பிராண்ட் டார்க்', brand_logo_no_stretch: '❌ நீட்டவோ, சுழற்றவோ அல்லது நிறமாற்றவோ வேண்டாம்', brand_logo_no_busy_bg: '❌ பிஸியான புகைப்பட பின்னணியில் வைக்க வேண்டாம்', brand_imagery_quality: '✅ உயர்தர உரிமம் பெற்ற புகைப்படம் மட்டுமே',
+        brand_imagery_values: '✅ பிராண்ட் மதிப்புகளை பிரதிபலிக்கவும்: நவீன, உள்ளடக்கிய, தொழில்முறை', brand_imagery_color_grade: '✅ பிராண்ட் தட்டுடன் சீரமைக்க வண்ண-தரம்', brand_imagery_avoid_cliched: '❌ க்ளிஷே ஸ்டாக் படங்களைத் தவிர்க்கவும்', brand_imagery_no_watermark: '❌ வாட்டர்மார்க் செய்யப்பட்ட அல்லது குறைந்த தெளிவுத்திறன் கொண்ட படங்கள் இல்லை',
+        activity_log: 'செயல்பாட்டு பதிவு', view: 'காண்க', view_only: 'பார்க்க மட்டும்', flagged: 'கொடியேற்றப்பட்டது',
+        metadata: 'மெட்டாடேட்டா', approval_status: 'ஒப்புதல் நிலை', brand_score: 'பிராண்ட் ஸ்கோர்', version_history: 'பதிப்பு வரலாறு',
+        comments: 'கருத்துகள்', add_comment_placeholder: 'கருத்தைச் சேர்க்கவும்…', post: 'இடுகை', category: 'வகை',
+        notes: 'குறிப்புகள்', priority: 'முன்னுரிமை', priority_high: 'உயர் - ஒப்புதலுக்கு முன் சரிசெய்ய வேண்டும்', priority_medium: 'நடுத்தர - சரிசெய்ய வேண்டும்',
+        priority_low: 'குறைந்த - சிறிய பரிந்துரை', compare: 'ஒப்பிடு', access_full: 'முழு அணுகல்', access_view: 'பார்க்க மட்டும்',
+        access_none: 'அணுகல் இல்லை', activity_uploaded: '{actor} பதிவேற்றிய "{material}"', activity_uploaded_version: '{actor} பதிவேற்றிய "{material} {version}"', activity_approved: '{actor} அங்கீகரிக்கப்பட்ட "{material}"',
+        activity_revision: '{actor} "{material}" - {reason} இல் மறுபரிசீலனை கோரப்பட்டது', activity_system_flagged: 'சிஸ்டம்: கொடியிடப்பட்ட {count} சிக்கல்களை AI முன் சரிபார்த்தல் (மதிப்பெண்: {score}/100)', activity_access_granted: '{actor} ஆனது {folder} க்கு {subject} பதிவேற்ற அணுகலை வழங்கியது', reason_brand_color_issue: 'பிராண்ட் நிற பிரச்சனை',
+        reason_logo_incorrect: 'லோகோ தவறானது', folder_marketing: 'சந்தைப்படுத்தல்', folder_flyers: 'ஃபிளையர்கள்', folder_2025: '2025',
+        folder_2024_archive: '2024 காப்பகம்', folder_brochures: 'பிரசுரங்கள்', folder_products: 'தயாரிப்புகள்', folder_corporate: 'கார்ப்பரேட்',
+        folder_posters: 'சுவரொட்டிகள்', folder_events: 'நிகழ்வுகள்', folder_retail_pos: 'சில்லறை பிஓஎஸ்', folder_digital: 'டிஜிட்டல்',
+        folder_social_media: 'சமூக ஊடகங்கள்', folder_email_headers: 'மின்னஞ்சல் தலைப்புகள்', folder_print: 'அச்சிடுக', folder_retail: 'சில்லறை விற்பனை',
+        folder_outdoor: 'வெளிப்புற', folder_campaigns: 'பிரச்சாரங்கள்', folder_seasonal: 'பருவகால', folder_summer: 'கோடை',
+        folder_winter: 'குளிர்காலம்', folder_festive: 'பண்டிகை', folder_in_store: 'கடையில்', folder_pos_materials: 'பிஓஎஸ் பொருட்கள்',
+        folder_window_displays: 'சாளரக் காட்சிகள்', folder_promotions: 'பதவி உயர்வுகள்', folder_leaflets: 'துண்டு பிரசுரங்கள்', folder_email: 'மின்னஞ்சல்',
+        folder_brand_assets: 'பிராண்ட் சொத்துக்கள்', folder_logos: 'சின்னங்கள்', folder_templates: 'வார்ப்புருக்கள்', folder_client_comms: 'கிளையண்ட் கம்ஸ்',
+        folder_presentations: 'விளக்கக்காட்சிகள்', folder_regulatory: 'ஒழுங்குமுறை', folder_compliance_docs: 'இணக்க ஆவணங்கள்', folder_disclosures: 'வெளிப்படுத்தல்கள்',
+        folder_banners: 'பதாகைகள்', folder_signage: 'அடையாளம்', folder_healthcare_mktg: 'ஹெல்த்கேர் எம்.கே.டி.ஜி', folder_awareness: 'விழிப்புணர்வு',
+        folder_patient_info: 'நோயாளி தகவல்', folder_staff_comms: 'பணியாளர்கள் கம்ஸ்', folder_internal_posters: 'உள் சுவரொட்டிகள்', folder_newsletters: 'செய்திமடல்கள்',
+        folder_web_banners: 'வலை பேனர்கள்', folder_education: 'கல்வி', folder_recruitment: 'ஆட்சேர்ப்பு', folder_prospectus: 'ப்ராஸ்பெக்டஸ்',
+        folder_open_day: 'திறந்த நாள்', folder_campus: 'வளாகம்', folder_courses: 'படிப்புகள்', folder_graduation: 'பட்டப்படிப்பு',
+        folder_conferences: 'மாநாடுகள்', folder_logistics_mktg: 'லாஜிஸ்டிக்ஸ் எம்.கே.டி.ஜி', folder_client_facing: 'வாடிக்கையாளர் எதிர்கொள்ளும்', folder_proposals: 'முன்மொழிவுகள்',
+        folder_fleet_branding: 'கடற்படை பிராண்டிங்', folder_vehicle_wraps: 'வாகன உறைகள்', folder_uniforms: 'சீருடைகள்', folder_trade_shows: 'வர்த்தக காட்சிகள்',
+        folder_displays: 'காட்சிகள்', notifications_title: 'அறிவிப்புகள் - {org}', notif_sale_await: 'கோடைகால விற்பனை ஃப்ளையர் உங்கள் ஒப்புதலுக்காகக் காத்திருக்கிறது', notif_q3_submitted: 'Q3 தயாரிப்பு சிற்றேடு மதிப்பாய்வுக்காக சமர்ப்பிக்கப்பட்டது',
+        notif_event_flagged: 'நிகழ்வு சுவரொட்டி திருத்தத்திற்காக கொடியிடப்பட்டது', notif_retail_approved: 'அனைத்து மதிப்பாய்வாளர்களால் அங்கீகரிக்கப்பட்ட சில்லறை POS பேனர்', access_full_short: '✅ முழு', access_view_short: '👁 பார்க்கவும்',
+        access_none_short: '- இல்லை', awaiting: 'காத்திருக்கிறது', ai_brand_compliance: 'AI பிராண்ட் இணக்கம்', send_revision_request: 'மறுசீரமைப்பு கோரிக்கையை அனுப்பவும்',
+        revision_describe_text: 'தேவையான மாற்றங்களை விவரிக்கவும். வடிவமைப்பாளருக்கு உடனடியாக அறிவிக்கப்படும்.', revision_describe_placeholder: 'எதை மாற்ற வேண்டும் என்பதை விவரிக்கவும்...', cat_brand_color: 'பிராண்ட் வண்ண சிக்கல்', cat_logo_violation: 'லோகோ பயன்பாடு மீறல்',
+        cat_typography: 'அச்சுக்கலை பிரச்சனை', cat_messaging: 'செய்தி அனுப்புதல் / நகல் பிழை', cat_layout: 'லேஅவுட் பிரச்சினை', cat_image_quality: 'படத்தின் தரம்',
+        cat_other: 'மற்றவை', comment_revision_text: 'லோகோ இடம் நீட்டிக்கப்பட்டதாகத் தெரிகிறது - பிராண்ட் கிட்டில் இருந்து அங்கீகரிக்கப்பட்ட முதன்மைக் கோப்பைப் பயன்படுத்தவும்.', comment_approved_text: 'நன்றாக இருக்கிறது. பிராண்ட் நிறங்கள் ஸ்பாட் ஆன்.', version_initial_upload: 'ஆரம்ப பதிவேற்றம்',
+        version_revised_cta: 'திருத்தப்பட்ட CTA நிறம்', version_final: 'இறுதி', version_initial: 'ஆரம்ப', ai_m1_1: '✅ வண்ணத் தட்டு பிராண்ட் முதன்மை வண்ணங்களுடன் பொருந்துகிறது',
+        ai_m1_2: '✅ லோகோ இடம் சரியானது', ai_m1_3: '⚠️ CTA எழுத்துரு அளவு பெரியதாக இருக்கலாம்', ai_m1_4: '✅ படத்தின் தரம் அச்சு தரத்தை சந்திக்கிறது', ai_m1_5: '⚠️ டேக்லைன் மெசேஜிங் வழிகாட்டியில் இருந்து சற்று விலகுகிறது',
+        ai_m2_1: '✅ அனைத்து பிராண்ட் நிறங்களும் சரியானவை', ai_m2_2: '✅ அச்சுக்கலை பிராண்ட் வழிகாட்டியுடன் பொருந்துகிறது', ai_m2_3: '✅ லோகோ க்ளியர்ஸ்பேஸ் சரியானது', ai_m2_4: '✅ பட நடை சீரமைக்கப்பட்டது',
+        ai_m3_1: '❌ இரண்டாம் வண்ணம் பிராண்ட் பேலட்டில் இல்லை', ai_m3_2: '❌ லோகோ நீட்டிக்கப்பட்டது - பயன்பாட்டு விதிகளை மீறுகிறது', ai_m3_3: '⚠️ உடல் நகல் அச்சிடுவதற்கு மிகவும் சிறியது', ai_m3_4: '⚠️ மாறுபாடு விகிதம் WCAG AA இல் தோல்வியடைகிறது',
+        ai_m4_1: '✅ சிறந்த பிராண்ட் இணக்கம்', ai_m4_2: '✅ அனைத்து காசோலைகளும் நிறைவேற்றப்பட்டன', ai_m5_1: '✅ பிளாட்ஃபார்ம் பரிமாணங்கள் சரியானவை', ai_m5_2: '✅ பிராண்ட் வண்ணங்கள் பயன்படுத்தப்பட்டன',
+        ai_m5_3: '⚠️ ஐஜி பதிப்பில் சிறிய லோகோ கிளியர்ஸ்பேஸ்', ai_m6_1: '✅ பிராண்ட் நிறங்கள் சரியானவை', ai_m6_2: '⚠️ 300dpiக்குக் கீழே ஒரு படம்', ai_m6_3: '✅ அச்சுக்கலை விதிகள் பின்பற்றப்பட்டன',
+        ai_new_color_ok: '✅ வண்ணத் தட்டு பிராண்ட் வழிகாட்டுதல்களுடன் பொருந்துகிறது', ai_new_logo_ok: '✅ அங்கீகரிக்கப்பட்ட வழிகாட்டுதல்களுக்குள் லோகோவை அமைத்தல்', ai_new_typography_ok: '✅ பிராண்டு வழிகாட்டிக்கு இசைவான அச்சுக்கலை', ai_new_imagery_ok: '✅ படங்கள் பிராண்ட் தரநிலைகளை சந்திக்கின்றன',
+        ai_new_score_note: '⚠️ வரம்புக்கு மேல் மதிப்பெண் — மதிப்பாய்வுக்கு தயார்', ai_new_color_warn: '⚠️ சிறிய வண்ண மாறுபாடுகள் கண்டறியப்பட்டன', ai_new_clearspace_warn: '⚠️ லோகோ காலியிடம் குறைந்தபட்சம் சற்று கீழே', ai_new_font_warn: '⚠️ எழுத்துரு அளவு சரிசெய்தல் தேவைப்படலாம்'
+      },
+      kn: {
+        dashboard: 'ಡ್ಯಾಶ್‌ಬೋರ್ಡ್', materials: 'ಮೆಟೀರಿಯಲ್ಸ್ ಲೈಬ್ರರಿ', approvals: 'ಅನುಮೋದನೆಗಳು', upload: 'ಅಪ್ಲೋಡ್ ವಸ್ತು',
+        users: 'ಬಳಕೆದಾರರ ಪ್ರವೇಶ', brand: 'ಬ್ರಾಂಡ್ ಮಾರ್ಗಸೂಚಿಗಳು', activity: 'ಚಟುವಟಿಕೆ ಲಾಗ್', folders: 'ಫೋಲ್ಡರ್‌ಗಳು',
+        admin: 'ನಿರ್ವಾಹಕ', welcome: 'ಮರಳಿ ಸ್ವಾಗತ', overview: 'ಮಾರ್ಕೆಟಿಂಗ್ ವಸ್ತುಗಳ ಅವಲೋಕನ', pending: 'ಅನುಮೋದನೆ ಬಾಕಿ ಇದೆ',
+        approved: 'ಅನುಮೋದಿಸಲಾಗಿದೆ', revision: 'ಪರಿಷ್ಕರಣೆ ಅಗತ್ಯವಿದೆ', total: 'ಒಟ್ಟು ವಸ್ತುಗಳು', designed_by: 'ವಿನ್ಯಾಸಗೊಳಿಸಿದವರು',
+        uploaded: 'ಅಪ್‌ಲೋಡ್ ಮಾಡಲಾಗಿದೆ', status: 'ಸ್ಥಿತಿ', campaign: 'ಪ್ರಚಾರ', approve: 'ಅನುಮೋದಿಸಿ',
+        request_revision: 'ಪರಿಷ್ಕರಣೆ ವಿನಂತಿ', close: 'ಮುಚ್ಚಿ', submit: 'ಅನುಮೋದನೆಗಾಗಿ ಸಲ್ಲಿಸಿ', all_types: 'ಎಲ್ಲಾ ವಿಧಗಳು',
+        search_placeholder: 'ಹೆಸರು, ವಿನ್ಯಾಸಕಾರ, ಪ್ರಕಾರದ ಮೂಲಕ ಹುಡುಕಿ...', recent_materials: 'ಇತ್ತೀಚಿನ ವಸ್ತುಗಳು', material_name_1: 'ಬೇಸಿಗೆ ಮಾರಾಟದ ಫ್ಲೈಯರ್', material_name_2: 'Q3 ಉತ್ಪನ್ನ ಕರಪತ್ರ',
+        material_name_3: 'ಈವೆಂಟ್ ಪ್ರಕಟಣೆಯ ಪೋಸ್ಟರ್', material_name_4: 'ಚಿಲ್ಲರೆ POS ಬ್ಯಾನರ್', material_name_5: 'ಸಾಮಾಜಿಕ ಮಾಧ್ಯಮ ಬಂಡಲ್', material_name_6: 'ಕರಪತ್ರ - ಹೊಸ ಸೇವೆಗಳು',
+        admin_section: 'ನಿರ್ವಾಹಕ', folder_label: 'ಫೋಲ್ಡರ್', lang_name: 'Kannada', login_error_password: 'ದಯವಿಟ್ಟು ನಿಮ್ಮ ಗುಪ್ತಪದವನ್ನು ನಮೂದಿಸಿ.',
+        login_error_invalid: 'ಅಮಾನ್ಯ ಬಳಕೆದಾರಹೆಸರು ಅಥವಾ ಪಾಸ್‌ವರ್ಡ್.', login_subtitle: 'ನಿಮ್ಮ ಪೋರ್ಟಲ್‌ಗೆ ಮುಂದುವರಿಯಲು ಸೈನ್ ಇನ್ ಮಾಡಿ', login_user: 'ಬಳಕೆದಾರ', login_password: 'ಪಾಸ್ವರ್ಡ್',
+        login_button: 'ಸೈನ್ ಇನ್ ಮಾಡಿ', signed_in_as: '{user} ನಂತೆ ಸೈನ್ ಇನ್ ಮಾಡಲಾಗಿದೆ', switched_to: '{org} ಗೆ ಬದಲಾಯಿಸಲಾಗಿದೆ', viewing_as: 'ಇದರಂತೆ ವೀಕ್ಷಿಸಲಾಗುತ್ತಿದೆ: {user}',
+        logged_out: 'ನೀವು ಲಾಗ್ ಔಟ್ ಆಗಿರುವಿರಿ', language_changed: 'ಭಾಷೆಯನ್ನು {lang} ಗೆ ಬದಲಾಯಿಸಲಾಗಿದೆ', switch_user_view: 'ಬಳಕೆದಾರರ ವೀಕ್ಷಣೆಯನ್ನು ಬದಲಿಸಿ', logout: 'ಲಾಗ್ಔಟ್',
+        selected: 'ಆಯ್ಕೆ ಮಾಡಲಾಗಿದೆ', file_ready_submit: 'ಫೈಲ್ ಸಿದ್ಧವಾಗಿದೆ - ವಿವರಗಳನ್ನು ಭರ್ತಿ ಮಾಡಿ ಮತ್ತು ಸಲ್ಲಿಸಿ', enter_material_name: 'ದಯವಿಟ್ಟು ವಸ್ತುವಿನ ಹೆಸರನ್ನು ನಮೂದಿಸಿ', running_precheck: '🤖 {org} ಗಾಗಿ AI ಬ್ರ್ಯಾಂಡ್ ಪೂರ್ವ-ಪರಿಶೀಲನೆಯನ್ನು ಚಾಲನೆ ಮಾಡಲಾಗುತ್ತಿದೆ...',
+        precheck_complete: '✅ ಪೂರ್ವ-ಪರಿಶೀಲನೆ ಪೂರ್ಣಗೊಂಡಿದೆ - ಸ್ಕೋರ್ 81/100', sent_to_approvers: '"{name}" ಅನ್ನು {org} 📨 ನಲ್ಲಿ ಅನುಮೋದಿಸುವವರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ', edit_access_button: 'ಪ್ರವೇಶವನ್ನು ಸಂಪಾದಿಸಿ', access_saved: 'ಪ್ರವೇಶ ಅನುಮತಿಗಳನ್ನು ಉಳಿಸಲಾಗಿದೆ',
+        save_changes: 'ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಿ', configure_access_for: '{org} ಒಳಗೆ ಈ ಬಳಕೆದಾರರಿಗೆ ಫೋಲ್ಡರ್ ಪ್ರವೇಶವನ್ನು ಕಾನ್ಫಿಗರ್ ಮಾಡಿ.', comment_added: 'ಕಾಮೆಂಟ್ ಸೇರಿಸಲಾಗಿದೆ', version_compare_info: 'ಆವೃತ್ತಿ ಹೋಲಿಕೆ - ಪೂರ್ಣ ನಿರ್ಮಾಣ ವೈಶಿಷ್ಟ್ಯ',
+        material_fully_approved: '"{material}" ಸಂಪೂರ್ಣವಾಗಿ ಅನುಮೋದಿಸಲಾಗಿದೆ! 🎉', revision_requested: '"{material}" ನಲ್ಲಿ ಪರಿಷ್ಕರಣೆ ವಿನಂತಿಸಲಾಗಿದೆ', approval_recorded: 'ಅನುಮೋದನೆಯನ್ನು ದಾಖಲಿಸಲಾಗಿದೆ ✅', revision_request_sent: 'ಪರಿಷ್ಕರಣೆ ವಿನಂತಿಯನ್ನು ಕಳುಹಿಸಲಾಗಿದೆ ⚠️',
+        "org_Bio Factor": 'ಜೈವಿಕ ಅಂಶ', "org_Ferty Base": 'ಫರ್ಟಿ ಬೇಸ್', "org_Aqua": 'ಆಕ್ವಾ', "org_One Health Centre": 'ಒಂದು ಆರೋಗ್ಯ ಕೇಂದ್ರ',
+        "org_Water Links": 'ನೀರಿನ ಲಿಂಕ್‌ಗಳು', "org_Beyond Organic": 'ಸಾವಯವವನ್ನು ಮೀರಿ', user_admin: 'ನಿರ್ವಾಹಕ', user_ceo: 'ಸಿಇಒ',
+        user_coo: 'COO', user_director: 'ನಿರ್ದೇಶಕ', role_admin: 'ನಿರ್ವಾಹಕ', role_ceo: 'ಸಿಇಒ',
+        role_coo: 'COO', role_director: 'ನಿರ್ದೇಶಕ', perm_upload: 'ಅಪ್ಲೋಡ್ ಮಾಡಿ', perm_approve: 'ಅನುಮೋದಿಸಿ',
+        perm_delete: 'ಅಳಿಸಿ', perm_manage_users: 'ಬಳಕೆದಾರರನ್ನು ನಿರ್ವಹಿಸಿ', perm_all_folders: 'ಎಲ್ಲಾ ಫೋಲ್ಡರ್‌ಗಳು', perm_view_all: 'ಎಲ್ಲವನ್ನೂ ವೀಕ್ಷಿಸಿ',
+        perm_final_approve: 'ಅಂತಿಮ ಅನುಮೋದನೆ', perm_manage_campaigns: 'ಅಭಿಯಾನಗಳನ್ನು ನಿರ್ವಹಿಸಿ', perm_assigned_folders: 'ನಿಯೋಜಿಸಲಾದ ಫೋಲ್ಡರ್‌ಗಳು', perm_view_brand_guide: 'ಬ್ರ್ಯಾಂಡ್ ಗೈಡ್ ವೀಕ್ಷಿಸಿ',
+        sector_technology: 'ತಂತ್ರಜ್ಞಾನ', sector_retail_fmcg: 'ಚಿಲ್ಲರೆ & FMCG', sector_financial_services: 'ಹಣಕಾಸು ಸೇವೆಗಳು', sector_healthcare: 'ಆರೋಗ್ಯ ರಕ್ಷಣೆ',
+        sector_education: 'ಶಿಕ್ಷಣ', sector_logistics_supply: 'ಲಾಜಿಸ್ಟಿಕ್ಸ್ ಮತ್ತು ಸರಬರಾಜು', select_org_subtitle: 'ಮುಂದುವರಿಸಲು ನಿಮ್ಮ ಸಂಸ್ಥೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ', select_lang_subtitle: 'ಕೆಲಸದ ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+        continue_to_language: 'ಭಾಷೆಗೆ ಮುಂದುವರಿಯಿರಿ →', back: '← ಹಿಂದೆ', enter_portal: 'ಪೋರ್ಟಲ್ ನಮೂದಿಸಿ →', selection_flow_path: 'ಸಂಸ್ಥೆ → ಭಾಷೆ → ಪೋರ್ಟಲ್',
+        switch_org: 'ಸ್ವಿಚ್ ಸಂಸ್ಥೆ', switch_lang: 'ಭಾಷೆ ಬದಲಿಸಿ', upload_new: '+ ಹೊಸದನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ', material_name: 'ವಸ್ತುವಿನ ಹೆಸರು',
+        type: 'ಟೈಪ್ ಮಾಡಿ', campaign_project: 'ಪ್ರಚಾರ / ಯೋಜನೆ', designer_notes: 'ಡಿಸೈನರ್ ಟಿಪ್ಪಣಿಗಳು', folder_location: 'ಫೋಲ್ಡರ್ ಸ್ಥಳ',
+        upload_title: 'ಹೊಸ ಮೆಟೀರಿಯಲ್ ಅನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ', upload_description: 'ವಿಮರ್ಶೆಗಾಗಿ ವಿನ್ಯಾಸವನ್ನು ಸಲ್ಲಿಸಿ - AI ಪೂರ್ವ ಪರಿಶೀಲನೆಯು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ರನ್ ಆಗುತ್ತದೆ', click_to_select: 'ಫೈಲ್ ಆಯ್ಕೆ ಮಾಡಲು ಕ್ಲಿಕ್ ಮಾಡಿ', file_types_hint: 'PDF, PNG, JPG, AI, PSD - 50MB ವರೆಗೆ',
+        precheck_title: '🤖 AI ಪೂರ್ವ ಪರಿಶೀಲನೆ', precheck_description: 'ಅನುಮೋದಕರನ್ನು ತಲುಪುವ ಮೊದಲು ನಿಮ್ಮ ವಿನ್ಯಾಸವನ್ನು ಬ್ರ್ಯಾಂಡ್ ಮಾರ್ಗಸೂಚಿಗಳ ವಿರುದ್ಧ ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಪರಿಶೀಲಿಸಲಾಗುತ್ತದೆ.', precheck_color_compliance: '✅ ಬಣ್ಣದ ಪ್ಯಾಲೆಟ್ ಅನುಸರಣೆ', precheck_logo_placement: '✅ ಲೋಗೋ ಪ್ಲೇಸ್‌ಮೆಂಟ್ ಮತ್ತು ಸುರಕ್ಷಿತ ವಲಯ',
+        precheck_typography_consistency: '✅ ಮುದ್ರಣಕಲೆ ಸ್ಥಿರತೆ', precheck_previous_approved: '✅ ಹಿಂದಿನ ಅನುಮೋದಿತ ವಿನ್ಯಾಸಗಳೊಂದಿಗೆ ಹೋಲಿಕೆ', precheck_score: '✅ ಬ್ರ್ಯಾಂಡ್ ಮಾರ್ಗಸೂಚಿಗಳ ಸ್ಕೋರ್ (0–100)', workflow_title: '📋 ಕೆಲಸದ ಹರಿವು',
+        workflow_step1: 'ಅಪ್‌ಲೋಡ್ + AI ಪೂರ್ವ-ಪರಿಶೀಲನೆ', workflow_step2: 'CEO, COO ಮತ್ತು ನಿರ್ದೇಶಕರಿಗೆ ಸೂಚಿಸಲಾಗಿದೆ', workflow_step3: 'ಪ್ರತಿ ಅನುಮೋದಕರು: ಅನುಮೋದಿಸಿ / ಪರಿಷ್ಕರಣೆ', workflow_step4: 'ಎಲ್ಲಾ ಅನುಮೋದನೆ → ಲೈಬ್ರರಿಗೆ ಪ್ರಕಟಿಸಲಾಗಿದೆ',
+        filter_flyers: '🖼 ಫ್ಲೈಯರ್ಸ್', filter_brochures: '📄 ಕರಪತ್ರಗಳು', filter_leaflets: '📃 ಕರಪತ್ರಗಳು', filter_posters: '🪧 ಪೋಸ್ಟರ್‌ಗಳು',
+        filter_banners: '🏳 ಬ್ಯಾನರ್‌ಗಳು', filter_approved: '✅ ಅನುಮೋದಿಸಲಾಗಿದೆ', type_flyer: 'ಫ್ಲೈಯರ್', type_brochure: 'ಕರಪತ್ರ',
+        type_leaflet: 'ಕರಪತ್ರ', type_poster: 'ಪೋಸ್ಟರ್', type_banner: 'ಬ್ಯಾನರ್', type_social: 'ಸಾಮಾಜಿಕ ಮಾಧ್ಯಮ ಗ್ರಾಫಿಕ್',
+        no_materials_stage: 'ಈ ಹಂತದಲ್ಲಿ ಯಾವುದೇ ಸಾಮಗ್ರಿಗಳಿಲ್ಲ', user_access: 'ಬಳಕೆದಾರ ಪ್ರವೇಶ ನಿಯಂತ್ರಣ', folder_access_matrix: 'ಫೋಲ್ಡರ್ ಪ್ರವೇಶ ಮ್ಯಾಟ್ರಿಕ್ಸ್', brand_guidelines: 'ಬ್ರಾಂಡ್ ಮಾರ್ಗಸೂಚಿಗಳು',
+        color_palette: '🎨 ಬಣ್ಣದ ಪ್ಯಾಲೆಟ್', typography: '🔤 ಮುದ್ರಣಕಲೆ', logo_rules: '📐 ಲೋಗೋ ನಿಯಮಗಳು', imagery: '🖼 ಚಿತ್ರಣ',
+        brand_typography_display: 'ಪ್ರದರ್ಶನ', brand_typography_body: 'ದೇಹ', brand_typography_caption: 'ಶೀರ್ಷಿಕೆ', brand_typography_display_font: '{org} ಡಿಸ್ಪ್ಲೇ ಫಾಂಟ್',
+        brand_typography_body_example: 'ಇಂಟರ್ ರೆಗ್ಯುಲರ್ - 16px, 1.6 ಸಾಲಿನ ಎತ್ತರ', brand_typography_caption_example: 'ಇಂಟರ್ ಲೈಟ್ - 12px, ಟ್ರ್ಯಾಕಿಂಗ್ +0.3', brand_logo_clearspace: '✅ ಕನಿಷ್ಠ ಕ್ಲಿಯರ್‌ಸ್ಪೇಸ್: ಎಲ್ಲಾ ಕಡೆಗಳಲ್ಲಿ 2× ಲೋಗೋ ಎತ್ತರ', brand_logo_minimum_size: '✅ ಕನಿಷ್ಠ ಗಾತ್ರ: 80px ಡಿಜಿಟಲ್ / 20mm ಮುದ್ರಣ',
+        brand_logo_approved_bg: '✅ ಅನುಮೋದಿತ ಬಿಜಿ: ಬಿಳಿ, ಬ್ರಾಂಡ್ ಪ್ರಾಥಮಿಕ, ಬ್ರ್ಯಾಂಡ್ ಡಾರ್ಕ್', brand_logo_no_stretch: '❌ ಹಿಗ್ಗಿಸಬೇಡಿ, ತಿರುಗಿಸಬೇಡಿ ಅಥವಾ ಬಣ್ಣ ಮಾಡಬೇಡಿ', brand_logo_no_busy_bg: '❌ ಬಿಡುವಿಲ್ಲದ ಛಾಯಾಗ್ರಹಣದ ಹಿನ್ನೆಲೆಯಲ್ಲಿ ಇರಿಸಬೇಡಿ', brand_imagery_quality: '✅ ಉತ್ತಮ ಗುಣಮಟ್ಟದ ಪರವಾನಗಿ ಪಡೆದ ಛಾಯಾಗ್ರಹಣ ಮಾತ್ರ',
+        brand_imagery_values: '✅ ಬ್ರ್ಯಾಂಡ್ ಮೌಲ್ಯಗಳನ್ನು ಪ್ರತಿಬಿಂಬಿಸಿ: ಆಧುನಿಕ, ಅಂತರ್ಗತ, ವೃತ್ತಿಪರ', brand_imagery_color_grade: '✅ ಬ್ರಾಂಡ್ ಪ್ಯಾಲೆಟ್‌ನೊಂದಿಗೆ ಜೋಡಿಸಲು ಬಣ್ಣ-ದರ್ಜೆ', brand_imagery_avoid_cliched: '❌ ಕ್ಲೀಷೆ ಸ್ಟಾಕ್ ಚಿತ್ರಣವನ್ನು ತಪ್ಪಿಸಿ', brand_imagery_no_watermark: '❌ ಯಾವುದೇ ವಾಟರ್‌ಮಾರ್ಕ್ ಅಥವಾ ಕಡಿಮೆ ರೆಸಲ್ಯೂಶನ್ ಚಿತ್ರಗಳಿಲ್ಲ',
+        activity_log: 'ಚಟುವಟಿಕೆ ಲಾಗ್', view: 'ವೀಕ್ಷಿಸಿ', view_only: 'ವೀಕ್ಷಿಸಿ ಮಾತ್ರ', flagged: 'ಧ್ವಜಾರೋಹಣ ಮಾಡಿದರು',
+        metadata: 'ಮೆಟಾಡೇಟಾ', approval_status: 'ಅನುಮೋದನೆ ಸ್ಥಿತಿ', brand_score: 'ಬ್ರಾಂಡ್ ಸ್ಕೋರ್', version_history: 'ಆವೃತ್ತಿ ಇತಿಹಾಸ',
+        comments: 'ಕಾಮೆಂಟ್‌ಗಳು', add_comment_placeholder: 'ಕಾಮೆಂಟ್ ಸೇರಿಸಿ...', post: 'ಪೋಸ್ಟ್ ಮಾಡಿ', category: 'ವರ್ಗ',
+        notes: 'ಟಿಪ್ಪಣಿಗಳು', priority: 'ಆದ್ಯತೆ', priority_high: 'ಹೆಚ್ಚು - ಅನುಮೋದನೆಯ ಮೊದಲು ಸರಿಪಡಿಸಬೇಕು', priority_medium: 'ಮಧ್ಯಮ - ಸರಿಪಡಿಸಬೇಕು',
+        priority_low: 'ಕಡಿಮೆ - ಸಣ್ಣ ಸಲಹೆ', compare: 'ಹೋಲಿಸಿ', access_full: 'ಪೂರ್ಣ ಪ್ರವೇಶ', access_view: 'ವೀಕ್ಷಣೆ ಮಾತ್ರ',
+        access_none: 'ಪ್ರವೇಶವಿಲ್ಲ', activity_uploaded: '{actor} ಅಪ್‌ಲೋಡ್ "{material}"', activity_uploaded_version: '{actor} ಅಪ್‌ಲೋಡ್ "{material} {version}"', activity_approved: '{actor} ಅನುಮೋದಿತ "{material}"',
+        activity_revision: '{actor} "{material}" - {reason} ನಲ್ಲಿ ಪರಿಷ್ಕರಣೆಗೆ ವಿನಂತಿಸಿದೆ', activity_system_flagged: 'ಸಿಸ್ಟಮ್: AI ಪೂರ್ವ-ಪರಿಶೀಲನೆ ಫ್ಲ್ಯಾಗ್ ಮಾಡಲಾದ {count} ಸಮಸ್ಯೆಗಳು (ಸ್ಕೋರ್: {score}/100)', activity_access_granted: '{actor} {subject} ಗೆ {folder} ಗೆ ಅಪ್‌ಲೋಡ್ ಪ್ರವೇಶವನ್ನು ನೀಡಿದೆ', reason_brand_color_issue: 'ಬ್ರಾಂಡ್ ಬಣ್ಣದ ಸಮಸ್ಯೆ',
+        reason_logo_incorrect: 'ಲೋಗೋ ತಪ್ಪಾಗಿದೆ', folder_marketing: 'ಮಾರ್ಕೆಟಿಂಗ್', folder_flyers: 'ಫ್ಲೈಯರ್ಸ್', folder_2025: '2025',
+        folder_2024_archive: '2024 ಆರ್ಕೈವ್', folder_brochures: 'ಕರಪತ್ರಗಳು', folder_products: 'ಉತ್ಪನ್ನಗಳು', folder_corporate: 'ಕಾರ್ಪೊರೇಟ್',
+        folder_posters: 'ಪೋಸ್ಟರ್ಗಳು', folder_events: 'ಘಟನೆಗಳು', folder_retail_pos: 'ಚಿಲ್ಲರೆ POS', folder_digital: 'ಡಿಜಿಟಲ್',
+        folder_social_media: 'ಸಾಮಾಜಿಕ ಮಾಧ್ಯಮ', folder_email_headers: 'ಇಮೇಲ್ ಶೀರ್ಷಿಕೆಗಳು', folder_print: 'ಮುದ್ರಿಸು', folder_retail: 'ಚಿಲ್ಲರೆ',
+        folder_outdoor: 'ಹೊರಾಂಗಣ', folder_campaigns: 'ಪ್ರಚಾರಗಳು', folder_seasonal: 'ಕಾಲೋಚಿತ', folder_summer: 'ಬೇಸಿಗೆ',
+        folder_winter: 'ಚಳಿಗಾಲ', folder_festive: 'ಹಬ್ಬದ', folder_in_store: 'ಅಂಗಡಿಯಲ್ಲಿ', folder_pos_materials: 'POS ಮೆಟೀರಿಯಲ್ಸ್',
+        folder_window_displays: 'ವಿಂಡೋ ಪ್ರದರ್ಶನಗಳು', folder_promotions: 'ಪ್ರಚಾರಗಳು', folder_leaflets: 'ಕರಪತ್ರಗಳು', folder_email: 'ಇಮೇಲ್',
+        folder_brand_assets: 'ಬ್ರಾಂಡ್ ಸ್ವತ್ತುಗಳು', folder_logos: 'ಲೋಗೋಗಳು', folder_templates: 'ಟೆಂಪ್ಲೇಟ್‌ಗಳು', folder_client_comms: 'ಗ್ರಾಹಕ ಕಾಮ್ಸ್',
+        folder_presentations: 'ಪ್ರಸ್ತುತಿಗಳು', folder_regulatory: 'ನಿಯಂತ್ರಕ', folder_compliance_docs: 'ಅನುಸರಣೆ ಡಾಕ್ಸ್', folder_disclosures: 'ಬಹಿರಂಗಪಡಿಸುವಿಕೆಗಳು',
+        folder_banners: 'ಬ್ಯಾನರ್‌ಗಳು', folder_signage: 'ಸಂಕೇತ', folder_healthcare_mktg: 'ಹೆಲ್ತ್‌ಕೇರ್ ಎಂಕೆಟಿಜಿ', folder_awareness: 'ಅರಿವು',
+        folder_patient_info: 'ರೋಗಿಯ ಮಾಹಿತಿ', folder_staff_comms: 'ಸಿಬ್ಬಂದಿ ಕಾಮ್ಸ್', folder_internal_posters: 'ಆಂತರಿಕ ಪೋಸ್ಟರ್ಗಳು', folder_newsletters: 'ಸುದ್ದಿಪತ್ರಗಳು',
+        folder_web_banners: 'ವೆಬ್ ಬ್ಯಾನರ್‌ಗಳು', folder_education: 'ಶಿಕ್ಷಣ', folder_recruitment: 'ನೇಮಕಾತಿ', folder_prospectus: 'ಪ್ರಾಸ್ಪೆಕ್ಟಸ್',
+        folder_open_day: 'ತೆರೆದ ದಿನ', folder_campus: 'ಕ್ಯಾಂಪಸ್', folder_courses: 'ಕೋರ್ಸ್‌ಗಳು', folder_graduation: 'ಪದವಿ',
+        folder_conferences: 'ಸಮ್ಮೇಳನಗಳು', folder_logistics_mktg: 'ಲಾಜಿಸ್ಟಿಕ್ಸ್ Mktg', folder_client_facing: 'ಗ್ರಾಹಕರು ಎದುರಿಸುತ್ತಿದ್ದಾರೆ', folder_proposals: 'ಪ್ರಸ್ತಾವನೆಗಳು',
+        folder_fleet_branding: 'ಫ್ಲೀಟ್ ಬ್ರ್ಯಾಂಡಿಂಗ್', folder_vehicle_wraps: 'ವಾಹನ ಸುತ್ತುಗಳು', folder_uniforms: 'ಸಮವಸ್ತ್ರಗಳು', folder_trade_shows: 'ವ್ಯಾಪಾರ ಪ್ರದರ್ಶನಗಳು',
+        folder_displays: 'ಪ್ರದರ್ಶನಗಳು', notifications_title: 'ಅಧಿಸೂಚನೆಗಳು - {org}', notif_sale_await: 'ಬೇಸಿಗೆ ಮಾರಾಟದ ಫ್ಲೈಯರ್ ನಿಮ್ಮ ಅನುಮೋದನೆಗೆ ಕಾಯುತ್ತಿದೆ', notif_q3_submitted: 'Q3 ಉತ್ಪನ್ನ ಕರಪತ್ರವನ್ನು ಪರಿಶೀಲನೆಗಾಗಿ ಸಲ್ಲಿಸಲಾಗಿದೆ',
+        notif_event_flagged: 'ಈವೆಂಟ್ ಪೋಸ್ಟರ್ ಅನ್ನು ಪರಿಷ್ಕರಣೆಗಾಗಿ ಫ್ಲ್ಯಾಗ್ ಮಾಡಲಾಗಿದೆ', notif_retail_approved: 'ಎಲ್ಲಾ ವಿಮರ್ಶಕರು ಅನುಮೋದಿಸಿದ ಚಿಲ್ಲರೆ POS ಬ್ಯಾನರ್', access_full_short: '✅ ಪೂರ್ಣ', access_view_short: '👁 ವೀಕ್ಷಿಸಿ',
+        access_none_short: '- ಯಾವುದೂ ಇಲ್ಲ', awaiting: 'ನಿರೀಕ್ಷಿಸಲಾಗುತ್ತಿದೆ', ai_brand_compliance: 'AI ಬ್ರ್ಯಾಂಡ್ ಅನುಸರಣೆ', send_revision_request: 'ಪರಿಷ್ಕರಣೆ ವಿನಂತಿಯನ್ನು ಕಳುಹಿಸಿ',
+        revision_describe_text: 'ಅಗತ್ಯವಿರುವ ಬದಲಾವಣೆಗಳನ್ನು ವಿವರಿಸಿ. ವಿನ್ಯಾಸಕಾರರಿಗೆ ತಕ್ಷಣ ಸೂಚನೆ ನೀಡಲಾಗುವುದು.', revision_describe_placeholder: 'ಏನನ್ನು ಬದಲಾಯಿಸಬೇಕು ಎಂಬುದನ್ನು ವಿವರಿಸಿ...', cat_brand_color: 'ಬ್ರಾಂಡ್ ಬಣ್ಣದ ಸಮಸ್ಯೆ', cat_logo_violation: 'ಲೋಗೋ ಬಳಕೆಯ ಉಲ್ಲಂಘನೆ',
+        cat_typography: 'ಮುದ್ರಣಕಲೆ ಸಮಸ್ಯೆ', cat_messaging: 'ಸಂದೇಶ ಕಳುಹಿಸುವಿಕೆ / ನಕಲು ದೋಷ', cat_layout: 'ಲೇಔಟ್ ಸಮಸ್ಯೆ', cat_image_quality: 'ಚಿತ್ರದ ಗುಣಮಟ್ಟ',
+        cat_other: 'ಇತರೆ', comment_revision_text: 'ಲೋಗೋ ಪ್ಲೇಸ್‌ಮೆಂಟ್ ವಿಸ್ತರಿಸಿದಂತೆ ಕಾಣುತ್ತದೆ - ಬ್ರ್ಯಾಂಡ್ ಕಿಟ್‌ನಿಂದ ಅನುಮೋದಿತ ಮಾಸ್ಟರ್ ಫೈಲ್ ಅನ್ನು ಬಳಸಿ.', comment_approved_text: 'ಚೆನ್ನಾಗಿ ಕಾಣುತ್ತದೆ. ಬ್ರ್ಯಾಂಡ್ ಬಣ್ಣಗಳು ಸ್ಪಾಟ್ ಆನ್ ಆಗಿದೆ.', version_initial_upload: 'ಆರಂಭಿಕ ಅಪ್ಲೋಡ್',
+        version_revised_cta: 'ಪರಿಷ್ಕೃತ CTA ಬಣ್ಣ', version_final: 'ಅಂತಿಮ', version_initial: 'ಆರಂಭಿಕ', ai_m1_1: '✅ ಬಣ್ಣದ ಪ್ಯಾಲೆಟ್ ಬ್ರ್ಯಾಂಡ್ ಪ್ರಾಥಮಿಕ ಬಣ್ಣಗಳಿಗೆ ಹೊಂದಿಕೆಯಾಗುತ್ತದೆ',
+        ai_m1_2: '✅ ಲೋಗೋ ನಿಯೋಜನೆ ಸರಿಯಾಗಿದೆ', ai_m1_3: '⚠️ CTA ಫಾಂಟ್ ಗಾತ್ರವು ದೊಡ್ಡದಾಗಿರಬಹುದು', ai_m1_4: '✅ ಚಿತ್ರದ ಗುಣಮಟ್ಟವು ಮುದ್ರಣ ಮಾನದಂಡಗಳನ್ನು ಪೂರೈಸುತ್ತದೆ', ai_m1_5: '⚠️ ಟ್ಯಾಗ್‌ಲೈನ್ ಮೆಸೇಜಿಂಗ್ ಗೈಡ್‌ನಿಂದ ಸ್ವಲ್ಪ ಭಿನ್ನವಾಗಿದೆ',
+        ai_m2_1: '✅ ಎಲ್ಲಾ ಬ್ರ್ಯಾಂಡ್ ಬಣ್ಣಗಳು ಸರಿಯಾಗಿವೆ', ai_m2_2: '✅ ಮುದ್ರಣಕಲೆಯು ಬ್ರ್ಯಾಂಡ್ ಮಾರ್ಗದರ್ಶಿಗೆ ಹೊಂದಿಕೆಯಾಗುತ್ತದೆ', ai_m2_3: '✅ ಲೋಗೋ ಕ್ಲಿಯರ್‌ಸ್ಪೇಸ್ ಸರಿಯಾಗಿದೆ', ai_m2_4: '✅ ಚಿತ್ರಣ ಶೈಲಿಯನ್ನು ಜೋಡಿಸಲಾಗಿದೆ',
+        ai_m3_1: '❌ ದ್ವಿತೀಯ ಬಣ್ಣವು ಬ್ರ್ಯಾಂಡ್ ಪ್ಯಾಲೆಟ್‌ನಲ್ಲಿಲ್ಲ', ai_m3_2: '❌ ಲೋಗೋ ವಿಸ್ತರಿಸಲಾಗಿದೆ - ಬಳಕೆಯ ನಿಯಮಗಳನ್ನು ಉಲ್ಲಂಘಿಸುತ್ತದೆ', ai_m3_3: '⚠️ ದೇಹದ ನಕಲು ಮುದ್ರಣಕ್ಕೆ ತುಂಬಾ ಚಿಕ್ಕದಾಗಿದೆ', ai_m3_4: '⚠️ ಕಾಂಟ್ರಾಸ್ಟ್ ಅನುಪಾತವು WCAG AA ವಿಫಲಗೊಳ್ಳುತ್ತದೆ',
+        ai_m4_1: '✅ ಅತ್ಯುತ್ತಮ ಬ್ರ್ಯಾಂಡ್ ಅನುಸರಣೆ', ai_m4_2: '✅ ಎಲ್ಲಾ ಚೆಕ್‌ಗಳು ಪಾಸ್ ಆಗಿವೆ', ai_m5_1: '✅ ಪ್ಲಾಟ್‌ಫಾರ್ಮ್ ಆಯಾಮಗಳು ಸರಿಯಾಗಿವೆ', ai_m5_2: '✅ ಬ್ರಾಂಡ್ ಬಣ್ಣಗಳನ್ನು ಅನ್ವಯಿಸಲಾಗಿದೆ',
+        ai_m5_3: '⚠️ ಐಜಿ ಆವೃತ್ತಿಯಲ್ಲಿ ಮೈನರ್ ಲೋಗೋ ಕ್ಲಿಯರ್‌ಸ್ಪೇಸ್', ai_m6_1: '✅ ಬ್ರ್ಯಾಂಡ್ ಬಣ್ಣಗಳು ಸರಿಯಾಗಿವೆ', ai_m6_2: '⚠️ 300dpi ಕೆಳಗೆ ಒಂದು ಚಿತ್ರ', ai_m6_3: '✅ ಮುದ್ರಣಕಲೆ ನಿಯಮಗಳನ್ನು ಅನುಸರಿಸಲಾಗಿದೆ',
+        ai_new_color_ok: '✅ ಬಣ್ಣದ ಪ್ಯಾಲೆಟ್ ಬ್ರ್ಯಾಂಡ್ ಮಾರ್ಗಸೂಚಿಗಳಿಗೆ ಹೊಂದಿಕೆಯಾಗುತ್ತದೆ', ai_new_logo_ok: '✅ ಅನುಮೋದಿತ ಮಾರ್ಗಸೂಚಿಗಳಲ್ಲಿ ಲೋಗೋ ನಿಯೋಜನೆ', ai_new_typography_ok: '✅ ಮುದ್ರಣಕಲೆಯು ಬ್ರ್ಯಾಂಡ್ ಮಾರ್ಗದರ್ಶಿಗೆ ಅನುಗುಣವಾಗಿರುತ್ತದೆ', ai_new_imagery_ok: '✅ ಚಿತ್ರಣವು ಬ್ರ್ಯಾಂಡ್ ಮಾನದಂಡಗಳನ್ನು ಪೂರೈಸುತ್ತದೆ',
+        ai_new_score_note: '⚠️ ಮಿತಿಗಿಂತ ಮೇಲಿನ ಸ್ಕೋರ್ - ಪರಿಶೀಲನೆಗೆ ಸಿದ್ಧವಾಗಿದೆ', ai_new_color_warn: '⚠️ ಚಿಕ್ಕ ಬಣ್ಣ ವ್ಯತ್ಯಾಸಗಳು ಪತ್ತೆಯಾಗಿವೆ', ai_new_clearspace_warn: '⚠️ ಲೋಗೋ ಕ್ಲಿಯರ್‌ಸ್ಪೇಸ್ ಕನಿಷ್ಠಕ್ಕಿಂತ ಸ್ವಲ್ಪ ಕಡಿಮೆ', ai_new_font_warn: '⚠️ ಫಾಂಟ್ ಗಾತ್ರಕ್ಕೆ ಹೊಂದಾಣಿಕೆ ಬೇಕಾಗಬಹುದು'
+      },
+      gu: {
+        dashboard: 'ડેશબોર્ડ', materials: 'સામગ્રી પુસ્તકાલય', approvals: 'મંજૂરીઓ', upload: 'સામગ્રી અપલોડ કરો',
+        users: 'વપરાશકર્તા ઍક્સેસ', brand: 'બ્રાન્ડ માર્ગદર્શિકા', activity: 'પ્રવૃત્તિ લોગ', folders: 'ફોલ્ડર્સ',
+        admin: 'એડમિન', welcome: 'ફરી સ્વાગત છે', overview: 'માર્કેટિંગ સામગ્રી વિહંગાવલોકન', pending: 'મંજૂરી બાકી છે',
+        approved: 'મંજૂર', revision: 'રિવિઝનની જરૂર છે', total: 'કુલ સામગ્રી', designed_by: 'દ્વારા ડિઝાઇન કરવામાં આવી છે',
+        uploaded: 'અપલોડ કર્યું', status: 'સ્થિતિ', campaign: 'ઝુંબેશ', approve: 'મંજૂર',
+        request_revision: 'પુનરાવર્તનની વિનંતી કરો', close: 'બંધ કરો', submit: 'મંજૂરી માટે સબમિટ કરો', all_types: 'બધા પ્રકારો',
+        search_placeholder: 'નામ, ડિઝાઇનર, પ્રકાર દ્વારા શોધો...', recent_materials: 'તાજેતરની સામગ્રી', material_name_1: 'સમર સેલ ફ્લાયર', material_name_2: 'Q3 ઉત્પાદન બ્રોશર',
+        material_name_3: 'ઇવેન્ટની જાહેરાત પોસ્ટર', material_name_4: 'છૂટક POS બેનર', material_name_5: 'સોશિયલ મીડિયા બંડલ', material_name_6: 'પત્રિકા - નવી સેવાઓ',
+        admin_section: 'એડમિન', folder_label: 'ફોલ્ડર', lang_name: 'Gujarati', login_error_password: 'કૃપા કરીને તમારો પાસવર્ડ દાખલ કરો.',
+        login_error_invalid: 'અમાન્ય વપરાશકર્તા નામ અથવા પાસવર્ડ.', login_subtitle: 'તમારા પોર્ટલ પર ચાલુ રાખવા માટે સાઇન ઇન કરો', login_user: 'વપરાશકર્તા', login_password: 'પાસવર્ડ',
+        login_button: 'સાઇન ઇન કરો', signed_in_as: '{user} તરીકે સાઇન ઇન કર્યું', switched_to: '{org} પર સ્વિચ કર્યું', viewing_as: 'આ રીતે જોઈ રહ્યાં છીએ: {user}',
+        logged_out: 'તમે લૉગ આઉટ થઈ ગયા છો', language_changed: 'ભાષા {lang} માં બદલાઈ', switch_user_view: 'વપરાશકર્તા દૃશ્ય સ્વિચ કરો', logout: 'લોગઆઉટ',
+        selected: 'પસંદ કરેલ', file_ready_submit: 'ફાઇલ તૈયાર છે - વિગતો ભરો અને સબમિટ કરો', enter_material_name: 'કૃપા કરીને સામગ્રીનું નામ દાખલ કરો', running_precheck: '🤖 {org} માટે AI બ્રાન્ડ પ્રી-ચેક ચલાવી રહ્યાં છીએ…',
+        precheck_complete: '✅ પૂર્વ-તપાસ પૂર્ણ — સ્કોર 81/100', sent_to_approvers: '"{name}" {org} 📨 પર મંજૂરકર્તાઓને મોકલવામાં આવ્યું', edit_access_button: 'એડિટ એક્સેસ', access_saved: 'ઍક્સેસ પરવાનગીઓ સાચવી',
+        save_changes: 'ફેરફારો સાચવો', configure_access_for: '{org} ની અંદર આ વપરાશકર્તા માટે ફોલ્ડર ઍક્સેસ ગોઠવો.', comment_added: 'ટિપ્પણી ઉમેરી', version_compare_info: 'સંસ્કરણની તુલના કરો - સંપૂર્ણ બિલ્ડ સુવિધા',
+        material_fully_approved: '"{material}" સંપૂર્ણપણે મંજૂર! 🎉', revision_requested: '"{material}" પર પુનરાવર્તનની વિનંતી કરી', approval_recorded: 'મંજૂરી રેકોર્ડ ✅', revision_request_sent: 'પુનરાવર્તન વિનંતી મોકલી ⚠️',
+        "org_Bio Factor": 'બાયો ફેક્ટર', "org_Ferty Base": 'ફર્ટી બેઝ', "org_Aqua": 'એક્વા', "org_One Health Centre": 'એક આરોગ્ય કેન્દ્ર',
+        "org_Water Links": 'વોટર લિંક્સ', "org_Beyond Organic": 'બિયોન્ડ ઓર્ગેનિક', user_admin: 'એડમિન', user_ceo: 'સીઇઓ',
+        user_coo: 'સીઓઓ', user_director: 'દિગ્દર્શક', role_admin: 'એડમિન', role_ceo: 'સીઇઓ',
+        role_coo: 'સીઓઓ', role_director: 'દિગ્દર્શક', perm_upload: 'અપલોડ કરો', perm_approve: 'મંજૂર',
+        perm_delete: 'કાઢી નાખો', perm_manage_users: 'વપરાશકર્તાઓ મેનેજ કરો', perm_all_folders: 'બધા ફોલ્ડર્સ', perm_view_all: 'બધા જુઓ',
+        perm_final_approve: 'અંતિમ મંજૂરી', perm_manage_campaigns: 'ઝુંબેશ મેનેજ કરો', perm_assigned_folders: 'સોંપેલ ફોલ્ડર્સ', perm_view_brand_guide: 'બ્રાન્ડ માર્ગદર્શિકા જુઓ',
+        sector_technology: 'ટેકનોલોજી', sector_retail_fmcg: 'છૂટક અને FMCG', sector_financial_services: 'નાણાકીય સેવાઓ', sector_healthcare: 'હેલ્થકેર',
+        sector_education: 'શિક્ષણ', sector_logistics_supply: 'લોજિસ્ટિક્સ અને સપ્લાય', select_org_subtitle: 'ચાલુ રાખવા માટે તમારી સંસ્થા પસંદ કરો', select_lang_subtitle: 'કાર્યકારી ભાષા પસંદ કરો',
+        continue_to_language: 'ભાષા પર ચાલુ રાખો →', back: '← પાછળ', enter_portal: 'પોર્ટલ દાખલ કરો →', selection_flow_path: 'સંસ્થા → ભાષા → પોર્ટલ',
+        switch_org: 'સ્વિચ સંસ્થા', switch_lang: 'ભાષા સ્વિચ કરો', upload_new: '+ નવું અપલોડ કરો', material_name: 'સામગ્રીનું નામ',
+        type: 'પ્રકાર', campaign_project: 'ઝુંબેશ / પ્રોજેક્ટ', designer_notes: 'ડિઝાઇનર નોંધો', folder_location: 'ફોલ્ડર સ્થાન',
+        upload_title: 'નવી સામગ્રી અપલોડ કરો', upload_description: 'સમીક્ષા માટે ડિઝાઇન સબમિટ કરો — AI પ્રી-ચેક આપમેળે ચાલે છે', click_to_select: 'ફાઇલ પસંદ કરવા માટે ક્લિક કરો', file_types_hint: 'PDF, PNG, JPG, AI, PSD — 50MB સુધી',
+        precheck_title: '🤖 AI પ્રી-ચેક', precheck_description: 'મંજૂરકર્તાઓ સુધી પહોંચતા પહેલા તમારી ડિઝાઇન બ્રાન્ડ માર્ગદર્શિકા સામે આપમેળે તપાસવામાં આવશે.', precheck_color_compliance: '✅ કલર પેલેટનું પાલન', precheck_logo_placement: '✅ લોગો પ્લેસમેન્ટ અને સેફ ઝોન',
+        precheck_typography_consistency: '✅ ટાઇપોગ્રાફી સુસંગતતા', precheck_previous_approved: '✅ અગાઉની મંજૂર ડિઝાઇન સાથે સરખામણી', precheck_score: '✅ બ્રાન્ડ માર્ગદર્શિકા સ્કોર (0–100)', workflow_title: '📋 વર્કફ્લો',
+        workflow_step1: 'અપલોડ + AI પ્રી-ચેક', workflow_step2: 'CEO, COO અને નિયામકને સૂચના આપી', workflow_step3: 'દરેક મંજૂર કરનાર: મંજૂર / પુનરાવર્તન', workflow_step4: 'બધા મંજૂર → લાઇબ્રેરીમાં પ્રકાશિત',
+        filter_flyers: '🖼 ફ્લાયર્સ', filter_brochures: '📄 બ્રોશર', filter_leaflets: '📃 પત્રિકાઓ', filter_posters: '🪧 પોસ્ટરો',
+        filter_banners: '🏳 બેનરો', filter_approved: '✅ મંજૂર', type_flyer: 'ફ્લાયર', type_brochure: 'બ્રોશર',
+        type_leaflet: 'પત્રિકા', type_poster: 'પોસ્ટર', type_banner: 'બેનર', type_social: 'સોશિયલ મીડિયા ગ્રાફિક',
+        no_materials_stage: 'આ તબક્કામાં કોઈ સામગ્રી નથી', user_access: 'વપરાશકર્તા ઍક્સેસ નિયંત્રણ', folder_access_matrix: 'ફોલ્ડર એક્સેસ મેટ્રિક્સ', brand_guidelines: 'બ્રાન્ડ માર્ગદર્શિકા',
+        color_palette: '🎨 કલર પેલેટ', typography: '🔤 ટાઇપોગ્રાફી', logo_rules: '📐 લોગો નિયમો', imagery: '🖼 છબી',
+        brand_typography_display: 'પ્રદર્શન', brand_typography_body: 'શરીર', brand_typography_caption: 'કૅપ્શન', brand_typography_display_font: '{org} ડિસ્પ્લે ફોન્ટ',
+        brand_typography_body_example: 'ઇન્ટર રેગ્યુલર — 16px, 1.6 લાઇનની ઊંચાઈ', brand_typography_caption_example: 'ઇન્ટર લાઇટ — 12px, ટ્રેકિંગ +0.3', brand_logo_clearspace: '✅ ન્યૂનતમ ખાલી જગ્યા: બધી બાજુઓ પર 2× લોગોની ઊંચાઈ', brand_logo_minimum_size: '✅ ન્યૂનતમ કદ: 80px ડિજિટલ / 20mm પ્રિન્ટ',
+        brand_logo_approved_bg: '✅ મંજૂર bg: સફેદ, બ્રાન્ડ પ્રાથમિક, બ્રાન્ડ ડાર્ક', brand_logo_no_stretch: '❌ ખેંચો, ફેરવશો નહીં અથવા ફરીથી રંગ કરશો નહીં', brand_logo_no_busy_bg: '❌ વ્યસ્ત ફોટોગ્રાફિક પૃષ્ઠભૂમિ પર ન મૂકો', brand_imagery_quality: '✅ માત્ર ઉચ્ચ ગુણવત્તાની લાઇસન્સવાળી ફોટોગ્રાફી',
+        brand_imagery_values: '✅ બ્રાન્ડ મૂલ્યો પ્રતિબિંબિત કરો: આધુનિક, સમાવિષ્ટ, વ્યાવસાયિક', brand_imagery_color_grade: '✅ બ્રાન્ડ પેલેટ સાથે સંરેખિત કરવા માટે કલર-ગ્રેડ', brand_imagery_avoid_cliched: '❌ ક્લિચ્ડ સ્ટોક ઈમેજરી ટાળો', brand_imagery_no_watermark: '❌ કોઈ વોટરમાર્કવાળી અથવા ઓછા રિઝોલ્યુશનવાળી છબીઓ નથી',
+        activity_log: 'પ્રવૃત્તિ લોગ', view: 'જુઓ', view_only: 'ફક્ત જુઓ', flagged: 'ધ્વજવંદન',
+        metadata: 'મેટાડેટા', approval_status: 'મંજૂરીની સ્થિતિ', brand_score: 'બ્રાન્ડ સ્કોર', version_history: 'સંસ્કરણ ઇતિહાસ',
+        comments: 'ટિપ્પણીઓ', add_comment_placeholder: 'એક ટિપ્પણી ઉમેરો...', post: 'પોસ્ટ', category: 'શ્રેણી',
+        notes: 'નોંધો', priority: 'પ્રાથમિકતા', priority_high: 'ઉચ્ચ — મંજૂરી પહેલાં ઠીક કરવું આવશ્યક છે', priority_medium: 'મધ્યમ - ઠીક કરવું જોઈએ',
+        priority_low: 'ઓછું — નાનું સૂચન', compare: 'સરખામણી કરો', access_full: 'સંપૂર્ણ ઍક્સેસ', access_view: 'ફક્ત જુઓ',
+        access_none: 'કોઈ ઍક્સેસ નથી', activity_uploaded: '{actor} અપલોડ કરેલ "{material}"', activity_uploaded_version: '{actor} અપલોડ કરેલ "{material} {version}"', activity_approved: '{actor} મંજૂર "{material}"',
+        activity_revision: '{actor} એ "{material}" — {reason} પર પુનરાવર્તનની વિનંતી કરી', activity_system_flagged: 'સિસ્ટમ: AI પ્રી-ચેક ફ્લેગ કરેલ {count} મુદ્દાઓ (સ્કોર: {score}/100)', activity_access_granted: '{actor} એ {folder} પર {subject} અપલોડની ઍક્સેસ આપી', reason_brand_color_issue: 'બ્રાન્ડ રંગ મુદ્દો',
+        reason_logo_incorrect: 'લોગો ખોટો છે', folder_marketing: 'માર્કેટિંગ', folder_flyers: 'ફ્લાયર્સ', folder_2025: '2025',
+        folder_2024_archive: '2024 આર્કાઇવ', folder_brochures: 'બ્રોશર', folder_products: 'ઉત્પાદનો', folder_corporate: 'કોર્પોરેટ',
+        folder_posters: 'પોસ્ટરો', folder_events: 'ઘટનાઓ', folder_retail_pos: 'છૂટક POS', folder_digital: 'ડિજિટલ',
+        folder_social_media: 'સોશિયલ મીડિયા', folder_email_headers: 'ઇમેઇલ હેડર્સ', folder_print: 'છાપો', folder_retail: 'છૂટક',
+        folder_outdoor: 'આઉટડોર', folder_campaigns: 'ઝુંબેશ', folder_seasonal: 'મોસમી', folder_summer: 'ઉનાળો',
+        folder_winter: 'શિયાળો', folder_festive: 'ઉત્સવની', folder_in_store: 'ઇન-સ્ટોર', folder_pos_materials: 'POS સામગ્રી',
+        folder_window_displays: 'વિન્ડો ડિસ્પ્લે', folder_promotions: 'પ્રમોશન', folder_leaflets: 'પત્રિકાઓ', folder_email: 'ઈમેલ',
+        folder_brand_assets: 'બ્રાન્ડ અસ્કયામતો', folder_logos: 'લોગો', folder_templates: 'નમૂનાઓ', folder_client_comms: 'ક્લાયન્ટ કોમ્સ',
+        folder_presentations: 'પ્રસ્તુતિઓ', folder_regulatory: 'નિયમનકારી', folder_compliance_docs: 'પાલન દસ્તાવેજ', folder_disclosures: 'ડિસ્ક્લોઝર',
+        folder_banners: 'બેનરો', folder_signage: 'ચિહ્ન', folder_healthcare_mktg: 'હેલ્થકેર Mktg', folder_awareness: 'જાગૃતિ',
+        folder_patient_info: 'દર્દીની માહિતી', folder_staff_comms: 'સ્ટાફ કોમ', folder_internal_posters: 'આંતરિક પોસ્ટરો', folder_newsletters: 'ન્યૂઝલેટર્સ',
+        folder_web_banners: 'વેબ બેનરો', folder_education: 'શિક્ષણ', folder_recruitment: 'ભરતી', folder_prospectus: 'પ્રોસ્પેક્ટસ',
+        folder_open_day: 'ઓપન ડે', folder_campus: 'કેમ્પસ', folder_courses: 'અભ્યાસક્રમો', folder_graduation: 'ગ્રેજ્યુએશન',
+        folder_conferences: 'પરિષદો', folder_logistics_mktg: 'લોજિસ્ટિક્સ Mktg', folder_client_facing: 'ક્લાયન્ટ ફેસિંગ', folder_proposals: 'દરખાસ્તો',
+        folder_fleet_branding: 'ફ્લીટ બ્રાન્ડિંગ', folder_vehicle_wraps: 'વાહન આવરણ', folder_uniforms: 'ગણવેશ', folder_trade_shows: 'ટ્રેડ શો',
+        folder_displays: 'દર્શાવે છે', notifications_title: 'સૂચનાઓ — {org}', notif_sale_await: 'સમર સેલ ફ્લાયર તમારી મંજૂરીની રાહ જોઈ રહ્યું છે', notif_q3_submitted: 'Q3 ઉત્પાદન બ્રોશર સમીક્ષા માટે સબમિટ કરવામાં આવ્યું છે',
+        notif_event_flagged: 'ઇવેન્ટ પોસ્ટર પુનરાવર્તન માટે ધ્વજાંકિત', notif_retail_approved: 'રિટેલ POS બૅનર બધા સમીક્ષકો દ્વારા મંજૂર', access_full_short: '✅ સંપૂર્ણ', access_view_short: '👁 જુઓ',
+        access_none_short: '- કોઈ નહીં', awaiting: 'પ્રતીક્ષામાં છે', ai_brand_compliance: 'AI બ્રાન્ડ અનુપાલન', send_revision_request: 'પુનરાવર્તન વિનંતી મોકલો',
+        revision_describe_text: 'જરૂરી ફેરફારોનું વર્ણન કરો. ડિઝાઇનરને તરત જ સૂચિત કરવામાં આવશે.', revision_describe_placeholder: 'શું બદલવાની જરૂર છે તેનું વર્ણન કરો...', cat_brand_color: 'બ્રાન્ડ રંગ મુદ્દો', cat_logo_violation: 'લોગો વપરાશ ઉલ્લંઘન',
+        cat_typography: 'ટાઇપોગ્રાફી સમસ્યા', cat_messaging: 'મેસેજિંગ / કોપી ભૂલ', cat_layout: 'લેઆઉટ સમસ્યા', cat_image_quality: 'છબી ગુણવત્તા',
+        cat_other: 'અન્ય', comment_revision_text: 'લોગો પ્લેસમેન્ટ ખેંચાયેલું દેખાય છે — બ્રાન્ડ કીટમાંથી માન્ય માસ્ટર ફાઇલનો ઉપયોગ કરો.', comment_approved_text: 'સારું લાગે છે. બ્રાન્ડ રંગો હાજર છે.', version_initial_upload: 'પ્રારંભિક અપલોડ',
+        version_revised_cta: 'સુધારેલ CTA રંગ', version_final: 'અંતિમ', version_initial: 'પ્રારંભિક', ai_m1_1: '✅ કલર પેલેટ બ્રાન્ડના પ્રાથમિક રંગો સાથે મેળ ખાય છે',
+        ai_m1_2: '✅ લોગો પ્લેસમેન્ટ યોગ્ય', ai_m1_3: '⚠️ CTA ફોન્ટનું કદ મોટું હોઈ શકે છે', ai_m1_4: '✅ છબીની ગુણવત્તા પ્રિન્ટના ધોરણોને પૂર્ણ કરે છે', ai_m1_5: '⚠️ ટૅગલાઇન મેસેજિંગ માર્ગદર્શિકાથી સહેજ વિચલિત થાય છે',
+        ai_m2_1: '✅ તમામ બ્રાન્ડના રંગો સાચા છે', ai_m2_2: '✅ ટાઇપોગ્રાફી બ્રાન્ડ માર્ગદર્શિકા સાથે મેળ ખાય છે', ai_m2_3: '✅ લોગો ખાલી જગ્યા સાચી', ai_m2_4: '✅ છબી શૈલી સંરેખિત',
+        ai_m3_1: '❌ ગૌણ રંગ બ્રાન્ડ પેલેટમાં નથી', ai_m3_2: '❌ લોગો સ્ટ્રેચ્ડ — ઉપયોગના નિયમોનું ઉલ્લંઘન કરે છે', ai_m3_3: '⚠️ પ્રિન્ટ માટે મુખ્ય નકલ ખૂબ નાની છે', ai_m3_4: '⚠️ કોન્ટ્રાસ્ટ રેશિયો WCAG AA નિષ્ફળ જાય છે',
+        ai_m4_1: '✅ ઉત્તમ બ્રાન્ડ અનુપાલન', ai_m4_2: '✅ તમામ ચેક પાસ થયા', ai_m5_1: '✅ પ્લેટફોર્મના પરિમાણો સાચા', ai_m5_2: '✅ બ્રાન્ડ રંગો લાગુ',
+        ai_m5_3: '⚠️ IG સંસ્કરણ પર નાની લોગો ક્લિયરસ્પેસ', ai_m6_1: '✅ બ્રાન્ડના રંગો સાચા', ai_m6_2: '⚠️ 300dpi ની નીચેની એક છબી', ai_m6_3: '✅ ટાઇપોગ્રાફીના નિયમોનું પાલન',
+        ai_new_color_ok: '✅ કલર પેલેટ બ્રાન્ડ માર્ગદર્શિકા સાથે મેળ ખાય છે', ai_new_logo_ok: '✅ માન્ય માર્ગદર્શિકામાં લોગો પ્લેસમેન્ટ', ai_new_typography_ok: '✅ બ્રાન્ડ માર્ગદર્શિકા સાથે સુસંગત ટાઇપોગ્રાફી', ai_new_imagery_ok: '✅ છબી બ્રાન્ડના ધોરણોને પૂર્ણ કરે છે',
+        ai_new_score_note: '⚠️ થ્રેશોલ્ડથી ઉપરનો સ્કોર — સમીક્ષા માટે તૈયાર', ai_new_color_warn: '⚠️ નાની રંગની વિવિધતાઓ મળી', ai_new_clearspace_warn: '⚠️ લોગોની ખાલી જગ્યા ન્યૂનતમથી થોડી નીચે', ai_new_font_warn: '⚠️ ફોન્ટના કદને ગોઠવણની જરૂર પડી શકે છે'
       }
     };
 
@@ -2602,11 +2841,15 @@
     function translateMaterialName(m) { return t('material_name_' + m.id) || m.name; }
     function folderKey(name) { return 'folder_' + name.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, ''); }
     function translateFolderName(name) {
+      if (!name) return '';
       const key = folderKey(name);
       const translation = t(key);
       return translation === key ? name : translation;
     }
-    function translateFolderPath(path) { return path.split('/').map(segment => translateFolderName(segment)).join('/'); }
+    function translateFolderPath(path) {
+      if (!path) return '';
+      return path.split('/').map(segment => translateFolderName(segment)).join('/');
+    }
     function translateActivityText(item) {
       const reasonKey = item.reason ? ('reason_' + item.reason.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '')) : '';
       const params = {
@@ -3017,9 +3260,18 @@
 
     function gotoLangScreen() {
       if (!selectedOrg) return;
+      selectedLang = LANGUAGES.find(l => l.id === 'en'); // Default to English
+      restrictSwitcherToCurrentUser();
       document.getElementById('screen-org').classList.add('hidden');
-      document.getElementById('screen-lang').classList.remove('hidden');
-      document.getElementById('lang-org-label').textContent = `${selectedOrg.icon} ${translateOrgName(selectedOrg)} — ${t('select_lang_subtitle')}`;
+      const app = document.getElementById('app');
+      app.style.display = 'flex';
+      initPortal();
+      if (currentUser === 'admin') {
+        goto('users');
+      } else {
+        goto('dashboard');
+      }
+      toast(`${selectedOrg.icon} ${translateOrgName(selectedOrg)} — ${selectedLang.flag} ${selectedLang.name}`, 'success');
     }
 
     function selectLang(id) {
@@ -3083,6 +3335,7 @@
       buildFileGrid();
       buildDashboard();
       buildApprovals();
+      buildAccessMatrix();
     }
 
     // ═══════════════════════════════════════════
@@ -3110,13 +3363,16 @@
       document.getElementById('login-password').placeholder = t('login_password');
       document.getElementById('login-btn').textContent = t('login_button');
       document.getElementById('org-subtitle').textContent = t('select_org_subtitle');
-      document.getElementById('org-next-btn').textContent = t('continue_to_language');
+      document.getElementById('org-next-btn').textContent = t('enter_portal');
       document.getElementById('lang-org-label').textContent = t('select_lang_subtitle');
       document.getElementById('back-btn').textContent = t('back');
       document.getElementById('lang-path-label').textContent = t('selection_flow_path');
       document.getElementById('lang-next-btn').textContent = t('enter_portal');
       const orgPathLabel = document.getElementById('org-path-label');
-      if (orgPathLabel) orgPathLabel.textContent = t('selection_flow_path');
+      if (orgPathLabel) {
+        orgPathLabel.textContent = t('selection_flow_path')
+          .replace(/ → (Language|भाषा|மொழி|ಭಾಷೆ|ಭಾષા)/, '');
+      }
       document.querySelectorAll('#login-user option').forEach(opt => {
         if (USERS_DATA[opt.value]) opt.textContent = translateUserLabel(USERS_DATA[opt.value].name);
       });
@@ -3352,6 +3608,30 @@
       const sb = document.getElementById('sb-' + page);
       if (sb) sb.classList.add('active');
       closeSwitcher(); closeAllDD();
+
+      if (page === 'upload') {
+        buildUploadFolderOptions();
+        // Sync folders in background
+        if (currentToken && selectedOrg) {
+          fetch(`${API_BASE}/api/folders?org_id=${selectedOrg.id}`, {
+            headers: { 'Authorization': `Bearer ${currentToken}` }
+          })
+            .then(res => {
+              if (res.ok) return res.json();
+            })
+            .then(fData => {
+              if (fData) {
+                ORG_FOLDERS[selectedOrg.id] = fData;
+                ORG_FOLDER_PATHS[selectedOrg.id] = getLeafPaths(fData);
+                buildFolderTree();
+                buildUploadFolderOptions();
+              }
+            })
+            .catch(e => console.error("Error syncing folders on upload page navigation:", e));
+        }
+      } else if (page === 'users') {
+        buildAccessMatrix();
+      }
     }
 
     // ═══════════════════════════════════════════
@@ -3381,7 +3661,7 @@
       return folders.map(f => {
         const currentPath = pathPrefix ? `${pathPrefix}/${f.name}` : f.name;
         const stats = getFolderStats(currentPath);
-        
+
         const complianceText = '';
         const countValue = stats.count;
         const isSelected = currentFolderFilter === currentPath;
@@ -3395,8 +3675,9 @@
           folderTooltip = `title="Double-click to rename"`;
           actionsHtml = `
             <span class="folder-actions" style="margin-left:auto; display:inline-flex; gap:6px; align-items:center;">
-              <span class="folder-action-btn" title="Add Subfolder" onclick="event.stopPropagation(); adminCreateFolder('${escapeForJsAttr(currentPath)}')" style="cursor:pointer;opacity:0.6;font-size:10px;padding:2px;">➕</span>
-            </span>
+              <span class="folder-action-btn" title="Add Subfolder" onclick="event.stopPropagation(); adminCreateFolder('${escapeForJsAttr(currentPath)}')" style="cursor:pointer;opacity:0.6;font-size:10px;padding:2px;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">➕</span>
+              <span class="folder-action-btn" title="Delete Folder" onclick="event.stopPropagation(); adminDeleteFolder('${escapeForJsAttr(currentPath)}', '${escapeForJsAttr(f.name)}')" style="cursor:pointer;opacity:0.6;font-size:10px;padding:2px;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">🗑️</span>
+            </span> 
           `;
         }
 
@@ -3433,7 +3714,7 @@
         currentFolderFilter = fullPath;
         toast((t('folder_label') || 'Folder') + ': ' + translateFolderPath(fullPath), 'info');
       }
-      
+
       // Update highlights directly without rebuilding the whole folder tree DOM
       document.querySelectorAll('.folder-file').forEach(el => el.classList.remove('active'));
       if (currentFolderFilter && element) {
@@ -3456,15 +3737,15 @@
           folders.push({ name: newFolderName });
           return true;
         }
-        
+
         const parts = targetPath.split('/');
         let currentLevel = folders;
-        
+
         for (let i = 0; i < parts.length; i++) {
           const part = parts[i];
           const found = currentLevel.find(f => f.name === part);
           if (!found) return false;
-          
+
           if (i === parts.length - 1) {
             if (!found.children) {
               found.children = [];
@@ -3500,6 +3781,7 @@
           ORG_FOLDER_PATHS[selectedOrg.id] = getLeafPaths(folderTree);
           buildFolderTree();
           buildUploadFolderOptions();
+          buildAccessMatrix();
           toast('Folder created successfully', 'success');
         } else {
           const data = await res.json();
@@ -3524,12 +3806,12 @@
         function findAndRename(folders, targetPath, newFolderName) {
           const parts = targetPath.split('/');
           let currentLevel = folders;
-          
+
           for (let i = 0; i < parts.length; i++) {
             const part = parts[i];
             const found = currentLevel.find(f => f.name === part);
             if (!found) return false;
-            
+
             if (i === parts.length - 1) {
               found.name = newFolderName;
               return true;
@@ -3581,6 +3863,69 @@
           toast('Error renaming folder', 'error');
         }
       }, 150);
+    }
+
+    async function adminDeleteFolder(folderPath, folderName) {
+      if (currentUser !== 'admin') return;
+      const confirmed = confirm(`Are you sure you want to delete folder "${folderName}" and all of its contents?\nThis will permanently delete all materials stored in this folder and its subfolders.`);
+      if (!confirmed) return;
+
+      let folderTree = JSON.parse(JSON.stringify(ORG_FOLDERS[selectedOrg.id] || []));
+
+      function removeFolderFromTree(folders, targetPath) {
+        const parts = targetPath.split('/');
+        let currentLevel = folders;
+
+        for (let i = 0; i < parts.length; i++) {
+          const part = parts[i];
+          const foundIdx = currentLevel.findIndex(f => f.name === part);
+          if (foundIdx === -1) return false;
+
+          if (i === parts.length - 1) {
+            currentLevel.splice(foundIdx, 1);
+            return true;
+          }
+          currentLevel = currentLevel[foundIdx].children || [];
+        }
+        return false;
+      }
+
+      const success = removeFolderFromTree(folderTree, folderPath);
+      if (!success) {
+        toast('Folder not found', 'error');
+        return;
+      }
+
+      if (currentFolderFilter === folderPath || currentFolderFilter?.startsWith(folderPath + '/')) {
+        currentFolderFilter = null;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/api/folders/delete`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${currentToken}`
+          },
+          body: JSON.stringify({
+            org_id: selectedOrg.id,
+            folder_path: folderPath,
+            folder_tree: folderTree
+          })
+        });
+        if (res.ok) {
+          ORG_FOLDERS[selectedOrg.id] = folderTree;
+          ORG_FOLDER_PATHS[selectedOrg.id] = getLeafPaths(folderTree);
+          await loadMaterialsAndRefresh();
+          toast('Folder and contents deleted successfully', 'success');
+        } else {
+          const data = await res.json();
+          toast(data.detail || 'Failed to delete folder', 'error');
+        }
+      } catch (e) {
+        console.error(e);
+        toast('Error deleting folder', 'error');
+      }
     }
 
     async function adminRenameMaterial(materialId, currentName) {
@@ -3651,7 +3996,7 @@
       if (filter === 'approved') mats = mats.filter(m => m.status === 'approved');
       else if (filter !== 'all') mats = mats.filter(m => m.type === filter);
       if (search) mats = mats.filter(m => translateMaterialName(m).toLowerCase().includes(search.toLowerCase()) || translateUserLabel(m.designer).toLowerCase().includes(search.toLowerCase()));
-      
+
       grid.innerHTML = mats.map(m => {
         const path = m.file_path || 'uploads/sample.pdf';
         const fileUrl = path.startsWith('http') ? path : `${API_BASE}/${path}`;
@@ -3706,7 +4051,7 @@
         const canAct = m.votes[currentUser] === 'pending';
         const path = m.file_path || 'uploads/sample.pdf';
         const fileUrl = path.startsWith('http') ? path : `${API_BASE}/${path}`;
-        
+
         return `<div class="approval-item ${m.status === 'pending' ? 'urgent' : ''}">
       <div class="ai-thumb" style="overflow:hidden;display:flex;align-items:center;justify-content:center">${getFileThumbnailHTML(m)}</div>
       <div class="approval-meta">
@@ -3749,11 +4094,11 @@
         document.getElementById('modal-title').textContent = translateMaterialName(m);
       }
       const canAct = m.votes[currentUser] === 'pending';
-      
+
       const path = m.file_path || 'uploads/sample.pdf';
       const fileUrl = path.startsWith('http') ? path : `${API_BASE}/${path}`;
       const ext = path.split('.').pop().toLowerCase();
-      
+
       let previewHTML = '';
       if (ext === 'pdf') {
         previewHTML = `
@@ -3763,7 +4108,21 @@
           </div>
         `;
       }
-      
+
+      let reuploadHTML = '';
+      if (m.status === 'revision') {
+        reuploadHTML = `
+          <div style="margin-top:16px; border: 1px dashed var(--orange); border-radius: var(--radius); padding: 12px; background: var(--bg3)">
+            <div style="font-weight:600; color:var(--orange); font-size:12px; margin-bottom:6px; display:flex; align-items:center; gap:6px;">
+              <span>⚠️</span> ${t('revision') || 'Needs Revision'}
+            </div>
+            <p style="font-size:11px; color:var(--text2); margin-bottom:8px;">A reviewer has requested revisions. Select and upload a revised document to update this material.</p>
+            <input type="file" id="reupload-file-input-${id}" style="display:none;" onchange="handleReupload(${id}, event)" />
+            <button class="btn btn-secondary btn-sm" onclick="document.getElementById('reupload-file-input-${id}').click()" style="padding:4px 8px; font-size:11px;">📎 Select Revised File</button>
+          </div>
+        `;
+      }
+
       document.getElementById('modal-body').innerHTML = `
     <div class="two-col" style="gap:14px;margin-bottom:18px">
       <div style="background:var(--bg3);border-radius:var(--radius);height:180px;display:flex;align-items:center;justify-content:center;font-size:56px;overflow:hidden">${getFileThumbnailHTML(m, "font-size:56px")}</div>
@@ -3823,6 +4182,7 @@
         ` : ''}
       </div>
     </div>
+    ${reuploadHTML}
     <div style="margin-top:16px">
       <div style="font-size:11px;color:var(--text3);margin-bottom:8px">${t('version_history')}</div>
       ${m.versions.map(v => `
@@ -3905,7 +4265,7 @@
       const input = document.getElementById(`sugg-input-${id}`);
       if (!input) return;
       const suggestions = input.value;
-      
+
       try {
         const res = await fetch(`${API_BASE}/api/materials/${id}/suggestions`, {
           method: 'POST',
@@ -3915,7 +4275,7 @@
           },
           body: JSON.stringify({ suggestions })
         });
-        
+
         if (res.ok) {
           toast('Suggestions updated successfully', 'success');
           const m = materials().find(x => x.id === id);
@@ -3934,10 +4294,46 @@
       }
     }
 
+    async function handleReupload(id, event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      toast('Uploading revised document and running AI checks...', 'info');
+
+      try {
+        const res = await fetch(`${API_BASE}/api/materials/${id}/reupload`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${currentToken}`
+          },
+          body: formData
+        });
+
+        if (res.ok) {
+          toast('Revised version uploaded successfully!', 'success');
+          closeModalDirect();
+          await loadMaterialsAndRefresh();
+          // Re-open file modal to show the updated version details
+          setTimeout(() => {
+            openFile(id);
+          }, 300);
+        } else {
+          const data = await res.json();
+          toast(data.detail || 'Failed to upload revised document', 'error');
+        }
+      } catch (e) {
+        console.error(e);
+        toast('Error uploading revised document', 'error');
+      }
+    }
+
     async function castVote(id, decision) {
       const m = materials().find(x => x.id === id);
       if (!m) return;
-      
+
       if (currentToken) {
         try {
           const res = await fetch(`${API_BASE}/api/materials/${id}/vote`, {
@@ -3948,12 +4344,12 @@
             },
             body: JSON.stringify({ decision })
           });
-          
+
           if (res.ok) {
             const data = await res.json();
             m.votes = data.votes;
             m.status = data.status;
-            
+
             if (m.status === 'approved') {
               toast(t('material_fully_approved', { material: translateMaterialName(m) }), 'success');
             } else if (m.status === 'revision') {
@@ -3961,7 +4357,7 @@
             } else {
               toast(decision === 'approved' ? t('approval_recorded') : t('revision_request_sent'), decision === 'approved' ? 'success' : 'info');
             }
-            
+
             buildApprovals('pending');
             buildDashboard();
             updateTopbar();
@@ -4062,7 +4458,7 @@
       document.getElementById('modal-title').textContent = "Edit User Profile";
       const roles = ['Admin', 'CEO', 'COO', 'Director'];
       const roleOptions = roles.map(r => `<option value="${r}" ${r === role ? 'selected' : ''}>${translateRole(r)}</option>`).join('');
-      
+
       document.getElementById('modal-body').innerHTML = `
         <div class="form-group">
           <label class="form-label">Full Name</label>
@@ -4075,24 +4471,24 @@
           </select>
         </div>
       `;
-      
+
       document.getElementById('modal-footer').innerHTML = `
         <button class="btn btn-secondary" onclick="closeModalDirect()">${t('close')}</button>
         <button class="btn btn-primary" onclick="submitEditUser('${userId}')">${t('save_changes')}</button>
       `;
-      
+
       document.getElementById('modal-overlay').classList.add('open');
     }
 
     async function submitEditUser(userId) {
       const name = document.getElementById('edit-user-name').value.trim();
       const role = document.getElementById('edit-user-role').value;
-      
+
       if (!name) {
         toast('Name cannot be empty', 'error');
         return;
       }
-      
+
       if (currentToken) {
         try {
           const res = await fetch(`${API_BASE}/api/admin/users/${userId}`, {
@@ -4103,7 +4499,7 @@
             },
             body: JSON.stringify({ name, role })
           });
-          
+
           if (res.ok) {
             toast('User profile updated successfully', 'success');
             closeModalDirect();
@@ -4136,7 +4532,7 @@
       if (!confirm(`Are you sure you want to delete user "${name}"? This action cannot be undone.`)) {
         return;
       }
-      
+
       if (currentToken) {
         try {
           const res = await fetch(`${API_BASE}/api/admin/users/${userId}`, {
@@ -4145,7 +4541,7 @@
               'Authorization': `Bearer ${currentToken}`
             }
           });
-          
+
           if (res.ok) {
             toast('User deleted successfully', 'success');
             fetchUsers();
@@ -4238,33 +4634,33 @@
       const file = e.target.files[0];
       if (!file) return;
       selectedUploadFile = file;
-      
+
       const z = document.getElementById('upload-zone');
       const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
       const ext = file.name.split('.').pop().toUpperCase();
-      
+
       z.innerHTML = `<div style="color:var(--green);font-size:32px;margin-bottom:8px">✅</div><p style="font-weight:600">${file.name} ${t('selected')}</p><p style="font-size:11px;color:var(--text3)">${sizeMB} MB — ${ext}</p>`;
-      z.style.borderColor = 'var(--green)'; 
+      z.style.borderColor = 'var(--green)';
       z.style.background = 'var(--green-dim)';
-      
+
       const nameInput = document.getElementById('upload-name');
       if (!nameInput.value.trim()) {
         const cleanName = file.name.split('.').slice(0, -1).join('.');
         nameInput.value = cleanName;
       }
-      
+
       toast(t('file_ready_submit'), 'info');
     }
 
     async function submitUpload() {
       const name = document.getElementById('upload-name').value.trim();
       if (!name) { toast(t('enter_material_name'), 'error'); return; }
-      
+
       if (!selectedUploadFile) {
         toast('Please select a file to upload', 'error');
         return;
       }
-      
+
       const type = document.getElementById('upload-type').value || 'flyer';
       const campaign = document.getElementById('upload-campaign').value.trim() || '—';
       const folderEl = document.getElementById('upload-folder');
@@ -4295,20 +4691,20 @@
           const result = await res.json();
           const uploadedMaterial = result.material;
           toast(t('precheck_complete'), 'success');
-          
+
           if (uploadedMaterial && uploadedMaterial.aiRemarks) {
             toast(`🤖 AI Remarks: ${uploadedMaterial.aiRemarks}`, 'info');
           }
-          
+
           setTimeout(() => {
             toast(t('sent_to_approvers', { name, org: translateOrgName(selectedOrg) }), 'success');
-            
+
             // Reset form fields
             document.getElementById('upload-name').value = '';
             document.getElementById('upload-campaign').value = '';
             document.getElementById('upload-notes').value = '';
             selectedUploadFile = null;
-            
+
             // Reset upload zone HTML
             const z = document.getElementById('upload-zone');
             z.innerHTML = `<div style="font-size:34px;margin-bottom:10px">📎</div>
@@ -4317,7 +4713,7 @@
             z.style.borderColor = 'var(--border)';
             z.style.background = 'none';
             document.getElementById('upload-file-input').value = '';
-            
+
             loadMaterialsAndRefresh().then(() => {
               goto('approvals');
             });
@@ -4339,7 +4735,7 @@
       await loadNotifications();
       document.getElementById('notif-dot').style.display = 'none';
       document.getElementById('modal-title').textContent = t('notifications_title', { org: translateOrgName(selectedOrg) });
-      
+
       // Mark all as read on backend
       if (currentToken && selectedOrg) {
         try {
