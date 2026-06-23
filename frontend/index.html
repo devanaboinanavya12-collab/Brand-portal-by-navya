@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone@7/babel.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <title>BrandPortal — Multi-Org Marketing Hub</title>
+
+  <link rel="stylesheet" href="/frontend/style.css">
+</head>
+
+<body>
+  <div id="react-root"></div>
+
+  <script>
+    const originalConsoleError = console.error;
+    console.error = function (...args) {
+      originalConsoleError.apply(console, args);
+      let tc = document.getElementById('toasts');
+      if (!tc) {
+        tc = document.getElementById('error-overlay');
+        if (!tc) {
+          tc = document.createElement('div');
+          tc.id = 'error-overlay';
+          tc.style.position = 'fixed';
+          tc.style.inset = '0';
+          tc.style.background = 'rgba(0,0,0,0.9)';
+          tc.style.color = '#ff5555';
+          tc.style.padding = '30px';
+          tc.style.zIndex = '999999';
+          tc.style.fontFamily = 'monospace';
+          tc.style.fontSize = '16px';
+          tc.style.whiteSpace = 'pre-wrap';
+          tc.style.overflow = 'auto';
+          document.body.appendChild(tc);
+        }
+      }
+      const errDiv = document.createElement('div');
+      errDiv.style.border = '1px solid #ff5555';
+      errDiv.style.padding = '15px';
+      errDiv.style.marginBottom = '15px';
+      errDiv.style.borderRadius = '5px';
+      errDiv.style.background = '#220000';
+      
+      const message = args.map(arg => {
+        if (arg instanceof Error) {
+          return `${arg.message}\n${arg.stack}`;
+        } else if (typeof arg === 'object') {
+          try { return JSON.stringify(arg); } catch(e) { return String(arg); }
+        } else {
+          return String(arg);
+        }
+      }).join(' ');
+      
+      errDiv.innerHTML = `<h3>Console Error Detected</h3>
+<pre style="margin-top: 10px; color: #ff8888; font-family: monospace; white-space: pre-wrap;">${message}</pre>`;
+      tc.appendChild(errDiv);
+    };
+
+    window.onerror = function (message, source, lineno, colno, error) {
+      console.error("Uncaught JS Error:", message, "at", source, ":", lineno, ":", colno, error);
+      return false;
+    };
+
+  </script>
+
+  <script>
+    window.GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
+  </script>
+  <script type="text/babel" src="/frontend/app.js"></script>
+</body>
+
+</html>

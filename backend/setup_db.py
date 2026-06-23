@@ -49,7 +49,8 @@ def main():
         {"name": "Admin", "desc": "System Administrator"},
         {"name": "CEO", "desc": "Chief Executive Officer"},
         {"name": "COO", "desc": "Chief Operating Officer"},
-        {"name": "Director", "desc": "Director"}
+        {"name": "Director", "desc": "Director"},
+        {"name": "User", "desc": "Standard User"}
     ]
     print("Seeding roles...")
     for role in roles:
@@ -65,10 +66,10 @@ def main():
 
     # Seed Default Users
     default_users = [
-        {"first_name": "Admin", "last_name": "User", "email": "admin@example.com", "role": "Admin", "password": "admin123"},
-        {"first_name": "CEO", "last_name": "User", "email": "ceo@example.com", "role": "CEO", "password": "ceopass"},
-        {"first_name": "COO", "last_name": "User", "email": "coo@example.com", "role": "COO", "password": "coopass"},
-        {"first_name": "Director", "last_name": "User", "email": "director@example.com", "role": "Director", "password": "director123"},
+        {"first_name": "Admin", "last_name": "", "email": "admin@example.com", "role": "Admin", "password": "admin123"},
+        {"first_name": "CEO", "last_name": "", "email": "ceo@example.com", "role": "CEO", "password": "ceopass"},
+        {"first_name": "COO", "last_name": "", "email": "coo@example.com", "role": "COO", "password": "coopass"},
+        {"first_name": "Director", "last_name": "", "email": "director@example.com", "role": "Director", "password": "director123"},
     ]
 
     print("Seeding default user accounts...")
@@ -123,6 +124,7 @@ def main():
             file_path VARCHAR(255),
             ai_remarks TEXT,
             ai_suggestions TEXT,
+            user_id INTEGER REFERENCES users(user_id) ON DELETE SET NULL,
             created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
         );
     """)
@@ -270,6 +272,10 @@ def main():
             "Beyond Organic": common_paths
         }
 
+        # Get Director user ID
+        cur.execute("SELECT user_id FROM users WHERE email = 'director@example.com';")
+        director_user_id = cur.fetchone()[0]
+
         # Seed default materials for all standard organisations
         for org in ["Bio Factor", "Ferty Base", "Aqua", "One Health Centre", "Water Links", "Beyond Organic"]:
             paths = org_folder_paths[org]
@@ -285,10 +291,10 @@ def main():
                         break
 
                 cur.execute("""
-                    INSERT INTO materials (name, type, emoji, designer, campaign, folder, status, ai_score, ai_insights, votes, versions, org_id, ai_remarks, ai_suggestions)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    INSERT INTO materials (name, type, emoji, designer, campaign, folder, status, ai_score, ai_insights, votes, versions, org_id, ai_remarks, ai_suggestions, user_id)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     RETURNING material_id;
-                """, (bm["name"], bm["type"], bm["emoji"], bm["designer"], bm["campaign"], assigned_folder, bm["status"], bm["ai_score"], bm["ai_insights"], bm["votes"], bm["versions"], org, bm["ai_remarks"], bm.get("ai_suggestions", "")))
+                """, (bm["name"], bm["type"], bm["emoji"], bm["designer"], bm["campaign"], assigned_folder, bm["status"], bm["ai_score"], bm["ai_insights"], bm["votes"], bm["versions"], org, bm["ai_remarks"], bm.get("ai_suggestions", ""), director_user_id))
                 mat_id = cur.fetchone()[0]
 
                 # Seed alerts in notifications

@@ -1,5 +1,5 @@
 #!/bin/bash
-cd "/Users/a9553370471/Desktop/CEREVYN-1"
+cd "/Users/a9553370471/Desktop/CEREVYN-1/backend"
 
 echo "=== Starting CEREVYN Brand Portal ==="
 
@@ -36,6 +36,6 @@ nohup /Library/Frameworks/Python.framework/Versions/3.12/bin/python3 run_tunnel.
 
 echo "=== Startup Complete ==="
 echo "Local server: http://localhost:5001"
-echo "Public URL:   https://cerevyn-brand-portal.loca.lt"
-echo "Logs saved in: server_daemon.log and tunnel_daemon.log"
+echo "Public URL:   https://cerevyn-portal.loca.lt"
+echo "Logs saved in: backend/server_daemon.log and backend/tunnel_daemon.log"
 

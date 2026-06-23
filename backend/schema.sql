@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS materials (
     file_path VARCHAR(255),
     ai_remarks TEXT,
     ai_suggestions TEXT,
+    user_id INTEGER REFERENCES users(user_id) ON DELETE SET NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 

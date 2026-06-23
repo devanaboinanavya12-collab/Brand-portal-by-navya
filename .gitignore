@@ -1,0 +1,36 @@
+# Environments
+.env
+.env.local
+.env.*.local
+**/backend/.env
+backend/.env
+
+# OS files
+.DS_Store
+Thumbs.db
+__MACOSX/
+
+# Logs
+*.log
+backend/*.log
+server_daemon.log
+tunnel_daemon.log
+**/backend/*.log
+
+# Certificates and keys
+*.pem
+backend/*.pem
+cert.pem
+key.pem
+
+# Uploads and temporary media
+uploads/
+backend/uploads/
+
+# Python cache
+__pycache__/
+backend/__pycache__/
+*.pyc
+
+# Node modules (if any)
+node_modules/

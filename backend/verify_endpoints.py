@@ -133,7 +133,7 @@ def test_flow():
     print("   Verified user was successfully deleted from PostgreSQL.")
 
     print("\n10. Verify material approval / voting persistence in PostgreSQL...")
-    status, materials_list = make_request("/api/materials?org_id=nexus", headers=headers_admin)
+    status, materials_list = make_request("/api/materials?org_id=Bio%20Factor", headers=headers_admin)
     assert status == 200, f"Failed to fetch materials: {materials_list}"
     assert len(materials_list) > 0, "No seeded materials found"
     
@@ -155,19 +155,19 @@ def test_flow():
 
     print("\n11. Testing dynamic notifications endpoints...")
     # Fetch notifications for Admin (should see notifications seeded)
-    status, notifications_list = make_request("/api/notifications?org_id=nexus", headers=headers_admin)
+    status, notifications_list = make_request("/api/notifications?org_id=Bio%20Factor", headers=headers_admin)
     assert status == 200, f"Failed to fetch notifications: {notifications_list}"
     print(f"    Admin notifications count: {len(notifications_list)}")
     if len(notifications_list) > 0:
         print(f"    Admin notification sample: {notifications_list[0]}")
     
     # Mark notifications as read
-    status, res = make_request("/api/notifications/read", method="POST", headers=headers_admin, body={"org_id": "nexus"})
+    status, res = make_request("/api/notifications/read", method="POST", headers=headers_admin, body={"org_id": "Bio Factor"})
     assert status == 200, f"Failed to mark notifications as read: {res}"
     print("    Successfully marked all notifications for Admin as read.")
     
     # Fetch notifications again and confirm they are marked as read
-    status, notifications_list_post = make_request("/api/notifications?org_id=nexus", headers=headers_admin)
+    status, notifications_list_post = make_request("/api/notifications?org_id=Bio%20Factor", headers=headers_admin)
     assert status == 200, f"Failed to fetch notifications after read: {notifications_list_post}"
     for n in notifications_list_post:
         assert n["isRead"] is True, f"Notification not marked as read: {n}"
@@ -186,7 +186,7 @@ def test_flow():
     print("    Successfully renamed material as Admin.")
 
     # Confirm renamed material persists in the DB
-    status, materials_list_rename = make_request("/api/materials?org_id=nexus", headers=headers_admin)
+    status, materials_list_rename = make_request("/api/materials?org_id=Bio%20Factor", headers=headers_admin)
     renamed_material = next((m for m in materials_list_rename if m["id"] == test_material_id), None)
     assert renamed_material is not None, "Material not found after rename"
     assert renamed_material["name"] == new_name, f"Expected name '{new_name}', got '{renamed_material['name']}'"

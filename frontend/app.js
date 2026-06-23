@@ -1,2097 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <title>BrandPortal — Multi-Org Marketing Hub</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0
-    }
-
-    :root {
-      --bg: #0f1117;
-      --bg2: #161b22;
-      --bg3: #1c2128;
-      --bg4: #21262d;
-      --border: #30363d;
-      --border2: #444c56;
-      --text: #e6edf3;
-      --text2: #8b949e;
-      --text3: #656d76;
-      --blue: #58a6ff;
-      --blue-dim: #1f6feb33;
-      --green: #3fb950;
-      --green-dim: #1a7f3733;
-      --orange: #d29922;
-      --orange-dim: #9e6a0333;
-      --red: #f85149;
-      --red-dim: #6e193633;
-      --purple: #a371f7;
-      --purple-dim: #7c3aed33;
-      --teal: #39d353;
-      --accent: #2ea043;
-      --radius: 8px;
-      --radius-lg: 12px;
-    }
-
-    body {
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      font-size: 14px;
-      line-height: 1.5;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column
-    }
-
-    /* ── SELECTION SCREENS ── */
-    .select-screen {
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
-      z-index: 500;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      transition: opacity .3s
-    }
-
-    .select-screen.hidden {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      display: none
-    }
-
-    .sel-logo {
-      font-size: 28px;
-      font-weight: 800;
-      letter-spacing: -1px;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 10px
-    }
-
-    .sel-dot {
-      width: 14px;
-      height: 14px;
-      background: var(--accent);
-      border-radius: 50%
-    }
-
-    .sel-subtitle {
-      color: var(--text2);
-      font-size: 14px;
-      margin-bottom: 40px;
-      text-align: center
-    }
-
-    .sel-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      width: 100%;
-      max-width: 720px
-    }
-
-    .sel-card {
-      background: var(--bg2);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 22px 18px;
-      cursor: pointer;
-      transition: all .18s;
-      text-align: center
-    }
-
-    .sel-card:hover {
-      border-color: var(--blue);
-      background: var(--bg3);
-      transform: translateY(-2px)
-    }
-
-    .sel-card.selected {
-      border-color: var(--accent);
-      background: var(--green-dim)
-    }
-
-    .sel-card-icon {
-      font-size: 32px;
-      margin-bottom: 10px
-    }
-
-    .sel-card-name {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 3px
-    }
-
-    .sel-card-sub {
-      font-size: 11px;
-      color: var(--text2)
-    }
-
-    .sel-btn {
-      margin-top: 28px;
-      padding: 10px 40px;
-      background: var(--accent);
-      border: none;
-      border-radius: var(--radius);
-      color: #fff;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background .15s;
-      display: flex;
-      align-items: center;
-      gap: 8px
-    }
-
-    .sel-btn:hover {
-      background: #238636
-    }
-
-    .sel-btn:disabled {
-      background: var(--bg3);
-      color: var(--text3);
-      cursor: not-allowed;
-      border: 1px solid var(--border)
-    }
-
-    .sel-step {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 32px;
-      align-items: center
-    }
-
-    .step-dot {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 700;
-      border: 1.5px solid var(--border)
-    }
-
-    .step-dot.done {
-      background: var(--green-dim);
-      border-color: var(--green);
-      color: var(--green)
-    }
-
-    .step-dot.active {
-      background: var(--blue-dim);
-      border-color: var(--blue);
-      color: var(--blue)
-    }
-
-    .step-dot.idle {
-      color: var(--text3)
-    }
-
-    .step-line {
-      width: 32px;
-      height: 1px;
-      background: var(--border)
-    }
-
-    .sel-back {
-      background: none;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 8px 18px;
-      color: var(--text2);
-      cursor: pointer;
-      font-size: 13px;
-      transition: all .15s
-    }
-
-    .sel-back:hover {
-      border-color: var(--border2);
-      color: var(--text)
-    }
-
-    .lang-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-      width: 100%;
-      max-width: 500px
-    }
-
-    /* ── TOPBAR ── */
-    .topbar {
-      background: var(--bg2);
-      border-bottom: 1px solid var(--border);
-      padding: 0 20px;
-      height: 52px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      position: sticky;
-      top: 0;
-      z-index: 100
-    }
-
-    .logo {
-      font-size: 16px;
-      font-weight: 700;
-      color: #fff;
-      letter-spacing: -0.5px;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      flex-shrink: 0
-    }
-
-    .logo-dot {
-      width: 9px;
-      height: 9px;
-      background: var(--accent);
-      border-radius: 50%
-    }
-
-    .org-pill {
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 4px 10px;
-      font-size: 12px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      transition: border-color .15s;
-      flex-shrink: 0
-    }
-
-    .org-pill:hover {
-      border-color: var(--border2)
-    }
-
-    .lang-pill {
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 4px 10px;
-      font-size: 12px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      cursor: pointer;
-      transition: border-color .15s;
-      flex-shrink: 0
-    }
-
-    .lang-pill:hover {
-      border-color: var(--border2)
-    }
-
-    .nav-sep {
-      flex: 1
-    }
-
-    .user-pill {
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 5px 12px 5px 6px;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      cursor: pointer;
-      transition: border-color .15s
-    }
-
-    .user-pill:hover {
-      border-color: var(--border2)
-    }
-
-    .avatar {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
-      font-weight: 700;
-      flex-shrink: 0
-    }
-
-    .av-admin {
-      background: #1f6feb33;
-      color: #58a6ff
-    }
-
-    .av-ceo {
-      background: #7c3aed33;
-      color: #a371f7
-    }
-
-    .av-coo {
-      background: #9e6a0333;
-      color: #d29922
-    }
-
-    .av-director {
-      background: #1a7f3733;
-      color: #3fb950
-    }
-
-    .badge {
-      font-size: 10px;
-      padding: 2px 7px;
-      border-radius: 10px;
-      font-weight: 600
-    }
-
-    .badge-admin {
-      background: #1f6feb33;
-      color: #58a6ff
-    }
-
-    .badge-ceo {
-      background: #7c3aed33;
-      color: #a371f7
-    }
-
-    .badge-coo {
-      background: #9e6a0333;
-      color: #d29922
-    }
-
-    .badge-director {
-      background: #1a7f3733;
-      color: #3fb950
-    }
-
-    .notif-btn {
-      position: relative;
-      background: none;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 5px 9px;
-      color: var(--text2);
-      cursor: pointer;
-      transition: all .15s;
-      font-size: 14px
-    }
-
-    .notif-btn:hover {
-      border-color: var(--border2);
-      color: var(--text)
-    }
-
-    .notif-dot {
-      position: absolute;
-      top: 3px;
-      right: 3px;
-      width: 6px;
-      height: 6px;
-      background: var(--red);
-      border-radius: 50%;
-      border: 1.5px solid var(--bg2)
-    }
-
-    /* ── LAYOUT ── */
-    .layout {
-      display: flex;
-      flex: 1;
-      min-height: 0
-    }
-
-    .sidebar {
-      width: 232px;
-      background: var(--bg2);
-      border-right: 1px solid var(--border);
-      padding: 14px 0;
-      flex-shrink: 0;
-      overflow-y: auto
-    }
-
-    .main {
-      flex: 1;
-      overflow-y: auto
-    }
-
-    /* ── SIDEBAR ── */
-    .sb-section {
-      padding: 0 10px 6px
-    }
-
-    .sb-label {
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--text3);
-      text-transform: uppercase;
-      letter-spacing: .8px;
-      padding: 4px 8px 7px;
-      margin-top: 6px
-    }
-
-    .sb-item {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      padding: 7px 9px;
-      border-radius: var(--radius);
-      cursor: pointer;
-      color: var(--text2);
-      transition: all .15s;
-      margin-bottom: 1px;
-      font-size: 13px
-    }
-
-    .sb-item:hover {
-      background: var(--bg3);
-      color: var(--text)
-    }
-
-    .sb-item.active {
-      background: var(--blue-dim);
-      color: var(--blue)
-    }
-
-    .sb-item svg {
-      width: 15px;
-      height: 15px;
-      flex-shrink: 0
-    }
-
-    .sb-count {
-      margin-left: auto;
-      font-size: 10px;
-      background: var(--red);
-      color: #fff;
-      border-radius: 10px;
-      padding: 1px 6px;
-      font-weight: 600
-    }
-
-    .folder-tree {
-      font-size: 12px
-    }
-
-    .folder {
-      margin-bottom: 2px
-    }
-
-    .folder-name {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      padding: 5px 9px;
-      border-radius: var(--radius);
-      cursor: pointer;
-      color: var(--text2);
-      transition: all .15s
-    }
-
-    .folder-name:hover {
-      background: var(--bg3);
-      color: var(--text)
-    }
-
-    .folder-children {
-      padding-left: 16px;
-      display: none
-    }
-
-    .folder-children.open {
-      display: block
-    }
-
-    .folder-file {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      padding: 4px 9px;
-      border-radius: var(--radius);
-      cursor: pointer;
-      color: var(--text2);
-      transition: background .15s;
-      font-size: 11px
-    }
-
-    .folder-file:hover {
-      background: var(--bg3);
-      color: var(--text)
-    }
-
-    .folder-file.active {
-      background: var(--border);
-      color: var(--text);
-      font-weight: bold
-    }
-
-    .folder-file .count {
-      margin-left: auto;
-      font-size: 10px;
-      color: var(--text3)
-    }
-
-    /* ── CONTENT ── */
-    .content {
-      padding: 22px
-    }
-
-    .page {
-      display: none
-    }
-
-    .page.active {
-      display: block
-    }
-
-    .ph {
-      margin-bottom: 20px
-    }
-
-    .ph h1 {
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 3px
-    }
-
-    .ph p {
-      color: var(--text2);
-      font-size: 13px
-    }
-
-    .ph-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 14px
-    }
-
-    /* ── BUTTONS ── */
-    .btn {
-      padding: 7px 14px;
-      border-radius: var(--radius);
-      border: 1px solid;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 500;
-      transition: all .15s;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px
-    }
-
-    .btn-primary {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff
-    }
-
-    .btn-primary:hover {
-      background: #238636;
-      border-color: #238636
-    }
-
-    .btn-secondary {
-      background: var(--bg3);
-      border-color: var(--border);
-      color: var(--text)
-    }
-
-    .btn-secondary:hover {
-      background: var(--bg4);
-      border-color: var(--border2)
-    }
-
-    .btn-danger {
-      background: var(--red-dim);
-      border-color: var(--red);
-      color: var(--red)
-    }
-
-    .btn-approve {
-      background: var(--green-dim);
-      border-color: var(--green);
-      color: var(--green)
-    }
-
-    .btn-sm {
-      padding: 4px 10px;
-      font-size: 12px
-    }
-
-    /* ── CARDS ── */
-    .card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 18px
-    }
-
-    .card-sm {
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 12px 14px
-    }
-
-    /* ── STATS ── */
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin-bottom: 22px
-    }
-
-    .stat {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px
-    }
-
-    .stat-n {
-      font-size: 26px;
-      font-weight: 700;
-      margin-bottom: 2px
-    }
-
-    .stat-l {
-      font-size: 12px;
-      color: var(--text2)
-    }
-
-    .stat-delta {
-      font-size: 11px;
-      margin-top: 3px
-    }
-
-    .delta-up {
-      color: var(--green)
-    }
-
-    .delta-pend {
-      color: var(--orange)
-    }
-
-    /* ── FILE GRID ── */
-    .file-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-      gap: 12px
-    }
-
-    .file-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      cursor: pointer;
-      transition: all .15s;
-      position: relative
-    }
-
-    .file-card:hover {
-      border-color: var(--border2);
-      transform: translateY(-1px)
-    }
-
-    .file-thumb {
-      height: 120px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 38px;
-      background: var(--bg3)
-    }
-
-    .file-thumb.flyer {
-      background: linear-gradient(135deg, #1a1f2e, #1f2b1a)
-    }
-
-    .file-thumb.brochure {
-      background: linear-gradient(135deg, #1e1a2e, #2a1a1e)
-    }
-
-    .file-thumb.leaflet {
-      background: linear-gradient(135deg, #1a2e1e, #1e2a2e)
-    }
-
-    .file-thumb.poster {
-      background: linear-gradient(135deg, #2e1a1a, #2e2a1a)
-    }
-
-    .file-thumb.banner {
-      background: linear-gradient(135deg, #1a2a2e, #1a1e2e)
-    }
-
-    .file-info {
-      padding: 10px
-    }
-
-    .file-name {
-      font-size: 12px;
-      font-weight: 600;
-      margin-bottom: 4px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis
-    }
-
-    .file-meta {
-      font-size: 11px;
-      color: var(--text2);
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap
-    }
-
-    .status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-      font-size: 10px;
-      padding: 2px 7px;
-      border-radius: 10px;
-      font-weight: 600;
-      margin-top: 5px
-    }
-
-    .s-pending {
-      background: var(--orange-dim);
-      color: var(--orange)
-    }
-
-    .s-approved {
-      background: var(--green-dim);
-      color: var(--green)
-    }
-
-    .s-revision {
-      background: var(--red-dim);
-      color: var(--red)
-    }
-
-    .s-draft {
-      background: var(--bg4);
-      color: var(--text2);
-      border: 1px solid var(--border)
-    }
-
-    .file-badge {
-      position: absolute;
-      top: 7px;
-      right: 7px
-    }
-
-    /* ── APPROVALS ── */
-    .approval-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px
-    }
-
-    .approval-item {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 16px;
-      display: grid;
-      grid-template-columns: 72px 1fr auto;
-      gap: 14px;
-      align-items: start
-    }
-
-    .approval-item.urgent {
-      border-left: 3px solid var(--orange)
-    }
-
-    .ai-thumb {
-      width: 72px;
-      height: 72px;
-      border-radius: var(--radius);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-      background: var(--bg3);
-      flex-shrink: 0
-    }
-
-    .approval-meta h3 {
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 3px
-    }
-
-    .approval-meta p {
-      font-size: 11px;
-      color: var(--text2);
-      margin-bottom: 7px
-    }
-
-    .approval-votes {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-bottom: 8px
-    }
-
-    .vote {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 10px;
-      padding: 2px 7px;
-      border-radius: 10px;
-      border: 1px solid
-    }
-
-    .vote-approved {
-      background: var(--green-dim);
-      border-color: var(--green);
-      color: var(--green)
-    }
-
-    .vote-pending {
-      background: var(--orange-dim);
-      border-color: var(--orange);
-      color: var(--orange)
-    }
-
-    .vote-revision {
-      background: var(--red-dim);
-      border-color: var(--red);
-      color: var(--red)
-    }
-
-    .approval-actions {
-      display: flex;
-      gap: 6px;
-      flex-direction: column;
-      align-items: flex-end
-    }
-
-    /* ── AI PANEL ── */
-    .ai-panel {
-      background: var(--bg3);
-      border: 1px solid var(--purple);
-      border-radius: var(--radius-lg);
-      padding: 16px;
-      margin-top: 10px
-    }
-
-    .ai-panel h4 {
-      color: var(--purple);
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 9px;
-      display: flex;
-      align-items: center;
-      gap: 6px
-    }
-
-    .ai-checks {
-      display: flex;
-      flex-direction: column;
-      gap: 5px
-    }
-
-    .ai-check {
-      display: flex;
-      align-items: flex-start;
-      gap: 7px;
-      font-size: 12px;
-      color: var(--text2)
-    }
-
-    .ai-score {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px solid var(--border)
-    }
-
-    .score-bar {
-      flex: 1;
-      height: 5px;
-      background: var(--bg4);
-      border-radius: 3px;
-      overflow: hidden
-    }
-
-    .score-fill {
-      height: 100%;
-      border-radius: 3px
-    }
-
-    /* ── MODAL ── */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, .72);
-      z-index: 1000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px
-    }
-
-    .modal-overlay.open {
-      display: flex
-    }
-
-    .modal {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      width: 100%;
-      max-width: 680px;
-      max-height: 90vh;
-      overflow-y: auto
-    }
-
-    .modal-header {
-      padding: 18px 22px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      background: var(--bg2)
-    }
-
-    .modal-header h2 {
-      font-size: 15px;
-      font-weight: 600
-    }
-
-    .modal-body {
-      padding: 22px
-    }
-
-    .modal-footer {
-      padding: 14px 22px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      gap: 8px;
-      justify-content: flex-end;
-      position: sticky;
-      bottom: 0;
-      background: var(--bg2)
-    }
-
-    .close-btn {
-      background: none;
-      border: none;
-      color: var(--text2);
-      cursor: pointer;
-      font-size: 20px;
-      line-height: 1;
-      padding: 2px
-    }
-
-    .close-btn:hover {
-      color: var(--text)
-    }
-
-    /* ── FORM ── */
-    .form-group {
-      margin-bottom: 14px
-    }
-
-    .form-label {
-      display: block;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text2);
-      margin-bottom: 5px
-    }
-
-    .form-control {
-      width: 100%;
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 7px 11px;
-      color: var(--text);
-      font-size: 13px;
-      transition: border-color .15s
-    }
-
-    .form-control:focus {
-      outline: none;
-      border-color: var(--blue)
-    }
-
-    .form-control:-webkit-autofill,
-    .form-control:-webkit-autofill:hover,
-    .form-control:-webkit-autofill:focus,
-    .form-control:-webkit-autofill:active {
-      -webkit-box-shadow: 0 0 0 1000px var(--bg3) inset !important;
-      -webkit-text-fill-color: var(--text) !important;
-    }
-
-    select.form-control option {
-      background: var(--bg2)
-    }
-
-    textarea.form-control {
-      resize: vertical;
-      min-height: 72px
-    }
-
-    .upload-zone {
-      border: 2px dashed var(--border);
-      border-radius: var(--radius-lg);
-      padding: 36px;
-      text-align: center;
-      cursor: pointer;
-      transition: all .15s;
-      color: var(--text2)
-    }
-
-    .upload-zone:hover {
-      border-color: var(--blue);
-      color: var(--text);
-      background: var(--blue-dim)
-    }
-
-    /* ── PEOPLE ── */
-    .people-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-      gap: 12px
-    }
-
-    .person-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 18px;
-      text-align: center;
-      transition: border-color .15s
-    }
-
-    .person-card:hover {
-      border-color: var(--border2)
-    }
-
-    .person-av {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      margin: 0 auto 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 17px;
-      font-weight: 700
-    }
-
-    .person-name {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 3px
-    }
-
-    .person-role {
-      font-size: 12px;
-      color: var(--text2);
-      margin-bottom: 10px
-    }
-
-    .person-perms {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 3px;
-      justify-content: center
-    }
-
-    .perm-tag {
-      font-size: 10px;
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 2px 7px;
-      color: var(--text3)
-    }
-
-    /* ── TABS ── */
-    .tabs {
-      display: flex;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 18px
-    }
-
-    .tab {
-      padding: 9px 16px;
-      font-size: 13px;
-      cursor: pointer;
-      color: var(--text2);
-      border-bottom: 2px solid transparent;
-      transition: all .15s;
-      margin-bottom: -1px
-    }
-
-    .tab:hover {
-      color: var(--text)
-    }
-
-    .tab.active {
-      color: var(--blue);
-      border-bottom-color: var(--blue)
-    }
-
-    /* ── SEARCH ── */
-    .search-bar {
-      position: relative;
-      margin-bottom: 16px
-    }
-
-    .search-bar input {
-      width: 100%;
-      padding: 8px 34px 8px 12px;
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      color: var(--text);
-      font-size: 13px
-    }
-
-    .search-bar input:focus {
-      outline: none;
-      border-color: var(--blue)
-    }
-
-    .search-bar svg {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text3);
-      pointer-events: none
-    }
-
-    .filter-row {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
-      flex-wrap: wrap
-    }
-
-    .filter-chip {
-      padding: 4px 12px;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      background: var(--bg3);
-      color: var(--text2);
-      cursor: pointer;
-      font-size: 12px;
-      transition: all .15s
-    }
-
-    .filter-chip:hover {
-      border-color: var(--border2);
-      color: var(--text)
-    }
-
-    .filter-chip.active {
-      background: var(--blue-dim);
-      border-color: var(--blue);
-      color: var(--blue)
-    }
-
-    /* ── ACTIVITY ── */
-    .activity-list {
-      display: flex;
-      flex-direction: column
-    }
-
-    .activity-item {
-      display: flex;
-      gap: 10px;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border)
-    }
-
-    .activity-item:last-child {
-      border-bottom: none
-    }
-
-    .activity-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      margin-top: 5px
-    }
-
-    .activity-text {
-      font-size: 13px;
-      flex: 1
-    }
-
-    .activity-time {
-      font-size: 11px;
-      color: var(--text3);
-      flex-shrink: 0;
-      margin-top: 2px
-    }
-
-    /* ── COMMENT ── */
-    .comment {
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 11px;
-      margin-bottom: 8px
-    }
-
-    .comment-header {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      margin-bottom: 5px;
-      font-size: 11px;
-      color: var(--text2)
-    }
-
-    .comment-text {
-      font-size: 13px;
-      line-height: 1.5
-    }
-
-    .version-row {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      padding: 9px;
-      background: var(--bg3);
-      border-radius: var(--radius);
-      margin-bottom: 7px
-    }
-
-    .version-thumb {
-      width: 44px;
-      height: 44px;
-      border-radius: 6px;
-      background: var(--bg4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      flex-shrink: 0
-    }
-
-    .version-info {
-      flex: 1;
-      font-size: 12px
-    }
-
-    .version-info strong {
-      font-size: 13px;
-      display: block;
-      margin-bottom: 1px
-    }
-
-    /* ── SWITCHERS ── */
-    .user-switcher {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 10px;
-      z-index: 300;
-      min-width: 200px;
-      display: none;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, .5)
-    }
-
-    .user-switcher.open {
-      display: block
-    }
-
-    .us-title {
-      font-size: 10px;
-      color: var(--text3);
-      text-transform: uppercase;
-      letter-spacing: .6px;
-      padding: 2px 6px 7px;
-      font-weight: 600
-    }
-
-    .us-item {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      padding: 7px;
-      border-radius: var(--radius);
-      cursor: pointer;
-      transition: background .15s
-    }
-
-    .us-item:hover {
-      background: var(--bg3)
-    }
-
-    .us-item.current {
-      background: var(--blue-dim)
-    }
-
-    /* ── ORG/LANG DROPDOWNS IN TOPBAR ── */
-    .topbar-dropdown {
-      position: absolute;
-      top: 56px;
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      min-width: 280px;
-      z-index: 150;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, .5);
-      display: none
-    }
-
-    .topbar-dropdown.open {
-      display: block
-    }
-
-    .topbar-dd-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
-      cursor: pointer;
-      transition: background .15s;
-      font-size: 13px
-    }
-
-    .topbar-dd-item:hover {
-      background: var(--bg3)
-    }
-
-    .topbar-dd-item.selected-item {
-      background: var(--green-dim);
-      color: var(--green)
-    }
-
-    .topbar-dd-divider {
-      height: 1px;
-      background: var(--border);
-      margin: 4px 0
-    }
-
-    /* ── TOAST ── */
-    .toast-container {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 600;
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-      pointer-events: none
-    }
-
-    .toast {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 10px 14px;
-      font-size: 13px;
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      pointer-events: auto;
-      animation: slide-in .2s ease;
-      max-width: 300px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, .5)
-    }
-
-    .toast.success {
-      border-left: 3px solid var(--green)
-    }
-
-    .toast.error {
-      border-left: 3px solid var(--red)
-    }
-
-    .toast.info {
-      border-left: 3px solid var(--blue)
-    }
-
-    @keyframes slide-in {
-      from {
-        transform: translateX(40px);
-        opacity: 0
-      }
-
-      to {
-        transform: none;
-        opacity: 1
-      }
-    }
-
-    .two-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px
-    }
-
-    ::-webkit-scrollbar {
-      width: 5px
-    }
-
-    ::-webkit-scrollbar-track {
-      background: transparent
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: var(--bg4);
-      border-radius: 3px
-    }
-  </style>
-</head>
-
-<body>
-
-  <!-- ══════════════════════════════════════
-     LOGIN SCREEN
-══════════════════════════════════════ -->
-  <div class="select-screen" id="screen-login">
-    <div class="sel-logo">
-      <div class="sel-dot"></div>BrandPortal
-    </div>
-    <p class="sel-subtitle" id="login-subtitle">Sign in to continue to your portal</p>
-    <div class="card" style="max-width:360px;width:100%;margin-bottom:14px">
-      <div class="form-group">
-        <label class="form-label" for="login-email" id="login-label-user">Email Address</label>
-        <input class="form-control" id="login-email" type="email" placeholder="e.g. admin@example.com"
-          onkeypress="if(event.key==='Enter')loginUser()" />
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="login-password" id="login-label-password">Password</label>
-        <input class="form-control" id="login-password" type="password" placeholder="Enter your password"
-          onkeypress="if(event.key==='Enter')loginUser()" />
-      </div>
-      <div id="login-error" style="color:var(--red);font-size:12px;min-height:18px;margin-top:6px"></div>
-    </div>
-    <button type="button" class="sel-btn" id="login-btn" onclick="loginUser()">Sign in</button>
-
-    <div
-      style="text-align:center;margin:18px 0 10px;font-size:12px;color:var(--text3);display:flex;align-items:center;gap:10px;width:100%;max-width:360px">
-      <div style="flex:1;height:1px;background:var(--border)"></div>
-      <span>or</span>
-      <div style="flex:1;height:1px;background:var(--border)"></div>
-    </div>
-
-    <div style="display:flex;justify-content:center;margin-bottom:10px;width:100%;max-width:360px">
-      <!-- Google Sign In Button Container -->
-      <div id="google-signin-container" style="width: 100%;">
-        <div id="g_id_onload" data-client_id="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com" data-context="signin"
-          data-ux_mode="popup" data-callback="handleGoogleLogin" data-auto_prompt="false">
-        </div>
-        <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline"
-          data-text="signin_with" data-size="large" data-logo_alignment="left"
-          style="width: 100%; display: flex; justify-content: center;">
-        </div>
-      </div>
-
-      <!-- Fallback Mock Google Button for Testing -->
-      <div id="mock-google-signin" style="display: none; width: 100%; justify-content: center;">
-        <button onclick="handleMockGoogleClick()" type="button" class="btn btn-secondary"
-          style="width: 100%; height: 40px; justify-content: center; gap: 10px; font-weight: 500; border: 1.5px solid var(--border); border-radius: var(--radius); cursor: pointer;">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
-            style="width: 18px; height: 18px;" />
-          Sign in with Google (OAuth Sandbox)
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════
-     SCREEN 1 — SELECT ORGANISATION
-══════════════════════════════════════ -->
-  <div class="select-screen hidden" id="screen-org">
-    <div class="sel-logo">
-      <div class="sel-dot"></div>BrandPortal
-    </div>
-    <p class="sel-subtitle" id="org-subtitle">Select your organisation to continue</p>
-    <div class="sel-step">
-      <div class="step-dot active">1</div>
-      <div class="step-line"></div>
-      <div class="step-dot idle">2</div>
-      <span id="org-path-label" style="font-size:12px;color:var(--text2);margin-left:8px">Organisation → Portal</span>
-    </div>
-    <div class="sel-grid" id="org-grid"></div>
-    <button class="sel-btn" id="org-next-btn" disabled onclick="gotoLangScreen()">
-      Enter Portal &nbsp;→
-    </button>
-  </div>
-
-  <!-- ══════════════════════════════════════
-     SCREEN 2 — SELECT LANGUAGE
-══════════════════════════════════════ -->
-  <div class="select-screen hidden" id="screen-lang">
-    <div class="sel-logo">
-      <div class="sel-dot"></div>BrandPortal
-    </div>
-    <p class="sel-subtitle" id="lang-org-label">Select working language</p>
-    <div class="sel-step">
-      <div class="step-dot done">✓</div>
-      <div class="step-line"></div>
-      <div class="step-dot active">2</div>
-      <div class="step-line"></div>
-      <div class="step-dot idle">3</div>
-      <span id="lang-path-label" style="font-size:12px;color:var(--text2);margin-left:8px">Organisation → Language →
-        Portal</span>
-    </div>
-    <div class="lang-grid" id="lang-grid"></div>
-    <div style="display:flex;gap:12px;margin-top:28px;width:100%;max-width:480px">
-      <button class="sel-back" id="back-btn" onclick="backToOrg()"
-        style="flex: 1; padding: 10px 0; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; height: 40px; box-sizing: border-box;">←
-        Back</button>
-      <button class="sel-btn" id="lang-next-btn" disabled onclick="enterPortal()"
-        style="flex: 1; margin-top: 0; padding: 10px 0; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; height: 40px; box-sizing: border-box;">
-        Enter Portal &nbsp;→
-      </button>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════
-     SCREEN 3 — REGISTER (standalone admin signup)
-══════════════════════════════════════ -->
-  <div class="select-screen hidden" id="screen-register">
-    <div class="sel-logo">
-      <div class="sel-dot"></div>BrandPortal
-    </div>
-    <p class="sel-subtitle" style="margin-bottom: 25px;">Create New User Account (Admin Only)</p>
-    <div class="card" style="max-width:400px;width:100%;margin-bottom:14px">
-      <form id="standalone-register-form" onsubmit="handleStandaloneCreateUser(event)">
-        <div class="form-group">
-          <label class="form-label">Full Name</label>
-          <input type="text" id="stand-reg-name" class="form-control" placeholder="e.g. John Doe" required />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Email Address</label>
-          <input type="email" id="stand-reg-email" class="form-control" placeholder="e.g. john@example.com" required />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Role</label>
-          <select id="stand-reg-role" class="form-control" required>
-            <!-- populated dynamically -->
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Password (Optional for Google login)</label>
-          <input type="password" id="stand-reg-password" class="form-control" placeholder="Optional" />
-        </div>
-        <button type="submit" class="sel-btn" style="width:100%;margin-top:18px">Register User</button>
-      </form>
-      <div id="stand-reg-error" style="color:var(--red); font-size:12px; margin-top:8px; min-height:18px;"></div>
-    </div>
-    <button class="sel-back" onclick="goToPortalFromRegister()">← Back to Portal</button>
-  </div>
-
-  <!-- ══════════════════════════════════════
-     MAIN APP (hidden until org+lang chosen)
-══════════════════════════════════════ -->
-  <div id="app" style="display:none;flex-direction:column;flex:1">
-
-    <!-- TOPBAR -->
-    <div class="topbar">
-      <div class="logo">
-        <div class="logo-dot"></div>BrandPortal
-      </div>
-      <div style="position:relative">
-        <div class="org-pill" id="topbar-org-pill" onclick="toggleOrgDD()">
-          <span id="topbar-org-icon"></span>
-          <span id="topbar-org-name" style="font-weight:600"></span>
-          <span style="color:var(--text3);font-size:10px">▼</span>
-        </div>
-        <div class="topbar-dropdown" id="org-dd"></div>
-      </div>
-      <div style="position:relative">
-        <div class="lang-pill" id="topbar-lang-pill" onclick="toggleLangDD()">
-          <span id="topbar-lang-flag"></span>
-          <span id="topbar-lang-name" style="font-weight:500"></span>
-          <span style="color:var(--text3);font-size:10px">▼</span>
-        </div>
-        <div class="topbar-dropdown" id="lang-dd" style="min-width:200px"></div>
-      </div>
-      <div class="nav-sep"></div>
-      <button class="notif-btn" onclick="showNotifications()">🔔<span class="notif-dot" id="notif-dot"></span></button>
-      <div class="user-pill" onclick="toggleSwitcher()">
-        <div class="avatar" id="top-avatar">A</div>
-        <span id="top-name" style="font-size:12px;font-weight:500">Admin</span>
-        <span class="badge badge-admin" id="top-badge">ADMIN</span>
-      </div>
-    </div>
-
-    <!-- LAYOUT -->
-    <div class="layout">
-      <div class="sidebar">
-        <div class="sb-section">
-          <div class="sb-label" id="sb-org-label">Organisation</div>
-          <div class="sb-item active" onclick="goto('dashboard')" id="sb-dashboard">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="3" y="3" width="7" height="7" />
-              <rect x="14" y="3" width="7" height="7" />
-              <rect x="3" y="14" width="7" height="7" />
-              <rect x="14" y="14" width="7" height="7" />
-            </svg>
-            Dashboard
-          </div>
-          <div class="sb-item" onclick="goto('materials')" id="sb-materials">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-              <polyline points="14 2 14 8 20 8" />
-            </svg>
-            Materials Library
-          </div>
-          <div class="sb-item" onclick="goto('approvals')" id="sb-approvals">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-              <polyline points="22 4 12 14.01 9 11.01" />
-            </svg>
-            Approvals
-            <span class="sb-count" id="pending-count">3</span>
-          </div>
-          <div class="sb-item" onclick="goto('upload')" id="sb-upload">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="16 16 12 12 8 16" />
-              <line x1="12" y1="12" x2="12" y2="21" />
-              <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" />
-            </svg>
-            Upload Material
-          </div>
-        </div>
-        <div class="sb-section">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-            <div class="sb-label" id="sb-folder-label" style="margin:0;">Folders</div>
-            <span id="sb-create-root-btn" title="Create Root Folder" onclick="adminCreateFolder('')"
-              style="cursor:pointer;opacity:0.6;font-size:12px;margin-right:12px;display:none;">📁➕</span>
-          </div>
-          <div class="folder-tree" id="folder-tree"></div>
-        </div>
-        <div class="sb-section" id="sb-admin-section">
-          <div class="sb-label" id="sb-admin-label">Admin</div>
-          <div class="sb-item" onclick="goto('users')" id="sb-users">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-              <circle cx="9" cy="7" r="4" />
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-            </svg>
-            User Access
-          </div>
-          <div class="sb-item" onclick="goto('brand')" id="sb-brand">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10" />
-              <path
-                d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32" />
-            </svg>
-            Brand Guidelines
-          </div>
-          <div class="sb-item" onclick="goto('activity')" id="sb-activity">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-            </svg>
-            Activity Log
-          </div>
-        </div>
-      </div>
-
-      <div class="main">
-        <div class="content">
-
-          <!-- DASHBOARD -->
-          <div class="page active" id="page-dashboard">
-            <div class="ph">
-              <h1 id="dash-title">Dashboard</h1>
-              <p id="dash-subtitle">Loading…</p>
-            </div>
-            <div class="stats">
-              <div class="stat">
-                <div class="stat-n" style="color:var(--blue)">24</div>
-                <div class="stat-l" id="stat-total-label">Total materials</div>
-                <div class="stat-delta delta-up" id="stat-total-delta">↑ 3 this week</div>
-              </div>
-              <div class="stat">
-                <div class="stat-n" id="stat-pending" style="color:var(--orange)">3</div>
-                <div class="stat-l" id="stat-pending-label">Pending approval</div>
-                <div class="stat-delta delta-pend" id="stat-pending-delta">Needs review</div>
-              </div>
-              <div class="stat">
-                <div class="stat-n" style="color:var(--green)">18</div>
-                <div class="stat-l" id="stat-approved-label">Approved</div>
-                <div class="stat-delta delta-up" id="stat-approved-delta">↑ 75% rate</div>
-              </div>
-              <div class="stat">
-                <div class="stat-n" style="color:var(--red)">3</div>
-                <div class="stat-l" id="stat-revision-label">Need revision</div>
-                <div class="stat-delta" style="color:var(--text3)" id="stat-revision-delta">Flagged</div>
-              </div>
-            </div>
-            <div class="two-col" style="gap:18px">
-              <div>
-                <h2 id="recent-title" style="font-size:14px;font-weight:600;margin-bottom:12px">Recent Materials</h2>
-                <div id="recent-files" style="display:flex;flex-direction:column;gap:7px"></div>
-              </div>
-              <div>
-                <h2 id="dashboard-activity-title" style="font-size:14px;font-weight:600;margin-bottom:12px">Activity
-                </h2>
-                <div class="activity-list" id="activity-feed"></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- MATERIALS -->
-          <div class="page" id="page-materials">
-            <div class="ph">
-              <h1 id="materials-title">Materials Library</h1>
-              <p id="materials-org-label"></p>
-              <div class="ph-actions">
-                <button class="btn btn-primary" id="materials-upload-btn" onclick="goto('upload')">+ Upload New</button>
-              </div>
-            </div>
-            <div class="search-bar">
-              <input id="materials-search" type="text" placeholder="Search by name, designer, type…"
-                oninput="filterMaterials(this.value)">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
-            </div>
-            <div class="filter-row" id="material-filters">
-              <div class="filter-chip active" id="filter-all" onclick="setFilter(this,'all')">All Types</div>
-              <div class="filter-chip" id="filter-flyer" onclick="setFilter(this,'flyer')">🖼 Flyers</div>
-              <div class="filter-chip" id="filter-brochure" onclick="setFilter(this,'brochure')">📄 Brochures</div>
-              <div class="filter-chip" id="filter-leaflet" onclick="setFilter(this,'leaflet')">📃 Leaflets</div>
-              <div class="filter-chip" id="filter-poster" onclick="setFilter(this,'poster')">🪧 Posters</div>
-              <div class="filter-chip" id="filter-banner" onclick="setFilter(this,'banner')">🏳 Banners</div>
-              <div class="filter-chip" id="filter-approved" onclick="setFilter(this,'approved')"
-                style="margin-left:auto">✅ Approved</div>
-            </div>
-            <div class="file-grid" id="file-grid"></div>
-          </div>
-
-          <!-- APPROVALS -->
-          <div class="page" id="page-approvals">
-            <div class="ph">
-              <h1 id="approvals-title">Approval Queue</h1>
-              <p id="approval-org-label"></p>
-            </div>
-            <div class="tabs">
-              <div class="tab active" id="approval-tab-pending" onclick="setApprovalTab(this,'pending')">Pending</div>
-              <div class="tab" id="approval-tab-revision" onclick="setApprovalTab(this,'revision')">Needs Revision</div>
-              <div class="tab" id="approval-tab-approved" onclick="setApprovalTab(this,'approved')">Approved</div>
-            </div>
-            <div class="approval-list" id="approval-list"></div>
-          </div>
-
-          <!-- UPLOAD -->
-          <div class="page" id="page-upload">
-            <div class="ph">
-              <h1 id="upload-title">Upload New Material</h1>
-              <p id="upload-desc">Submit a design for review — AI pre-check runs automatically</p>
-            </div>
-            <div class="two-col">
-              <div class="card">
-                <div class="upload-zone" onclick="triggerFileInput()" id="upload-zone">
-                  <div style="font-size:34px;margin-bottom:10px">📎</div>
-                  <p id="upload-zone-title" style="font-size:14px;font-weight:600;margin-bottom:5px">Click to select a
-                    file</p>
-                  <p id="upload-zone-hint" style="font-size:11px;color:var(--text3)">PDF, PNG, JPG, AI, PSD — up to 50MB
-                  </p>
-                </div>
-                <input type="file" id="upload-file-input" style="display: none;" onchange="handleFileSelected(event)">
-                <div class="form-group" style="margin-top:14px">
-                  <label class="form-label" id="upload-label-name">Material Name</label>
-                  <input class="form-control" id="upload-name" type="text" placeholder="e.g. Summer Sale Flyer">
-                </div>
-                <div class="form-group">
-                  <label class="form-label" id="upload-label-type">Type</label>
-                  <select class="form-control" id="upload-type">
-                    <option value="flyer">Flyer</option>
-                    <option value="brochure">Brochure</option>
-                    <option value="leaflet">Leaflet</option>
-                    <option value="poster">Poster</option>
-                    <option value="banner">Banner</option>
-                    <option value="social">Social Media Graphic</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" id="upload-label-campaign">Campaign / Project</label>
-                  <input class="form-control" id="upload-campaign" type="text" placeholder="e.g. Q3 Product Launch">
-                </div>
-                <div class="form-group">
-                  <label class="form-label" id="upload-label-folder">Folder Location</label>
-                  <select class="form-control" id="upload-folder"></select>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" id="upload-label-notes">Designer Notes</label>
-                  <textarea class="form-control" id="upload-notes"
-                    placeholder="Key design decisions, palette choices, target audience…"></textarea>
-                </div>
-                <button class="btn btn-primary" id="upload-submit-btn" style="width:100%"
-                  onclick="submitUpload()">Submit for Approval</button>
-              </div>
-              <div>
-                <div class="card" style="margin-bottom:14px">
-                  <h3 id="upload-precheck-title" style="font-size:13px;font-weight:600;margin-bottom:10px">🤖 AI
-                    Pre-check</h3>
-                  <p id="upload-precheck-desc" style="font-size:12px;color:var(--text2);margin-bottom:12px">Your design
-                    will be automatically checked against brand guidelines before reaching approvers.</p>
-                  <div style="display:flex;flex-direction:column;gap:7px;font-size:12px;color:var(--text2)">
-                    <div id="upload-precheck-item1">✅ Color palette compliance</div>
-                    <div id="upload-precheck-item2">✅ Logo placement &amp; safe zone</div>
-                    <div id="upload-precheck-item3">✅ Typography consistency</div>
-                    <div id="upload-precheck-item4">✅ Comparison with previous approved designs</div>
-                    <div id="upload-precheck-item5">✅ Brand guidelines score (0–100)</div>
-                  </div>
-                </div>
-                <div class="card">
-                  <h3 id="upload-workflow-title" style="font-size:13px;font-weight:600;margin-bottom:10px">📋 Workflow
-                  </h3>
-                  <div style="display:flex;flex-direction:column;gap:9px;font-size:12px">
-                    <div style="display:flex;gap:9px;align-items:center">
-                      <div
-                        style="width:22px;height:22px;border-radius:50%;background:var(--blue-dim);color:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;flex-shrink:0">
-                        1</div>
-                      <span id="upload-workflow-step1" style="color:var(--text2)">Upload + AI pre-check</span>
-                    </div>
-                    <div style="display:flex;gap:9px;align-items:center">
-                      <div
-                        style="width:22px;height:22px;border-radius:50%;background:var(--blue-dim);color:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;flex-shrink:0">
-                        2</div>
-                      <span id="upload-workflow-step2" style="color:var(--text2)">CEO, COO &amp; Director
-                        notified</span>
-                    </div>
-                    <div style="display:flex;gap:9px;align-items:center">
-                      <div
-                        style="width:22px;height:22px;border-radius:50%;background:var(--blue-dim);color:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;flex-shrink:0">
-                        3</div>
-                      <span id="upload-workflow-step3" style="color:var(--text2)">Each approver: Approve /
-                        Revision</span>
-                    </div>
-                    <div style="display:flex;gap:9px;align-items:center">
-                      <div
-                        style="width:22px;height:22px;border-radius:50%;background:var(--blue-dim);color:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;flex-shrink:0">
-                        4</div>
-                      <span id="upload-workflow-step4" style="color:var(--text2)">All approve → Published to
-                        library</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- USERS -->
-          <div class="page" id="page-users">
-            <div class="ph">
-              <h1 id="users-title">User Access Control</h1>
-              <p id="users-org-label"></p>
-            </div>
-
-            <!-- Admin-Only user registration form -->
-            <div id="admin-create-user-section" class="card" style="margin-bottom: 22px; display: none;">
-              <h3
-                style="font-size: 14px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                👤 Create New User Account
-              </h3>
-              <form id="admin-create-user-form" onsubmit="handleCreateUser(event)"
-                style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px 20px; align-items: end;">
-                <div class="form-group" style="margin-bottom: 0;">
-                  <label class="form-label">Full Name</label>
-                  <input type="text" id="reg-name" class="form-control" placeholder="e.g. John Doe" required />
-                </div>
-                <div class="form-group" style="margin-bottom: 0;">
-                  <label class="form-label">Email Address</label>
-                  <input type="email" id="reg-email" class="form-control" placeholder="e.g. john@example.com"
-                    required />
-                </div>
-                <div class="form-group" style="margin-bottom: 0;">
-                  <label class="form-label">Role</label>
-                  <select id="reg-role" class="form-control" required>
-                    <!-- populated dynamically -->
-                  </select>
-                </div>
-                <div class="form-group" style="margin-bottom: 0;">
-                  <label class="form-label">Password (Optional for Google login)</label>
-                  <input type="password" id="reg-password" class="form-control" placeholder="Optional" />
-                </div>
-                <button type="submit" class="btn btn-primary"
-                  style="height: 38px; grid-column: 1 / -1; margin-top: 6px; justify-content: center; width: 180px; justify-self: center;">Create
-                  User</button>
-              </form>
-              <div id="reg-error" style="color:var(--red); font-size:12px; margin-top:8px;"></div>
-            </div>
-
-            <div class="people-grid" id="people-grid"></div>
-            <div style="margin-top:22px">
-              <h2 id="users-access-title" style="font-size:14px;font-weight:600;margin-bottom:12px">Folder Access Matrix
-              </h2>
-              <div class="card">
-                <table style="width:100%;font-size:12px;border-collapse:collapse">
-                  <thead>
-                    <tr style="color:var(--text2)">
-                      <th id="access-header-folder"
-                        style="text-align:left;padding:7px 9px;border-bottom:1px solid var(--border)">Folder</th>
-                      <th id="access-header-admin" style="padding:7px 9px;border-bottom:1px solid var(--border)">Admin
-                      </th>
-                      <th id="access-header-ceo" style="padding:7px 9px;border-bottom:1px solid var(--border)">CEO</th>
-                      <th id="access-header-coo" style="padding:7px 9px;border-bottom:1px solid var(--border)">COO</th>
-                      <th id="access-header-director" style="padding:7px 9px;border-bottom:1px solid var(--border)">
-                        Director</th>
-                    </tr>
-                  </thead>
-                  <tbody id="access-matrix"></tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-
-          <!-- BRAND GUIDELINES -->
-          <div class="page" id="page-brand">
-            <div class="ph">
-              <h1 id="brand-title">Brand Guidelines</h1>
-              <p id="brand-org-label"></p>
-            </div>
-            <div class="two-col">
-              <div>
-                <div class="card" style="margin-bottom:14px">
-                  <h3 id="brand-color-title" style="font-size:13px;font-weight:600;margin-bottom:12px">🎨 Color Palette
-                  </h3>
-                  <div style="display:flex;flex-direction:column;gap:9px" id="color-palette"></div>
-                </div>
-                <div class="card">
-                  <h3 id="brand-typography-title" style="font-size:13px;font-weight:600;margin-bottom:12px">🔤
-                    Typography</h3>
-                  <div style="display:flex;flex-direction:column;gap:9px;font-size:13px" id="brand-typography"></div>
-                </div>
-              </div>
-              <div>
-                <div class="card" style="margin-bottom:14px">
-                  <h3 id="brand-logo-title" style="font-size:13px;font-weight:600;margin-bottom:12px">📐 Logo Rules</h3>
-                  <div style="display:flex;flex-direction:column;gap:7px;font-size:12px;color:var(--text2)"
-                    id="brand-logo"></div>
-                </div>
-                <div class="card">
-                  <h3 id="brand-imagery-title" style="font-size:13px;font-weight:600;margin-bottom:12px">🖼 Imagery</h3>
-                  <div style="display:flex;flex-direction:column;gap:7px;font-size:12px;color:var(--text2)"
-                    id="brand-imagery">
-                    <div id="brand-imagery-item1">✅ High-quality licensed photography only</div>
-                    <div id="brand-imagery-item2">✅ Reflect brand values: modern, inclusive, professional</div>
-                    <div id="brand-imagery-item3">✅ Color-grade to align with brand palette</div>
-                    <div id="brand-imagery-item4">❌ Avoid clichéd stock imagery</div>
-                    <div id="brand-imagery-item5">❌ No watermarked or low-resolution images</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- ACTIVITY -->
-          <div class="page" id="page-activity">
-            <div class="ph">
-              <h1 id="activity-title">Activity Log</h1>
-              <p id="activity-org-label"></p>
-            </div>
-            <div class="card">
-              <div class="activity-list" id="full-activity"></div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  </div><!-- end #app -->
-
-  <!-- MODAL -->
-  <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
-    <div class="modal">
-      <div class="modal-header">
-        <h2 id="modal-title">Detail</h2>
-        <button class="close-btn" onclick="closeModalDirect()">×</button>
-      </div>
-      <div class="modal-body" id="modal-body"></div>
-      <div class="modal-footer" id="modal-footer"></div>
-    </div>
-  </div>
-
-  <!-- USER SWITCHER -->
-  <div class="user-switcher" id="user-switcher">
-    <div class="us-title">Switch User View</div>
-    <div class="us-item current" onclick="switchUser('admin')" id="us-admin">
-      <div class="avatar av-admin">AD</div>
-      <div>
-        <div style="font-size:12px;font-weight:500">Admin</div><span class="badge badge-admin">ADMIN</span>
-      </div>
-    </div>
-    <div class="us-item" onclick="switchUser('ceo')" id="us-ceo">
-      <div class="avatar av-ceo">CE</div>
-      <div>
-        <div style="font-size:12px;font-weight:500">CEO</div><span class="badge badge-ceo">CEO</span>
-      </div>
-    </div>
-    <div class="us-item" onclick="switchUser('coo')" id="us-coo">
-      <div class="avatar av-coo">CO</div>
-      <div>
-        <div style="font-size:12px;font-weight:500">COO</div><span class="badge badge-coo">COO</span>
-      </div>
-    </div>
-    <div class="us-item" onclick="switchUser('director')" id="us-director">
-      <div class="avatar av-director">DI</div>
-      <div>
-        <div style="font-size:12px;font-weight:500">Director</div><span class="badge badge-director">DIRECTOR</span>
-      </div>
-    </div>
-    <div class="us-item" onclick="logout()"
-      style="justify-content:center;font-weight:700;color:var(--orange);border-top:1px solid var(--border);margin-top:8px;padding-top:12px;">
-      Logout
-    </div>
-  </div>
-
-  <div class="toast-container" id="toasts"></div>
-
-  <script>
-    window.onerror = function (message, source, lineno, colno, error) {
-      const tc = document.getElementById('toasts');
-      if (tc) {
-        const t = document.createElement('div');
-        t.className = 'toast error';
-        t.innerHTML = `JS Error: ${message} (Line ${lineno})`;
-        tc.appendChild(t);
-        setTimeout(() => {
-          t.style.opacity = '0';
-          t.style.transform = 'translateX(40px)';
-          t.style.transition = 'all .3s';
-          setTimeout(() => t.remove(), 300);
-        }, 6000);
-      }
-      return false;
-    };
-  </script>
-
-  <script>
     const API_BASE = window.location.protocol === 'file:' ? 'http://localhost:5001' : '';
 
     function escapeHtml(str) {
@@ -2244,7 +150,7 @@
         version_compare_info: 'Version compare — full build feature', material_fully_approved: '"{material}" fully approved! 🎉', revision_requested: 'Revision requested on "{material}"', approval_recorded: 'Approval recorded ✅', revision_request_sent: 'Revision request sent ⚠️',
         "org_Bio Factor": 'Bio Factor', "org_Ferty Base": 'Ferty Base', "org_Aqua": 'Aqua', "org_One Health Centre": 'One Health Centre', "org_Water Links": 'Water Links', "org_Beyond Organic": 'Beyond Organic',
         user_admin: 'Admin', user_ceo: 'CEO', user_coo: 'COO', user_director: 'Director',
-        role_admin: 'Admin', role_ceo: 'CEO', role_coo: 'COO', role_director: 'Director',
+        role_admin: 'Admin', role_ceo: 'CEO', role_coo: 'COO', role_director: 'Director', role_user: 'User',
         perm_upload: 'Upload', perm_approve: 'Approve', perm_delete: 'Delete', perm_manage_users: 'Manage Users', perm_all_folders: 'All Folders', perm_view_all: 'View All', perm_final_approve: 'Final Approve', perm_manage_campaigns: 'Manage Campaigns', perm_assigned_folders: 'Assigned Folders', perm_view_brand_guide: 'View Brand Guide',
         sector_technology: 'Technology', sector_retail_fmcg: 'Retail & FMCG', sector_financial_services: 'Financial Services', sector_healthcare: 'Healthcare', sector_education: 'Education', sector_logistics_supply: 'Logistics & Supply',
         select_org_subtitle: 'Select your organisation to continue', select_lang_subtitle: 'Select working language',
@@ -2301,7 +207,7 @@
         version_compare_info: 'आवृत्ती तुलना — पूर्ण बांधणी वैशिष्ट्य', material_fully_approved: '"{material}" पूर्णपणे मंजूर! 🎉', revision_requested: '"{material}" वर सुधारणा विनंती केली', approval_recorded: 'मंजुरी नोंदवली ✅', revision_request_sent: 'सुधारणा विनंती पाठवली ⚠️',
         "org_Bio Factor": 'Bio Factor', "org_Ferty Base": 'Ferty Base', "org_Aqua": 'Aqua', "org_One Health Centre": 'One Health Centre', "org_Water Links": 'Water Links', "org_Beyond Organic": 'Beyond Organic',
         user_admin: 'अॅलेक्स', user_ceo: 'कॅरोल', user_coo: 'ओमर', user_director: 'डायना',
-        role_admin: 'प्रशासक', role_ceo: 'CEO', role_coo: 'COO', role_director: 'संचालक',
+        role_admin: 'प्रशासक', role_ceo: 'CEO', role_coo: 'COO', role_director: 'संचालक', role_user: 'वापरकर्ता',
         perm_upload: 'अपलोड', perm_approve: 'मंजूर करा', perm_delete: 'हटवा', perm_manage_users: 'वापरकर्ते व्यवस्थापित करा', perm_all_folders: 'सर्व फोल्डर', perm_view_all: 'सर्व पहा', perm_final_approve: 'अंतिम मंजुरी', perm_manage_campaigns: 'मोहिमा व्यवस्थापित करा', perm_assigned_folders: 'नियुक्त फोल्डर', perm_view_brand_guide: 'ब्रँड गाइड पहा',
         sector_technology: 'तंत्रज्ञान', sector_retail_fmcg: 'किरकोळ आणि FMCG', sector_financial_services: 'वित्तीय सेवा', sector_healthcare: 'आरोग्य सेवा', sector_education: 'शिक्षण', sector_logistics_supply: 'लॉजिस्टिक्स आणि पुरवठा',
         select_org_subtitle: 'सुरू ठेवण्यासाठी आपली संस्था निवडा', select_lang_subtitle: 'कार्य भाषा निवडा',
@@ -2358,7 +264,7 @@
         version_compare_info: 'వెర్షన్ పోలిక — పూర్తి నిర్మాణ ఫీచర్', material_fully_approved: '"{material}" పూర్తిగా ఆమోదించబడింది! 🎉', revision_requested: '"{material}" పై సవరణ అభ్యర్థించారు', approval_recorded: 'ఆమోదం నమోదు చేయబడింది ✅', revision_request_sent: 'సవరణ అభ్యర్థన పంపబడింది ⚠️',
         "org_Bio Factor": 'Bio Factor', "org_Ferty Base": 'Ferty Base', "org_Aqua": 'Aqua', "org_One Health Centre": 'One Health Centre', "org_Water Links": 'Water Links', "org_Beyond Organic": 'Beyond Organic',
         user_admin: 'అలెక్స్', user_ceo: 'కారోల్', user_coo: 'ఒమర్', user_director: 'డయానా',
-        role_admin: 'అడ్మిన్', role_ceo: 'CEO', role_coo: 'COO', role_director: 'డైరెక్టర్',
+        role_admin: 'అడ్మిన్', role_ceo: 'CEO', role_coo: 'COO', role_director: 'డైరెక్టర్', role_user: 'ವಿನ್ಯಾಸಕಾರರು / ಬಳಕೆದಾರರು',
         perm_upload: 'అప్‌లోడ్', perm_approve: 'ఆమోదించు', perm_delete: 'తొలగించు', perm_manage_users: 'వినియోగదారులను నిర్వహించు', perm_all_folders: 'అన్ని ఫోల్డర్లు', perm_view_all: 'అన్నీ చూడు', perm_final_approve: 'తుది ఆమోదం', perm_manage_campaigns: 'ప్రచారాలు నిర్వహించు', perm_assigned_folders: 'కేటాయించిన ఫోల్డర్లు', perm_view_brand_guide: 'బ్రాండ్ గైడ్ చూడు',
         sector_technology: 'సాంకేతికత', sector_retail_fmcg: 'రిటైల్ & FMCG', sector_financial_services: 'ఆర్థిక సేవలు', sector_healthcare: 'ఆరోగ్య సంరక్షణ', sector_education: 'విద్య', sector_logistics_supply: 'లాజిస్టిక్స్ & సరఫరా',
         select_org_subtitle: 'కొనసాగించడానికి మీ సంస్థను ఎంచుకోండి', select_lang_subtitle: 'పని చేసే భాష ఎంచుకోండి',
@@ -2415,7 +321,7 @@
         version_compare_info: 'संस्करण तुलना — पूर्ण निर्माण सुविधा', material_fully_approved: '"{material}" को पूरी तरह से मंज़ूरी मिली! 🎉', revision_requested: '"{material}" पर संशोधन का अनुरोध किया गया', approval_recorded: 'अनुमोदन दर्ज किया गया ✅', revision_request_sent: 'संशोधन अनुरोध भेजा गया ⚠️',
         "org_Bio Factor": 'Bio Factor', "org_Ferty Base": 'Ferty Base', "org_Aqua": 'Aqua', "org_One Health Centre": 'One Health Centre', "org_Water Links": 'Water Links', "org_Beyond Organic": 'Beyond Organic',
         user_admin: 'व्यवस्थापक', user_ceo: 'CEO', user_coo: 'COO', user_director: 'निदेशक',
-        role_admin: 'व्यवस्थापक', role_ceo: 'CEO', role_coo: 'COO', role_director: 'निदेशक',
+        role_admin: 'व्यवस्थापक', role_ceo: 'CEO', role_coo: 'COO', role_director: 'निदेशक', role_user: 'उपयोगकर्ता',
         perm_upload: 'अपलोड', perm_approve: 'अनुमोदन', perm_delete: 'हटाएँ', perm_manage_users: 'उपयोगकर्ताओं का प्रबंधन करें', perm_all_folders: 'सभी फ़ोल्डर', perm_view_all: 'सभी देखें', perm_final_approve: 'अंतिम अनुमोदन', perm_manage_campaigns: 'कैम्पेन प्रबंधित करें', perm_assigned_folders: 'आवंटित फ़ोल्डर', perm_view_brand_guide: 'ब्रांड गाइड देखें',
         sector_technology: 'प्रौद्योगिकी', sector_retail_fmcg: 'रिटेल और FMCG', sector_financial_services: 'वित्तीय सेवाएँ', sector_healthcare: 'स्वास्थ्य देखभाल', sector_education: 'शिक्षा', sector_logistics_supply: 'लॉजिस्टिक और सप्लाई',
         select_org_subtitle: 'जारी रखने के लिए अपने संगठन का चयन करें', select_lang_subtitle: 'कार्य भाषा चुनें',
@@ -2474,7 +380,7 @@
         "org_Bio Factor": 'உயிர் காரணி', "org_Ferty Base": 'ஃபெர்ட்டி பேஸ்', "org_Aqua": 'அக்வா', "org_One Health Centre": 'ஒரு சுகாதார மையம்',
         "org_Water Links": 'நீர் இணைப்புகள்', "org_Beyond Organic": 'ஆர்கானிக் தாண்டி', user_admin: 'நிர்வாகி', user_ceo: 'CEO',
         user_coo: 'சிஓஓ', user_director: 'இயக்குனர்', role_admin: 'நிர்வாகி', role_ceo: 'CEO',
-        role_coo: 'சிஓஓ', role_director: 'இயக்குனர்', perm_upload: 'பதிவேற்றவும்', perm_approve: 'ஒப்புதல்',
+        role_coo: 'சிஓஓ', role_director: 'இயக்குனர்', role_user: 'பயனர்', perm_upload: 'பதிவேற்றவும்', perm_approve: 'ஒப்புதல்',
         perm_delete: 'நீக்கு', perm_manage_users: 'பயனர்களை நிர்வகிக்கவும்', perm_all_folders: 'அனைத்து கோப்புறைகள்', perm_view_all: 'அனைத்தையும் பார்க்கவும்',
         perm_final_approve: 'இறுதி ஒப்புதல்', perm_manage_campaigns: 'பிரச்சாரங்களை நிர்வகிக்கவும்', perm_assigned_folders: 'ஒதுக்கப்பட்ட கோப்புறைகள்', perm_view_brand_guide: 'பிராண்ட் கையேட்டைப் பார்க்கவும்',
         sector_technology: 'தொழில்நுட்பம்', sector_retail_fmcg: 'சில்லறை & FMCG', sector_financial_services: 'நிதி சேவைகள்', sector_healthcare: 'சுகாதாரம்',
@@ -2552,7 +458,7 @@
         "org_Bio Factor": 'ಜೈವಿಕ ಅಂಶ', "org_Ferty Base": 'ಫರ್ಟಿ ಬೇಸ್', "org_Aqua": 'ಆಕ್ವಾ', "org_One Health Centre": 'ಒಂದು ಆರೋಗ್ಯ ಕೇಂದ್ರ',
         "org_Water Links": 'ನೀರಿನ ಲಿಂಕ್‌ಗಳು', "org_Beyond Organic": 'ಸಾವಯವವನ್ನು ಮೀರಿ', user_admin: 'ನಿರ್ವಾಹಕ', user_ceo: 'ಸಿಇಒ',
         user_coo: 'COO', user_director: 'ನಿರ್ದೇಶಕ', role_admin: 'ನಿರ್ವಾಹಕ', role_ceo: 'ಸಿಇಒ',
-        role_coo: 'COO', role_director: 'ನಿರ್ದೇಶಕ', perm_upload: 'ಅಪ್ಲೋಡ್ ಮಾಡಿ', perm_approve: 'ಅನುಮೋದಿಸಿ',
+        role_coo: 'COO', role_director: 'ನಿರ್ದೇಶಕ', role_user: 'ಬಳಕೆದಾರ', perm_upload: 'ಅಪ್ಲೋಡ್ ಮಾಡಿ', perm_approve: 'ಅನುಮೋದಿಸಿ',
         perm_delete: 'ಅಳಿಸಿ', perm_manage_users: 'ಬಳಕೆದಾರರನ್ನು ನಿರ್ವಹಿಸಿ', perm_all_folders: 'ಎಲ್ಲಾ ಫೋಲ್ಡರ್‌ಗಳು', perm_view_all: 'ಎಲ್ಲವನ್ನೂ ವೀಕ್ಷಿಸಿ',
         perm_final_approve: 'ಅಂತಿಮ ಅನುಮೋದನೆ', perm_manage_campaigns: 'ಅಭಿಯಾನಗಳನ್ನು ನಿರ್ವಹಿಸಿ', perm_assigned_folders: 'ನಿಯೋಜಿಸಲಾದ ಫೋಲ್ಡರ್‌ಗಳು', perm_view_brand_guide: 'ಬ್ರ್ಯಾಂಡ್ ಗೈಡ್ ವೀಕ್ಷಿಸಿ',
         sector_technology: 'ತಂತ್ರಜ್ಞಾನ', sector_retail_fmcg: 'ಚಿಲ್ಲರೆ & FMCG', sector_financial_services: 'ಹಣಕಾಸು ಸೇವೆಗಳು', sector_healthcare: 'ಆರೋಗ್ಯ ರಕ್ಷಣೆ',
@@ -2630,7 +536,7 @@
         "org_Bio Factor": 'બાયો ફેક્ટર', "org_Ferty Base": 'ફર્ટી બેઝ', "org_Aqua": 'એક્વા', "org_One Health Centre": 'એક આરોગ્ય કેન્દ્ર',
         "org_Water Links": 'વોટર લિંક્સ', "org_Beyond Organic": 'બિયોન્ડ ઓર્ગેનિક', user_admin: 'એડમિન', user_ceo: 'સીઇઓ',
         user_coo: 'સીઓઓ', user_director: 'દિગ્દર્શક', role_admin: 'એડમિન', role_ceo: 'સીઇઓ',
-        role_coo: 'સીઓઓ', role_director: 'દિગ્દર્શક', perm_upload: 'અપલોડ કરો', perm_approve: 'મંજૂર',
+        role_coo: 'સીઓઓ', role_director: 'દિગ્દર્શક', role_user: 'વપરાશકર્તા', perm_upload: 'અપલોડ કરો', perm_approve: 'મંજૂર',
         perm_delete: 'કાઢી નાખો', perm_manage_users: 'વપરાશકર્તાઓ મેનેજ કરો', perm_all_folders: 'બધા ફોલ્ડર્સ', perm_view_all: 'બધા જુઓ',
         perm_final_approve: 'અંતિમ મંજૂરી', perm_manage_campaigns: 'ઝુંબેશ મેનેજ કરો', perm_assigned_folders: 'સોંપેલ ફોલ્ડર્સ', perm_view_brand_guide: 'બ્રાન્ડ માર્ગદર્શિકા જુઓ',
         sector_technology: 'ટેકનોલોજી', sector_retail_fmcg: 'છૂટક અને FMCG', sector_financial_services: 'નાણાકીય સેવાઓ', sector_healthcare: 'હેલ્થકેર',
@@ -2694,7 +600,8 @@
       admin: { name: 'Admin', initials: 'AD', role: 'Admin', badge: 'ADMIN', avClass: 'av-admin', badgeClass: 'badge-admin', perms: ['Upload', 'Approve', 'Delete', 'Manage Users', 'All Folders'] },
       ceo: { name: 'CEO', initials: 'CE', role: 'CEO', badge: 'CEO', avClass: 'av-ceo', badgeClass: 'badge-ceo', perms: ['View All', 'Approve', 'Final Approve'] },
       coo: { name: 'COO', initials: 'CO', role: 'COO', badge: 'COO', avClass: 'av-coo', badgeClass: 'badge-coo', perms: ['View All', 'Approve', 'Manage Campaigns'] },
-      director: { name: 'Director', initials: 'DI', role: 'Director', badge: 'DIRECTOR', avClass: 'av-director', badgeClass: 'badge-director', perms: ['Upload', 'Assigned Folders', 'View Brand Guide'] }
+      director: { name: 'Director', initials: 'DI', role: 'Director', badge: 'DIRECTOR', avClass: 'av-director', badgeClass: 'badge-director', perms: ['Upload', 'Assigned Folders', 'View Brand Guide'] },
+      user: { name: 'User', initials: 'US', role: 'User', badge: 'USER', avClass: 'av-user', badgeClass: 'badge-user', perms: ['Upload', 'View Brand Guide'] }
     };
 
     const USER_PASSWORDS = {
@@ -2866,1978 +773,2178 @@
       return t(item.key, params);
     }
 
-    // ═══════════════════════════════════════════
-    //  SELECTION SCREENS
-    // ═══════════════════════════════════════════
-    window.addEventListener('DOMContentLoaded', () => {
-      buildSelectionScreens();
 
-      // Developer sandbox mode check
-      const googleClientId = document.getElementById('g_id_onload').getAttribute('data-client_id');
-      if (googleClientId.startsWith('YOUR_GOOGLE_CLIENT_ID') || googleClientId === '') {
-        document.getElementById('google-signin-container').style.display = 'none';
-        document.getElementById('mock-google-signin').style.display = 'flex';
+
+const { useState, useEffect, useCallback, useRef } = React;
+
+function App() {
+  const [currentToken, setCurrentToken] = useState(() => localStorage.getItem('bp_token'));
+  const [currentUser, setCurrentUser] = useState(() => {
+    const userJson = localStorage.getItem('bp_user');
+    if (userJson) {
+      try { return JSON.parse(userJson).role.toLowerCase(); } catch(e) {}
+    }
+    return 'admin';
+  });
+  const [currentUserName, setCurrentUserName] = useState(() => {
+    const userJson = localStorage.getItem('bp_user');
+    if (userJson) {
+      try { return JSON.parse(userJson).name; } catch(e) {}
+    }
+    return 'Admin';
+  });
+
+  const [selectedOrg, setSelectedOrg] = useState(() => {
+    const savedOrgId = localStorage.getItem('bp_selected_org_id');
+    if (savedOrgId) {
+      const org = ORGANISATIONS.find(o => o.id === savedOrgId);
+      if (org) return org;
+    }
+    return null;
+  });
+  const [tempOrg, setTempOrg] = useState(null);
+  const [selectedLang, setSelectedLang] = useState(() => {
+    const savedLangId = localStorage.getItem('bp_selected_lang_id');
+    if (savedLangId) {
+      const lang = LANGUAGES.find(l => l.id === savedLangId);
+      if (lang) return lang;
+    }
+    return LANGUAGES[0];
+  });
+  const [activePage, setActivePage] = useState(() => {
+    return localStorage.getItem('bp_active_page') || 'dashboard';
+  });
+  const [currentFolderFilter, setCurrentFolderFilter] = useState(null);
+  const [currentFilter, setCurrentFilter] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  
+  const [foldersMap, setFoldersMap] = useState(ORG_FOLDERS);
+  const [materialsMap, setMaterialsMap] = useState({});
+  const [notifications, setNotifications] = useState([]);
+  const [usersList, setUsersList] = useState([]);
+  const [rolesList, setRolesList] = useState([]);
+  const [toasts, setToasts] = useState([]);
+  const [lightboxUrl, setLightboxUrl] = useState(null);
+
+  // Login form state
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+
+  // Dropdowns and menus
+  const [orgDDOpen, setOrgDDOpen] = useState(false);
+  const [langDDOpen, setLangDDOpen] = useState(false);
+  const [switcherOpen, setSwitcherOpen] = useState(false);
+  const [modal, setModal] = useState(null); // { title, body, footer } or null
+
+  // User registration state
+  const [regName, setRegName] = useState('');
+  const [regEmail, setRegEmail] = useState('');
+  const [regRole, setRegRole] = useState('Director');
+  const [regPassword, setRegPassword] = useState('');
+  const [regError, setRegError] = useState('');
+
+  // Upload Form state
+  const [selectedUploadFile, setSelectedUploadFile] = useState(null);
+  const [uploadName, setUploadName] = useState('');
+  const [uploadType, setUploadType] = useState('flyer');
+  const [uploadCampaign, setUploadCampaign] = useState('');
+  const [uploadFolder, setUploadFolder] = useState('');
+  const [uploadNotes, setUploadNotes] = useState('');
+
+  // Sandbox Sandbox state
+  const [sandboxEmail, setSandboxEmail] = useState('');
+
+  // Lifted states to prevent Hook Rule violations (Error #310)
+  const [approvalTab, setApprovalTab] = useState('pending');
+  const [isEditingSuggestions, setIsEditingSuggestions] = useState(false);
+  const [suggestionsVal, setSuggestionsVal] = useState('');
+  const [editName, setEditName] = useState('');
+  const [editRole, setEditRole] = useState('');
+
+  // Load translations & translations helper
+  const langId = selectedLang?.id || 'en';
+  const t = useCallback((key, params = {}) => {
+    const template = (T[langId] || T.en)[key] || key;
+    return Object.entries(params).reduce((text, [param, value]) => text.replace(new RegExp(`\\{${param}\\}`, 'g'), value), template);
+  }, [langId]);
+
+  const translateOrgName = useCallback((org) => org ? (t('org_' + org.id) || org.name) : '', [t]);
+  const translateUserNameKey = useCallback((key) => t('user_' + key.toLowerCase()) || key, [t]);
+  const translateRole = useCallback((role) => t('role_' + role.toLowerCase()) || role, [t]);
+  
+  const translatePermission = useCallback((name) => {
+    const mapping = {
+      'Upload': 'perm_upload', 'Approve': 'perm_approve', 'Delete': 'perm_delete',
+      'Manage Users': 'perm_manage_users', 'All Folders': 'perm_all_folders',
+      'View All': 'perm_view_all', 'Final Approve': 'perm_final_approve',
+      'Manage Campaigns': 'perm_manage_campaigns', 'Assigned Folders': 'perm_assigned_folders',
+      'View Brand Guide': 'perm_view_brand_guide'
+    };
+    const key = mapping[name] || ('perm_' + name.toLowerCase().replace(/[^a-z0-9]+/g, '_'));
+    return t(key) || name;
+  }, [t]);
+
+  const translateUserLabel = useCallback((label) => {
+    if (!label) return '';
+    const [namePart, rolePart] = label.split(' (');
+    const userKey = namePart.trim().toLowerCase();
+    const translatedName = translateUserNameKey(userKey);
+    if (!rolePart) return translatedName;
+    const trimmedRole = rolePart.replace(/\)$/, '');
+    return `${translatedName} (${translateRole(trimmedRole)})`;
+  }, [translateUserNameKey, translateRole]);
+
+  const translateMaterialName = useCallback((m) => t('material_name_' + m.id) || m.name, [t]);
+  const translateFolderName = useCallback((name) => {
+    if (!name) return '';
+    const key = 'folder_' + name.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+    const translation = t(key);
+    return translation === key ? name : translation;
+  }, [t]);
+
+  const translateFolderPath = useCallback((path) => {
+    if (!path) return '';
+    return path.split('/').map(segment => translateFolderName(segment)).join('/');
+  }, [translateFolderName]);
+
+  const translateActivityText = useCallback((item) => {
+    const reasonKey = item.reason ? ('reason_' + item.reason.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '')) : '';
+    const params = {
+      actor: item.actor ? translateUserNameKey(item.actor.toLowerCase()) : '',
+      role: item.role ? translateRole(item.role) : '',
+      material: item.materialId ? translateMaterialName({ id: item.materialId }) : (item.material || ''),
+      version: item.version || '',
+      reason: reasonKey ? t(reasonKey) : (item.reason || ''),
+      count: item.count || '',
+      score: item.score || '',
+      subject: item.subject ? translateUserNameKey(item.subject.toLowerCase()) : '',
+      folder: item.folder ? translateFolderPath(item.folder) : ''
+    };
+    return t(item.key, params);
+  }, [t, translateUserNameKey, translateRole, translateMaterialName, translateFolderPath]);
+
+  // Toast Helper
+  const addToast = useCallback((msg, type = 'info') => {
+    const id = Date.now() + Math.random();
+    setToasts(prev => [...prev, { id, msg, type, fade: false }]);
+    setTimeout(() => {
+      setToasts(prev => prev.map(to => to.id === id ? { ...to, fade: true } : to));
+      setTimeout(() => {
+        setToasts(prev => prev.filter(to => to.id !== id));
+      }, 300);
+    }, 3500);
+  }, []);
+
+  const currentOrgMaterials = selectedOrg ? (materialsMap[selectedOrg.id] || []) : [];
+
+  // Fetching folders, materials, notifications
+  const loadMaterialsAndRefresh = useCallback(async (orgId = selectedOrg?.id, token = currentToken) => {
+    if (!orgId || !token) return;
+    try {
+      const fRes = await fetch(`${API_BASE}/api/folders?org_id=${orgId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (fRes.ok) {
+        const fData = await fRes.json();
+        setFoldersMap(prev => ({ ...prev, [orgId]: fData }));
       }
+    } catch (e) {
+      console.error("Error loading folders:", e);
+    }
 
-      // Try to load auto-login session
-      const token = localStorage.getItem('bp_token');
-      const userJson = localStorage.getItem('bp_user');
-      let loggedInUser = null;
-      if (token && userJson) {
-        try {
-          loggedInUser = JSON.parse(userJson);
-          currentToken = token;
-          currentUser = loggedInUser.role.toLowerCase();
-          if (USERS_DATA[currentUser]) {
-            USERS_DATA[currentUser].name = loggedInUser.name;
-          }
-          restrictSwitcherToCurrentUser();
-          loadRoles();
-        } catch (e) {
-          localStorage.removeItem('bp_token');
-          localStorage.removeItem('bp_user');
+    try {
+      const res = await fetch(`${API_BASE}/api/materials?org_id=${orgId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setMaterialsMap(prev => ({ ...prev, [orgId]: data }));
+      }
+    } catch (e) {
+      console.error("Error loading materials:", e);
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/api/notifications?org_id=${orgId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setNotifications(data);
+      }
+    } catch (e) {
+      console.error("Error loading notifications:", e);
+    }
+  }, [selectedOrg, currentToken]);
+
+  const fetchUsers = useCallback(async () => {
+    if (!currentToken) return;
+    try {
+      const res = await fetch(`${API_BASE}/api/users`, {
+        headers: { 'Authorization': `Bearer ${currentToken}` }
+      });
+      if (res.status === 401) {
+        handleLogout();
+        return;
+      }
+      if (res.ok) {
+        const users = await res.json();
+        setUsersList(users);
+      }
+    } catch (e) {
+      console.error('Error fetching users:', e);
+    }
+  }, [currentToken]);
+
+  const loadRoles = useCallback(async () => {
+    if (currentUser !== 'admin' || !currentToken) return;
+    try {
+      const res = await fetch(`${API_BASE}/api/roles`, {
+        headers: { 'Authorization': `Bearer ${currentToken}` }
+      });
+      if (res.ok) {
+        const roles = await res.json();
+        setRolesList(roles);
+        if (roles.length > 0) setRegRole(roles[0]);
+      }
+    } catch (e) {
+      console.error('Error loading roles:', e);
+    }
+  }, [currentUser, currentToken]);
+
+  // Auth Handling
+  const handleLogin = async (e) => {
+    if (e) e.preventDefault();
+    if (!loginEmail) {
+      setLoginError('Please enter your email.'); return;
+    }
+    if (!loginPassword) {
+      setLoginError(t('login_error_password')); return;
+    }
+    try {
+      const res = await fetch(`${API_BASE}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: loginEmail, password: loginPassword })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setLoginError(data.detail || data.error || 'Invalid credentials.');
+        return;
+      }
+      setCurrentToken(data.token);
+      localStorage.setItem('bp_token', data.token);
+      localStorage.setItem('bp_user', JSON.stringify(data.user));
+      setCurrentUser(data.user.role.toLowerCase());
+      setCurrentUserName(data.user.name);
+      setLoginError('');
+      setLoginPassword('');
+      addToast(t('signed_in_as', { user: data.user.name }), 'success');
+    } catch (err) {
+      console.error(err);
+      setLoginError('Connection error. Please try again.');
+    }
+  };
+
+  const handleGoogleLogin = async (response) => {
+    const credential = response.credential;
+    try {
+      const res = await fetch(`${API_BASE}/api/auth/google`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ credential })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        addToast(data.error || 'Google login failed.', 'error');
+        return;
+      }
+      setCurrentToken(data.token);
+      localStorage.setItem('bp_token', data.token);
+      localStorage.setItem('bp_user', JSON.stringify(data.user));
+      setCurrentUser(data.user.role.toLowerCase());
+      setCurrentUserName(data.user.name);
+      addToast(t('signed_in_as', { user: data.user.name }), 'success');
+    } catch (err) {
+      console.error('Google login error:', err);
+      addToast('Server connection error during Google login.', 'error');
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('bp_token');
+    localStorage.removeItem('bp_user');
+    localStorage.removeItem('bp_selected_org_id');
+    localStorage.removeItem('bp_selected_lang_id');
+    localStorage.removeItem('bp_active_page');
+    setCurrentToken(null);
+    setCurrentUser('admin');
+    setCurrentUserName('Admin');
+    setSelectedOrg(null);
+    setTempOrg(null);
+    setSelectedLang(null);
+    setMaterialsMap({});
+    setNotifications([]);
+    addToast(t('logged_out'), 'info');
+  };
+
+  // Sync selectedOrg to localStorage
+  useEffect(() => {
+    if (selectedOrg) {
+      localStorage.setItem('bp_selected_org_id', selectedOrg.id);
+    } else {
+      localStorage.removeItem('bp_selected_org_id');
+    }
+  }, [selectedOrg]);
+
+  // Sync selectedLang to localStorage
+  useEffect(() => {
+    if (selectedLang) {
+      localStorage.setItem('bp_selected_lang_id', selectedLang.id);
+    } else {
+      localStorage.removeItem('bp_selected_lang_id');
+    }
+  }, [selectedLang]);
+
+  // Sync activePage to localStorage
+  useEffect(() => {
+    if (activePage) {
+      localStorage.setItem('bp_active_page', activePage);
+    } else {
+      localStorage.removeItem('bp_active_page');
+    }
+  }, [activePage]);
+
+  // Google OAuth button initialization on mount or token change
+  useEffect(() => {
+    if (!currentToken && window.google) {
+      const googleClientId = window.GOOGLE_CLIENT_ID || "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
+      const isSandboxMode = googleClientId.startsWith("YOUR_GOOGLE_CLIENT_ID") || googleClientId === "";
+      if (!isSandboxMode) {
+        window.google.accounts.id.initialize({
+          client_id: googleClientId,
+          callback: handleGoogleLogin
+        });
+        const btnContainer = document.getElementById("google-signin-btn");
+        if (btnContainer) {
+          window.google.accounts.id.renderButton(btnContainer, {
+            type: "standard", shape: "rectangular", theme: "outline",
+            text: "signin_with", size: "large", logo_alignment: "left"
+          });
         }
       }
+    }
+  }, [currentToken]);
 
-      // Path-based routing for /register and /signup (Admin only)
-      const path = window.location.pathname;
-      if (path === '/register' || path === '/signup') {
-        if (loggedInUser && loggedInUser.role.toLowerCase() === 'admin') {
-          // Show standalone register screen for logged-in Admin
-          document.getElementById('screen-login').classList.add('hidden');
-          document.getElementById('screen-register').classList.remove('hidden');
-          document.getElementById('app').style.display = 'none';
-          return;
-        } else {
-          // Access denied for non-admins / non-logged in users
-          toast('Access denied. Only logged-in Administrators can access the signup page.', 'error');
-          // Redirect to login screen
-          document.getElementById('screen-login').classList.remove('hidden');
-          document.getElementById('screen-register').classList.add('hidden');
-          document.getElementById('app').style.display = 'none';
-          window.history.replaceState({}, '', '/');
-          return;
-        }
+  // Load directories and data if logged in and organization is selected
+  useEffect(() => {
+    if (currentToken && selectedOrg) {
+      loadMaterialsAndRefresh();
+    }
+  }, [currentToken, selectedOrg, loadMaterialsAndRefresh]);
+
+  useEffect(() => {
+    if (currentToken) {
+      loadRoles();
+      if (activePage === 'users') {
+        fetchUsers();
       }
+    }
+  }, [currentToken, activePage, fetchUsers, loadRoles]);
 
-      // Default homepage routing
-      if (loggedInUser) {
-        document.getElementById('screen-login').classList.add('hidden');
-        document.getElementById('screen-org').classList.remove('hidden');
+  // Sync modal inputs when modal changes
+  useEffect(() => {
+    if (modal) {
+      if (modal.type === 'material_detail' && modal.material) {
+        setIsEditingSuggestions(false);
+        setSuggestionsVal(modal.material.aiSuggestions || '');
+      } else if (modal.type === 'edit_profile') {
+        setEditName(modal.userName || '');
+        setEditRole(modal.userRole || '');
+      }
+    }
+  }, [modal]);
+
+  // Folder helper calculations
+  const getLeafPaths = (folders, prefix = '') => {
+    let paths = [];
+    folders.forEach(f => {
+      const path = prefix ? `${prefix}/${f.name}` : f.name;
+      paths.push(path);
+      if (f.children) {
+        paths = paths.concat(getLeafPaths(f.children, path));
       }
     });
+    return paths;
+  };
 
-    async function loginUser() {
-      const email = document.getElementById('login-email').value.trim();
-      const password = document.getElementById('login-password').value.trim();
-      const errorEl = document.getElementById('login-error');
-      if (!email) {
-        errorEl.textContent = 'Please enter your email.';
-        return;
+  const currentOrgFolders = selectedOrg ? (foldersMap[selectedOrg.id] || []) : [];
+  const currentOrgFolderLeafPaths = selectedOrg ? getLeafPaths(currentOrgFolders) : [];
+
+  // Folder stats calculation
+  const getFolderStats = useCallback((folderPath) => {
+    let count = 0;
+    let totalScore = 0;
+    currentOrgMaterials.forEach(m => {
+      if (m.folder === folderPath || m.folder.startsWith(folderPath + '/')) {
+        count++;
+        totalScore += m.aiScore || 0;
       }
-      if (!password) {
-        errorEl.textContent = t('login_error_password') || 'Please enter your password.';
-        return;
+    });
+    const avgCompliance = count > 0 ? Math.round(totalScore / count) : 0;
+    return { count, avgCompliance };
+  }, [currentOrgMaterials]);
+
+  // Sync default values when active page is 'upload'
+  useEffect(() => {
+    if (activePage === 'upload' && currentOrgFolderLeafPaths.length > 0 && !uploadFolder) {
+      setUploadFolder(currentOrgFolderLeafPaths[0]);
+    }
+  }, [activePage, currentOrgFolderLeafPaths, uploadFolder]);
+
+  // Operations
+  const handleCreateFolder = async (parentPath) => {
+    if (currentUser !== 'admin') return;
+    const newName = prompt(t('enter_new_folder_name') || 'Enter the name of the new folder:');
+    if (!newName) return;
+    const cleanName = newName.trim();
+    if (!cleanName) return;
+
+    let folderTree = JSON.parse(JSON.stringify(currentOrgFolders));
+    function insertSubfolder(folders, targetPath, newFolderName) {
+      if (!targetPath) {
+        folders.push({ name: newFolderName });
+        return true;
       }
-
-      try {
-        const res = await fetch(`${API_BASE}/api/auth/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
-        });
-
-        let data = {};
-        try {
-          data = await res.json();
-        } catch (e) {
-          console.warn("Response was not JSON:", e);
-        }
-
-        if (!res.ok) {
-          errorEl.textContent = data.detail || data.error || 'Invalid credentials.';
-          return;
-        }
-
-        // Save session
-        currentToken = data.token;
-        localStorage.setItem('bp_token', data.token);
-        localStorage.setItem('bp_user', JSON.stringify(data.user));
-
-        currentUser = data.user.role.toLowerCase();
-        if (USERS_DATA[currentUser]) {
-          USERS_DATA[currentUser].name = data.user.name;
-        }
-
-        restrictSwitcherToCurrentUser();
-        loadRoles(); // Preload roles list for admin
-
-        document.getElementById('screen-login').classList.add('hidden');
-        document.getElementById('screen-org').classList.remove('hidden');
-        document.getElementById('login-password').value = '';
-        errorEl.textContent = '';
-      } catch (e) {
-        console.error(e);
-        errorEl.textContent = 'Connection error. Please try again.';
-      }
-    }
-
-    function handleMockGoogleClick() {
-      document.getElementById('modal-title').textContent = "Google OAuth Developer Sandbox";
-      document.getElementById('modal-body').innerHTML = `
-    <p style="color:var(--text2);font-size:13px;margin-bottom:16px">
-      You are running in Developer Sandbox mode. Please enter the email address of the account you want to sign in with:
-    </p>
-    <div class="form-group" style="margin-bottom:0">
-      <label class="form-label" for="sandbox-email">Email Address</label>
-      <input type="email" id="sandbox-email" class="form-control" placeholder="e.g. admin@example.com" onkeypress="if(event.key==='Enter')submitSandboxLogin()" />
-    </div>
-    <div id="sandbox-error" style="color:var(--red);font-size:12px;margin-top:6px;min-height:18px"></div>
-  `;
-      document.getElementById('modal-footer').innerHTML = `
-    <button class="btn btn-secondary" onclick="closeModalDirect()">Cancel</button>
-    <button class="btn btn-primary" onclick="submitSandboxLogin()">Sign in</button>
-  `;
-      document.getElementById('modal-overlay').classList.add('open');
-
-      // Auto-focus the email input field
-      setTimeout(() => {
-        const el = document.getElementById('sandbox-email');
-        if (el) el.focus();
-      }, 100);
-    }
-
-    function submitSandboxLogin() {
-      const email = document.getElementById('sandbox-email').value.trim();
-      const errorEl = document.getElementById('sandbox-error');
-      if (!email) {
-        errorEl.textContent = "Please enter an email address.";
-        return;
-      }
-
-      closeModalDirect();
-      handleGoogleLogin({ credential: "mock_token_for_" + email.toLowerCase() });
-    }
-
-    async function handleGoogleLogin(response) {
-      const credential = response.credential;
-      const errorEl = document.getElementById('login-error');
-      errorEl.textContent = '';
-
-      try {
-        const res = await fetch(`${API_BASE}/api/auth/google`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ credential })
-        });
-
-        const data = await res.json();
-        if (!res.ok) {
-          errorEl.textContent = data.error || 'Google login failed.';
-          return;
-        }
-
-        // Save session
-        currentToken = data.token;
-        localStorage.setItem('bp_token', data.token);
-        localStorage.setItem('bp_user', JSON.stringify(data.user));
-
-        currentUser = data.user.role.toLowerCase();
-        if (USERS_DATA[currentUser]) {
-          USERS_DATA[currentUser].name = data.user.name;
-        }
-
-        restrictSwitcherToCurrentUser();
-        loadRoles(); // Preload roles list for admin
-
-        document.getElementById('screen-login').classList.add('hidden');
-        document.getElementById('screen-org').classList.remove('hidden');
-        document.getElementById('login-password').value = '';
-
-        toast(t('signed_in_as', { user: data.user.name }), 'success');
-      } catch (err) {
-        console.error('Google login error:', err);
-        errorEl.textContent = 'Server connection error during Google login.';
-      }
-    }
-
-    async function loadRoles() {
-      if (currentUser !== 'admin') return;
-      try {
-        const res = await fetch(`${API_BASE}/api/roles`, {
-          headers: { 'Authorization': `Bearer ${currentToken}` }
-        });
-        if (res.ok) {
-          const roles = await res.json();
-          const optionsHtml = roles.map(r => `<option value="${r}">${r}</option>`).join('');
-
-          const select1 = document.getElementById('reg-role');
-          if (select1) select1.innerHTML = optionsHtml;
-
-          const select2 = document.getElementById('stand-reg-role');
-          if (select2) select2.innerHTML = optionsHtml;
-        }
-      } catch (e) {
-        console.error('Error loading roles:', e);
-      }
-    }
-
-    async function fetchUsers() {
-      try {
-        const res = await fetch(`${API_BASE}/api/users`, {
-          headers: { 'Authorization': `Bearer ${currentToken}` }
-        });
-        if (res.status === 401) {
-          logout();
-          return;
-        }
-        if (res.ok) {
-          const users = await res.json();
-          buildPeopleList(users);
-        }
-      } catch (e) {
-        console.error('Error fetching users:', e);
-      }
-    }
-
-    function buildPeopleList(users) {
-      const roleStyleMap = {
-        'Admin': { avClass: 'av-admin', badgeClass: 'badge-admin', initials: 'AD', perms: ['Upload', 'Approve', 'Delete', 'Manage Users', 'All Folders'] },
-        'CEO': { avClass: 'av-ceo', badgeClass: 'badge-ceo', initials: 'CE', perms: ['View All', 'Approve', 'Final Approve'] },
-        'COO': { avClass: 'av-coo', badgeClass: 'badge-coo', initials: 'CO', perms: ['View All', 'Approve', 'Manage Campaigns'] },
-        'Director': { avClass: 'av-director', badgeClass: 'badge-director', initials: 'DI', perms: ['Upload', 'Assigned Folders', 'View Brand Guide'] }
-      };
-
-      const pg = document.getElementById('people-grid');
-      if (!pg) return;
-
-      pg.innerHTML = users.map(u => {
-        const meta = roleStyleMap[u.role] || roleStyleMap['Director'];
-        const initials = u.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || meta.initials;
-
-        return `
-      <div class="person-card">
-        <div class="person-av ${meta.avClass}">${escapeHtml(initials)}</div>
-        <div class="person-name">${escapeHtml(u.name)} <div style="font-size:11px;color:var(--text3);font-weight:400;margin-top:2px">${escapeHtml(u.email)}</div></div>
-        <div class="person-role">${translateRole(u.role)}</div>
-        <div style="font-size:11px;color:var(--text2);margin-bottom:8px">${translateOrgName(selectedOrg)}</div>
-        <div class="person-perms">${meta.perms.map(p => `<span class="perm-tag">${translatePermission(p)}</span>`).join('')}</div>
-        ${currentUser === 'admin' ? `
-          <div style="display:flex;gap:6px;margin-top:10px;">
-            <button class="btn btn-sm btn-secondary" style="flex:1" onclick="editAccess('${u.id}', '${escapeForJsAttr(u.name)}')">${t('edit_access_button')}</button>
-            <button class="btn btn-sm btn-secondary" style="padding:4px 8px" onclick="editUserProfile('${u.id}', '${escapeForJsAttr(u.name)}', '${escapeForJsAttr(u.role)}')" title="Edit Profile">✏️</button>
-            <button class="btn btn-sm btn-danger" style="padding:4px 8px" onclick="deleteUser('${u.id}', '${escapeForJsAttr(u.name)}')" title="Delete User">🗑️</button>
-          </div>
-        ` : ''}
-      </div>`;
-      }).join('');
-    }
-
-    async function handleCreateUser(e) {
-      e.preventDefault();
-      const name = document.getElementById('reg-name').value.trim();
-      const email = document.getElementById('reg-email').value.trim();
-      const role = document.getElementById('reg-role').value;
-      const password = document.getElementById('reg-password').value;
-      const errorEl = document.getElementById('reg-error');
-
-      errorEl.textContent = '';
-
-      try {
-        const res = await fetch(`${API_BASE}/api/admin/users`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${currentToken}`
-          },
-          body: JSON.stringify({ name, email, role, password })
-        });
-
-        const data = await res.json();
-        if (!res.ok) {
-          const errMsg = data.detail || data.error || 'Failed to create user.';
-          errorEl.textContent = errMsg;
-          if (res.status === 409) {
-            alert(errMsg);
-          }
-          return;
-        }
-
-        toast('User created successfully!', 'success');
-        document.getElementById('admin-create-user-form').reset();
-        fetchUsers(); // Refresh users list
-      } catch (err) {
-        console.error('Error creating user:', err);
-        errorEl.textContent = 'Network error occurred.';
-      }
-    }
-
-    async function handleStandaloneCreateUser(e) {
-      e.preventDefault();
-      const name = document.getElementById('stand-reg-name').value.trim();
-      const email = document.getElementById('stand-reg-email').value.trim();
-      const role = document.getElementById('stand-reg-role').value;
-      const password = document.getElementById('stand-reg-password').value;
-      const errorEl = document.getElementById('stand-reg-error');
-
-      errorEl.textContent = '';
-
-      try {
-        const res = await fetch(`${API_BASE}/api/admin/users`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${currentToken}`
-          },
-          body: JSON.stringify({ name, email, role, password })
-        });
-
-        const data = await res.json();
-        if (!res.ok) {
-          const errMsg = data.detail || data.error || 'Failed to create user.';
-          errorEl.textContent = errMsg;
-          if (res.status === 409) {
-            alert(errMsg);
-          }
-          return;
-        }
-
-        toast('User created successfully!', 'success');
-        document.getElementById('standalone-register-form').reset();
-      } catch (err) {
-        console.error('Error creating user:', err);
-        errorEl.textContent = 'Network error occurred.';
-      }
-    }
-
-    function goToPortalFromRegister() {
-      document.getElementById('screen-register').classList.add('hidden');
-
-      // Try to load auto-login session
-      const token = localStorage.getItem('bp_token');
-      const userJson = localStorage.getItem('bp_user');
-      if (token && userJson) {
-        document.getElementById('app').style.display = 'flex';
-        window.history.pushState({}, '', '/');
-        const u = JSON.parse(userJson);
-        if (u.role.toLowerCase() === 'admin') {
-          goto('users');
-        } else {
-          goto('dashboard');
-        }
-      } else {
-        document.getElementById('screen-login').classList.remove('hidden');
-        window.history.pushState({}, '', '/');
-      }
-    }
-
-    function buildSelectionScreens() {
-      const og = document.getElementById('org-grid');
-      og.innerHTML = ORGANISATIONS.map(o => `
-    <div class="sel-card" id="org-card-${o.id}" onclick="selectOrg('${o.id}')">
-      <div class="sel-card-icon">${o.icon}</div>
-      <div class="sel-card-name">${o.name}</div>
-    </div>
-  `).join('');
-
-      const lg = document.getElementById('lang-grid');
-      lg.innerHTML = LANGUAGES.map(l => `
-    <div class="sel-card" id="lang-card-${l.id}" onclick="selectLang('${l.id}')">
-      <div class="sel-card-icon">${l.flag}</div>
-      <div class="sel-card-name">${l.name}</div>
-      <div class="sel-card-sub">${l.native}</div>
-    </div>
-  `).join('');
-    }
-
-    function selectOrg(id) {
-      currentFolderFilter = null;
-      selectedOrg = ORGANISATIONS.find(o => o.id === id);
-      document.querySelectorAll('.sel-card').forEach(c => c.classList.remove('selected'));
-      document.getElementById('org-card-' + id).classList.add('selected');
-      document.getElementById('org-next-btn').disabled = false;
-    }
-
-    function gotoLangScreen() {
-      if (!selectedOrg) return;
-      selectedLang = LANGUAGES.find(l => l.id === 'en'); // Default to English
-      restrictSwitcherToCurrentUser();
-      document.getElementById('screen-org').classList.add('hidden');
-      const app = document.getElementById('app');
-      app.style.display = 'flex';
-      initPortal();
-      if (currentUser === 'admin') {
-        goto('users');
-      } else {
-        goto('dashboard');
-      }
-      toast(`${selectedOrg.icon} ${translateOrgName(selectedOrg)} — ${selectedLang.flag} ${selectedLang.name}`, 'success');
-    }
-
-    function selectLang(id) {
-      selectedLang = LANGUAGES.find(l => l.id === id);
-      document.querySelectorAll('#lang-grid .sel-card').forEach(c => c.classList.remove('selected'));
-      document.getElementById('lang-card-' + id).classList.add('selected');
-      document.getElementById('lang-next-btn').disabled = false;
-    }
-
-    function backToOrg() {
-      document.getElementById('screen-lang').classList.add('hidden');
-      document.getElementById('screen-org').classList.remove('hidden');
-      selectedLang = null;
-    }
-
-    function enterPortal() {
-      if (!selectedOrg || !selectedLang) return;
-      restrictSwitcherToCurrentUser();
-      document.getElementById('screen-lang').classList.add('hidden');
-      const app = document.getElementById('app');
-      app.style.display = 'flex';
-      initPortal();
-      if (currentUser === 'admin') {
-        goto('users');
-      } else {
-        goto('dashboard');
-      }
-      toast(`${selectedOrg.icon} ${translateOrgName(selectedOrg)} — ${selectedLang.flag} ${selectedLang.name}`, 'success');
-    }
-
-    async function loadMaterialsAndRefresh() {
-      if (currentToken) {
-        try {
-          const fRes = await fetch(`${API_BASE}/api/folders?org_id=${selectedOrg.id}`, {
-            headers: { 'Authorization': `Bearer ${currentToken}` }
-          });
-          if (fRes.ok) {
-            const fData = await fRes.json();
-            ORG_FOLDERS[selectedOrg.id] = fData;
-            ORG_FOLDER_PATHS[selectedOrg.id] = getLeafPaths(fData);
-          }
-        } catch (e) {
-          console.error("Error loading folders:", e);
-        }
-
-        try {
-          const res = await fetch(`${API_BASE}/api/materials?org_id=${selectedOrg.id}`, {
-            headers: { 'Authorization': `Bearer ${currentToken}` }
-          });
-          if (res.ok) {
-            const data = await res.json();
-            orgMaterials[selectedOrg.id] = data;
-          }
-        } catch (e) {
-          console.error("Error loading materials:", e);
-        }
-        await loadNotifications();
-      }
-      buildFolderTree();
-      buildUploadFolderOptions();
-      buildFileGrid();
-      buildDashboard();
-      buildApprovals();
-      buildAccessMatrix();
-    }
-
-    // ═══════════════════════════════════════════
-    //  PORTAL INIT
-    // ═══════════════════════════════════════════
-    async function initPortal() {
-      applyTranslations();
-      buildTopbarDropdowns();
-      buildFolderTree();
-      await loadMaterialsAndRefresh();
-      buildPeople();
-      buildBrand();
-      buildActivity();
-      buildAccessMatrix();
-      buildUploadFolderOptions();
-      updateTopbar();
-    }
-
-    function applyTranslations() {
-      // Login and selection screens
-      const loginSubtitle = document.getElementById('login-subtitle');
-      if (loginSubtitle) loginSubtitle.textContent = t('login_subtitle');
-      document.getElementById('login-label-user').textContent = t('login_user');
-      document.getElementById('login-label-password').textContent = t('login_password');
-      document.getElementById('login-password').placeholder = t('login_password');
-      document.getElementById('login-btn').textContent = t('login_button');
-      document.getElementById('org-subtitle').textContent = t('select_org_subtitle');
-      document.getElementById('org-next-btn').textContent = t('enter_portal');
-      document.getElementById('lang-org-label').textContent = t('select_lang_subtitle');
-      document.getElementById('back-btn').textContent = t('back');
-      document.getElementById('lang-path-label').textContent = t('selection_flow_path');
-      document.getElementById('lang-next-btn').textContent = t('enter_portal');
-      const orgPathLabel = document.getElementById('org-path-label');
-      if (orgPathLabel) {
-        orgPathLabel.textContent = t('selection_flow_path')
-          .replace(/ → (Language|भाषा|மொழி|ಭಾಷೆ|ಭಾષા)/, '');
-      }
-      document.querySelectorAll('#login-user option').forEach(opt => {
-        if (USERS_DATA[opt.value]) opt.textContent = translateUserLabel(USERS_DATA[opt.value].name);
-      });
-      document.querySelectorAll('.us-item').forEach(item => {
-        const key = item.id?.replace('us-', '');
-        if (!key || !USERS_DATA[key]) return;
-        const labelEl = item.querySelector('div > div');
-        const badgeEl = item.querySelector('span');
-        if (labelEl) labelEl.textContent = translateUserLabel(USERS_DATA[key].name);
-        if (badgeEl) badgeEl.textContent = translateRole(USERS_DATA[key].role).toUpperCase();
-      });
-      const switcherTitle = document.querySelector('.us-title');
-      if (switcherTitle) switcherTitle.textContent = t('switch_user_view');
-      const logoutButton = document.querySelector('.user-switcher .us-item[onclick*="logout"]');
-      if (logoutButton) logoutButton.textContent = t('logout');
-
-      // Sidebar labels
-      document.getElementById('sb-org-label').textContent = translateOrgName(selectedOrg);
-      const setSbItemText = (id, label) => {
-        const item = document.getElementById(id);
-        if (!item) return;
-        const textNodes = Array.from(item.childNodes).filter(node => node.nodeType === Node.TEXT_NODE);
-        const textNode = textNodes.reverse().find(node => node.textContent.trim().length > 0) || textNodes[0];
-        if (textNode) textNode.textContent = ' ' + label;
-        else item.append(' ' + label);
-      };
-      setSbItemText('sb-dashboard', t('dashboard'));
-      setSbItemText('sb-materials', t('materials'));
-      setSbItemText('sb-approvals', t('approvals'));
-      setSbItemText('sb-upload', t('upload'));
-      document.getElementById('sb-folder-label').textContent = t('folders');
-      const sbAdminLabel = document.getElementById('sb-admin-label');
-      if (sbAdminLabel) sbAdminLabel.textContent = t('admin_section');
-      setSbItemText('sb-users', t('users'));
-      setSbItemText('sb-brand', t('brand'));
-      setSbItemText('sb-activity', t('activity'));
-
-      // Page titles and labels
-      document.getElementById('dash-title').textContent = t('dashboard');
-      document.getElementById('dash-subtitle').textContent = `${t('welcome')}, ${translateUserNameKey(currentUser)} — ${selectedOrg.icon} ${translateOrgName(selectedOrg)} ${t('overview')} (${selectedLang.flag} ${selectedLang.name})`;
-      document.getElementById('stat-total-label').textContent = t('total');
-      document.getElementById('stat-pending-label').textContent = t('pending');
-      document.getElementById('stat-approved-label').textContent = t('approved');
-      document.getElementById('stat-revision-label').textContent = t('revision');
-      const accessSelect = document.querySelector('#user-access-select');
-      if (accessSelect) {
-        accessSelect.innerHTML = `
-      <option>${t('access_full')}</option>
-      <option>${t('access_view')}</option>
-      <option>${t('access_none')}</option>
-    `;
-      }
-      document.getElementById('recent-title').textContent = t('recent_materials');
-      document.getElementById('dashboard-activity-title').textContent = t('activity');
-
-      document.getElementById('materials-title').textContent = t('materials');
-      document.getElementById('materials-org-label').textContent = `${selectedOrg.icon} ${translateOrgName(selectedOrg)} — ${selectedLang.flag} ${t('lang_name')}`;
-      document.getElementById('materials-upload-btn').textContent = t('upload_new');
-      document.getElementById('materials-search').placeholder = t('search_placeholder');
-      document.getElementById('filter-all').textContent = t('all_types');
-      document.getElementById('filter-flyer').textContent = t('filter_flyers');
-      document.getElementById('filter-brochure').textContent = t('filter_brochures');
-      document.getElementById('filter-leaflet').textContent = t('filter_leaflets');
-      document.getElementById('filter-poster').textContent = t('filter_posters');
-      document.getElementById('filter-banner').textContent = t('filter_banners');
-      document.getElementById('filter-approved').textContent = t('filter_approved');
-
-      document.getElementById('approvals-title').textContent = t('approvals');
-      document.getElementById('approval-tab-pending').textContent = t('pending');
-      document.getElementById('approval-tab-revision').textContent = t('revision');
-      document.getElementById('approval-tab-approved').textContent = t('approved');
-
-      document.getElementById('upload-title').textContent = t('upload_title');
-      document.getElementById('upload-desc').textContent = t('upload_description');
-      document.getElementById('upload-zone-title').textContent = t('click_to_select');
-      document.getElementById('upload-zone-hint').textContent = t('file_types_hint');
-      document.getElementById('upload-label-name').textContent = t('material_name');
-      document.getElementById('upload-name').placeholder = t('material_name');
-      document.getElementById('upload-label-type').textContent = t('type');
-      const uploadType = document.getElementById('upload-type');
-      if (uploadType) uploadType.innerHTML = `
-    <option value="flyer">${t('type_flyer')}</option>
-    <option value="brochure">${t('type_brochure')}</option>
-    <option value="leaflet">${t('type_leaflet')}</option>
-    <option value="poster">${t('type_poster')}</option>
-    <option value="banner">${t('type_banner')}</option>
-    <option value="social">${t('type_social')}</option>
-  `;
-      document.getElementById('upload-label-campaign').textContent = t('campaign_project');
-      document.getElementById('upload-campaign').placeholder = t('campaign_project');
-      document.getElementById('upload-label-folder').textContent = t('folder_location');
-      document.getElementById('upload-label-notes').textContent = t('designer_notes');
-      document.getElementById('upload-notes').placeholder = t('designer_notes');
-      document.getElementById('upload-precheck-title').textContent = t('precheck_title');
-      document.getElementById('upload-precheck-desc').textContent = t('precheck_description');
-      document.getElementById('upload-precheck-item1').textContent = t('precheck_color_compliance');
-      document.getElementById('upload-precheck-item2').textContent = t('precheck_logo_placement');
-      document.getElementById('upload-precheck-item3').textContent = t('precheck_typography_consistency');
-      document.getElementById('upload-precheck-item4').textContent = t('precheck_previous_approved');
-      document.getElementById('upload-precheck-item5').textContent = t('precheck_score');
-      document.getElementById('upload-workflow-title').textContent = t('workflow_title');
-      document.getElementById('upload-workflow-step1').textContent = t('workflow_step1');
-      document.getElementById('upload-workflow-step2').textContent = t('workflow_step2');
-      document.getElementById('upload-workflow-step3').textContent = t('workflow_step3');
-      document.getElementById('upload-workflow-step4').textContent = t('workflow_step4');
-      document.getElementById('upload-submit-btn').textContent = t('submit');
-
-      document.getElementById('users-title').textContent = t('user_access');
-      document.getElementById('users-org-label').textContent = `${selectedOrg.icon} ${translateOrgName(selectedOrg)}`;
-      document.getElementById('users-access-title').textContent = t('folder_access_matrix');
-      document.getElementById('access-header-folder').textContent = t('folder_label');
-
-      document.getElementById('brand-title').textContent = t('brand');
-      document.getElementById('brand-color-title').textContent = t('color_palette');
-      document.getElementById('brand-typography-title').textContent = t('typography');
-      document.getElementById('brand-logo-title').textContent = t('logo_rules');
-      document.getElementById('brand-imagery-title').textContent = t('imagery');
-
-      document.getElementById('activity-title').textContent = t('activity');
-      document.getElementById('activity-org-label').textContent = `${selectedOrg.icon} ${translateOrgName(selectedOrg)}`;
-    }
-
-    // ═══════════════════════════════════════════
-    //  TOPBAR DROPDOWNS
-    // ═══════════════════════════════════════════
-    function buildTopbarDropdowns() {
-      // Org pill
-      document.getElementById('topbar-org-icon').textContent = selectedOrg.icon;
-      document.getElementById('topbar-org-name').textContent = translateOrgName(selectedOrg);
-      // Lang pill
-      document.getElementById('topbar-lang-flag').textContent = selectedLang.flag;
-      document.getElementById('topbar-lang-name').textContent = selectedLang.name;
-      // Org dropdown
-      document.getElementById('org-dd').innerHTML = `
-    <div style="padding:8px 14px 6px;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.6px">${t('switch_org')}</div>
-    ${ORGANISATIONS.map(o => `
-      <div class="topbar-dd-item ${o.id === selectedOrg.id ? 'selected-item' : ''}" onclick="switchOrg('${o.id}')">
-        <span style="font-size:20px">${o.icon}</span>
-        <div>
-          <div style="font-size:13px;font-weight:500">${translateOrgName(o)}</div>
-        </div>
-        ${o.id === selectedOrg.id ? '<span style="margin-left:auto;color:var(--green);font-size:12px">✓</span>' : ''}
-      </div>
-    `).join('')}
-  `;
-      // Lang dropdown
-      document.getElementById('lang-dd').innerHTML = `
-    <div style="padding:8px 14px 6px;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.6px">${t('switch_lang')}</div>
-    ${LANGUAGES.map(l => `
-      <div class="topbar-dd-item ${l.id === selectedLang.id ? 'selected-item' : ''}" onclick="switchLang('${l.id}')">
-        <span style="font-size:20px">${l.flag}</span>
-        <div>
-          <div style="font-size:13px;font-weight:500">${l.name}</div>
-          <div style="font-size:11px;color:var(--text2)">${l.native}</div>
-        </div>
-        ${l.id === selectedLang.id ? '<span style="margin-left:auto;color:var(--green);font-size:12px">✓</span>' : ''}
-      </div>
-    `).join('')}
-  `;
-    }
-
-    function toggleOrgDD() { orgDDOpen = !orgDDOpen; document.getElementById('org-dd').classList.toggle('open', orgDDOpen); if (langDDOpen) { langDDOpen = false; document.getElementById('lang-dd').classList.remove('open'); } }
-    function toggleLangDD() { langDDOpen = !langDDOpen; document.getElementById('lang-dd').classList.toggle('open', langDDOpen); if (orgDDOpen) { orgDDOpen = false; document.getElementById('org-dd').classList.remove('open'); } }
-
-    async function switchOrg(id) {
-      currentFolderFilter = null;
-      selectedOrg = ORGANISATIONS.find(o => o.id === id);
-      orgDDOpen = false; document.getElementById('org-dd').classList.remove('open');
-      applyTranslations();
-      buildTopbarDropdowns();
-      buildFolderTree();
-      await loadMaterialsAndRefresh();
-      buildPeople();
-      buildBrand();
-      buildActivity();
-      buildAccessMatrix();
-      buildUploadFolderOptions();
-      updateTopbar();
-      toast(t('switched_to', { org: translateOrgName(selectedOrg) }), 'info');
-    }
-
-    function refreshLanguageLabels() {
-      document.getElementById('topbar-lang-flag').textContent = selectedLang.flag;
-      document.getElementById('topbar-lang-name').textContent = selectedLang.name;
-    }
-
-    async function switchLang(id) {
-      selectedLang = LANGUAGES.find(l => l.id === id);
-      langDDOpen = false;
-      document.getElementById('lang-dd').classList.remove('open');
-      applyTranslations();
-      buildTopbarDropdowns();
-      buildFolderTree();
-      await loadMaterialsAndRefresh();
-      buildPeople();
-      buildBrand();
-      buildActivity();
-      buildAccessMatrix();
-      buildUploadFolderOptions();
-      updateTopbar();
-      toast(t('language_changed', { lang: `${selectedLang.flag} ${selectedLang.name}` }), 'success');
-    }
-
-    // ═══════════════════════════════════════════
-    //  TOPBAR / NAV
-    // ═══════════════════════════════════════════
-    function updateTopbar() {
-      const u = USERS_DATA[currentUser];
-      document.getElementById('top-avatar').textContent = u.initials;
-      document.getElementById('top-avatar').className = 'avatar ' + u.avClass;
-      const translatedUserName = translateUserLabel(u.name).split(' (')[0];
-      document.getElementById('top-name').textContent = translatedUserName;
-      document.getElementById('top-badge').textContent = translateRole(u.role).toUpperCase();
-      document.getElementById('top-badge').className = 'badge ' + u.badgeClass;
-      document.getElementById('sb-admin-section').style.display = currentUser === 'admin' ? 'block' : 'none';
-      const sbCreateRootBtn = document.getElementById('sb-create-root-btn');
-      if (sbCreateRootBtn) {
-        sbCreateRootBtn.style.display = currentUser === 'admin' ? 'inline' : 'none';
-      }
-      const adminSec = document.getElementById('admin-create-user-section');
-      if (adminSec) {
-        adminSec.style.display = currentUser === 'admin' ? 'block' : 'none';
-      }
-      const pending = materials().filter(m => m.status === 'pending').length;
-      document.getElementById('pending-count').textContent = pending;
-      document.getElementById('stat-pending').textContent = pending;
-    }
-
-    function goto(page) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.sb-item').forEach(s => s.classList.remove('active'));
-      document.getElementById('page-' + page).classList.add('active');
-      const sb = document.getElementById('sb-' + page);
-      if (sb) sb.classList.add('active');
-      closeSwitcher(); closeAllDD();
-
-      if (page === 'upload') {
-        buildUploadFolderOptions();
-        // Sync folders in background
-        if (currentToken && selectedOrg) {
-          fetch(`${API_BASE}/api/folders?org_id=${selectedOrg.id}`, {
-            headers: { 'Authorization': `Bearer ${currentToken}` }
-          })
-            .then(res => {
-              if (res.ok) return res.json();
-            })
-            .then(fData => {
-              if (fData) {
-                ORG_FOLDERS[selectedOrg.id] = fData;
-                ORG_FOLDER_PATHS[selectedOrg.id] = getLeafPaths(fData);
-                buildFolderTree();
-                buildUploadFolderOptions();
-              }
-            })
-            .catch(e => console.error("Error syncing folders on upload page navigation:", e));
-        }
-      } else if (page === 'users') {
-        buildAccessMatrix();
-      }
-    }
-
-    // ═══════════════════════════════════════════
-    //  FOLDER TREE — built from org-specific structure
-    // ═══════════════════════════════════════════
-    let currentFolderFilter = null;
-
-    function getFolderStats(folderPath) {
-      const mats = materials();
-      let count = 0;
-      let totalScore = 0;
-      mats.forEach(m => {
-        if (m.folder === folderPath || m.folder.startsWith(folderPath + '/')) {
-          count++;
-          totalScore += m.aiScore || 0;
-        }
-      });
-      const avgCompliance = count > 0 ? Math.round(totalScore / count) : 0;
-      return { count, avgCompliance };
-    }
-
-    function buildFolderTree() {
-      const folders = ORG_FOLDERS[selectedOrg.id] || [];
-      document.getElementById('folder-tree').innerHTML = renderFolders(folders);
-    }
-    function renderFolders(folders, pathPrefix = '') {
-      return folders.map(f => {
-        const currentPath = pathPrefix ? `${pathPrefix}/${f.name}` : f.name;
-        const stats = getFolderStats(currentPath);
-
-        const complianceText = '';
-        const countValue = stats.count;
-        const isSelected = currentFolderFilter === currentPath;
-        const activeClass = isSelected ? ' active' : '';
-
-        let actionsHtml = '';
-        let dblClickAttr = '';
-        let folderTooltip = '';
-        if (currentUser === 'admin') {
-          dblClickAttr = `ondblclick="event.stopPropagation(); adminRenameFolder('${escapeForJsAttr(currentPath)}', '${escapeForJsAttr(f.name)}')"`;
-          folderTooltip = `title="Double-click to rename"`;
-          actionsHtml = `
-            <span class="folder-actions" style="margin-left:auto; display:inline-flex; gap:6px; align-items:center;">
-              <span class="folder-action-btn" title="Add Subfolder" onclick="event.stopPropagation(); adminCreateFolder('${escapeForJsAttr(currentPath)}')" style="cursor:pointer;opacity:0.6;font-size:10px;padding:2px;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">➕</span>
-              <span class="folder-action-btn" title="Delete Folder" onclick="event.stopPropagation(); adminDeleteFolder('${escapeForJsAttr(currentPath)}', '${escapeForJsAttr(f.name)}')" style="cursor:pointer;opacity:0.6;font-size:10px;padding:2px;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">🗑️</span>
-            </span> 
-          `;
-        }
-
-        if (f.children) {
-          return `<div class="folder">
-        <div class="folder-name" onclick="toggleFolder(this)" ${dblClickAttr} ${folderTooltip} style="display:flex; align-items:center; width:100%; cursor:pointer;">
-          <span style="font-size:9px;color:var(--text3);margin-right:6px;">▶</span>
-          <span>📁</span> <span style="margin-left:4px;flex-grow:1;text-align:left;">${translateFolderName(f.name)}</span>
-          ${actionsHtml}
-        </div>
-        <div class="folder-children">${renderFolders(f.children, currentPath)}</div>
-      </div>`;
-        } else {
-          return `<div class="folder-file${activeClass}" onclick="filterByFolder('${escapeForJsAttr(f.name)}', '${escapeForJsAttr(currentPath)}', this)" ${dblClickAttr} ${folderTooltip} style="display:flex; align-items:center; width:100%; cursor:pointer;">
-        <span>📂</span> <span style="margin-left:4px;flex-grow:1;text-align:left;">${translateFolderName(f.name)}</span>
-        <span class="count" style="margin-left:6px;margin-right:6px;">${countValue}</span>
-        ${actionsHtml}
-      </div>`;
-        }
-      }).join('');
-    }
-    function toggleFolder(el) {
-      const ch = el.nextElementSibling;
-      const ar = el.querySelector('span');
-      const open = ch.classList.toggle('open');
-      ar.textContent = open ? '▼' : '▶';
-    }
-    function filterByFolder(name, fullPath, element) {
-      goto('materials');
-      if (currentFolderFilter === fullPath) {
-        currentFolderFilter = null;
-        toast(t('all_folders') || 'Showing all folders', 'info');
-      } else {
-        currentFolderFilter = fullPath;
-        toast((t('folder_label') || 'Folder') + ': ' + translateFolderPath(fullPath), 'info');
-      }
-
-      // Update highlights directly without rebuilding the whole folder tree DOM
-      document.querySelectorAll('.folder-file').forEach(el => el.classList.remove('active'));
-      if (currentFolderFilter && element) {
-        element.classList.add('active');
-      }
-      buildFileGrid(currentFilter);
-    }
-
-    async function adminCreateFolder(parentPath) {
-      if (currentUser !== 'admin') return;
-      const newName = prompt(t('enter_new_folder_name') || 'Enter the name of the new folder:');
-      if (!newName) return;
-      const cleanName = newName.trim();
-      if (!cleanName) return;
-
-      let folderTree = JSON.parse(JSON.stringify(ORG_FOLDERS[selectedOrg.id] || []));
-
-      function insertSubfolder(folders, targetPath, newFolderName) {
-        if (!targetPath) {
-          folders.push({ name: newFolderName });
+      const parts = targetPath.split('/');
+      let currentLevel = folders;
+      for (let i = 0; i < parts.length; i++) {
+        const part = parts[i];
+        const found = currentLevel.find(f => f.name === part);
+        if (!found) return false;
+        if (i === parts.length - 1) {
+          if (!found.children) found.children = [];
+          found.children.push({ name: newFolderName });
           return true;
         }
-
-        const parts = targetPath.split('/');
-        let currentLevel = folders;
-
-        for (let i = 0; i < parts.length; i++) {
-          const part = parts[i];
-          const found = currentLevel.find(f => f.name === part);
-          if (!found) return false;
-
-          if (i === parts.length - 1) {
-            if (!found.children) {
-              found.children = [];
-            }
-            found.children.push({ name: newFolderName });
-            return true;
-          }
-          currentLevel = found.children || [];
-        }
-        return false;
+        currentLevel = found.children || [];
       }
-
-      const success = insertSubfolder(folderTree, parentPath, cleanName);
-      if (!success) {
-        toast('Failed to find parent folder', 'error');
-        return;
-      }
-
-      try {
-        const res = await fetch(`${API_BASE}/api/folders`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${currentToken}`
-          },
-          body: JSON.stringify({
-            org_id: selectedOrg.id,
-            folder_tree: folderTree
-          })
-        });
-        if (res.ok) {
-          ORG_FOLDERS[selectedOrg.id] = folderTree;
-          ORG_FOLDER_PATHS[selectedOrg.id] = getLeafPaths(folderTree);
-          buildFolderTree();
-          buildUploadFolderOptions();
-          buildAccessMatrix();
-          toast('Folder created successfully', 'success');
-        } else {
-          const data = await res.json();
-          toast(data.detail || 'Failed to save folder to database', 'error');
-        }
-      } catch (e) {
-        console.error(e);
-        toast('Error saving folder', 'error');
-      }
+      return false;
     }
 
-    async function adminRenameFolder(folderPath, currentName) {
-      if (currentUser !== 'admin') return;
-      setTimeout(async () => {
-        const newName = prompt(t('enter_rename_folder_name') || `Rename "${currentName}" to:`, currentName);
-        if (!newName) return;
-        const cleanName = newName.trim();
-        if (!cleanName || cleanName === currentName) return;
-
-        let folderTree = JSON.parse(JSON.stringify(ORG_FOLDERS[selectedOrg.id] || []));
-
-        function findAndRename(folders, targetPath, newFolderName) {
-          const parts = targetPath.split('/');
-          let currentLevel = folders;
-
-          for (let i = 0; i < parts.length; i++) {
-            const part = parts[i];
-            const found = currentLevel.find(f => f.name === part);
-            if (!found) return false;
-
-            if (i === parts.length - 1) {
-              found.name = newFolderName;
-              return true;
-            }
-            currentLevel = found.children || [];
-          }
-          return false;
-        }
-
-        const pathParts = folderPath.split('/');
-        pathParts[pathParts.length - 1] = cleanName;
-        const newFullPath = pathParts.join('/');
-
-        const success = findAndRename(folderTree, folderPath, cleanName);
-        if (!success) {
-          toast('Folder not found', 'error');
-          return;
-        }
-
-        if (currentFolderFilter === folderPath) {
-          currentFolderFilter = null;
-        }
-
-        try {
-          const res = await fetch(`${API_BASE}/api/folders/rename`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${currentToken}`
-            },
-            body: JSON.stringify({
-              org_id: selectedOrg.id,
-              old_path: folderPath,
-              new_path: newFullPath,
-              folder_tree: folderTree
-            })
-          });
-          if (res.ok) {
-            ORG_FOLDERS[selectedOrg.id] = folderTree;
-            ORG_FOLDER_PATHS[selectedOrg.id] = getLeafPaths(folderTree);
-            await loadMaterialsAndRefresh();
-            toast('Folder renamed successfully', 'success');
-          } else {
-            const data = await res.json();
-            toast(data.detail || 'Failed to rename folder', 'error');
-          }
-        } catch (e) {
-          console.error(e);
-          toast('Error renaming folder', 'error');
-        }
-      }, 150);
+    const success = insertSubfolder(folderTree, parentPath, cleanName);
+    if (!success) {
+      addToast('Failed to find parent folder', 'error');
+      return;
     }
 
-    async function adminDeleteFolder(folderPath, folderName) {
-      if (currentUser !== 'admin') return;
-      const confirmed = confirm(`Are you sure you want to delete folder "${folderName}" and all of its contents?\nThis will permanently delete all materials stored in this folder and its subfolders.`);
-      if (!confirmed) return;
-
-      let folderTree = JSON.parse(JSON.stringify(ORG_FOLDERS[selectedOrg.id] || []));
-
-      function removeFolderFromTree(folders, targetPath) {
-        const parts = targetPath.split('/');
-        let currentLevel = folders;
-
-        for (let i = 0; i < parts.length; i++) {
-          const part = parts[i];
-          const foundIdx = currentLevel.findIndex(f => f.name === part);
-          if (foundIdx === -1) return false;
-
-          if (i === parts.length - 1) {
-            currentLevel.splice(foundIdx, 1);
-            return true;
-          }
-          currentLevel = currentLevel[foundIdx].children || [];
-        }
-        return false;
-      }
-
-      const success = removeFolderFromTree(folderTree, folderPath);
-      if (!success) {
-        toast('Folder not found', 'error');
-        return;
-      }
-
-      if (currentFolderFilter === folderPath || currentFolderFilter?.startsWith(folderPath + '/')) {
-        currentFolderFilter = null;
-      }
-
-      try {
-        const res = await fetch(`${API_BASE}/api/folders/delete`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${currentToken}`
-          },
-          body: JSON.stringify({
-            org_id: selectedOrg.id,
-            folder_path: folderPath,
-            folder_tree: folderTree
-          })
-        });
-        if (res.ok) {
-          ORG_FOLDERS[selectedOrg.id] = folderTree;
-          ORG_FOLDER_PATHS[selectedOrg.id] = getLeafPaths(folderTree);
-          await loadMaterialsAndRefresh();
-          toast('Folder and contents deleted successfully', 'success');
-        } else {
-          const data = await res.json();
-          toast(data.detail || 'Failed to delete folder', 'error');
-        }
-      } catch (e) {
-        console.error(e);
-        toast('Error deleting folder', 'error');
-      }
-    }
-
-    async function adminRenameMaterial(materialId, currentName) {
-      if (currentUser !== 'admin') return;
-      setTimeout(async () => {
-        const newName = prompt('Enter new filename:', currentName);
-        if (!newName) return;
-        const cleanName = newName.trim();
-        if (!cleanName || cleanName === currentName) return;
-
-        try {
-          const res = await fetch(`${API_BASE}/api/materials/${materialId}/rename`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${currentToken}`
-            },
-            body: JSON.stringify({ name: cleanName })
-          });
-          if (res.ok) {
-            await loadMaterialsAndRefresh();
-            openFile(materialId);
-            toast('File renamed successfully', 'success');
-          } else {
-            const data = await res.json();
-            toast(data.detail || 'Failed to rename file', 'error');
-          }
-        } catch (e) {
-          console.error(e);
-          toast('Error renaming file', 'error');
-        }
-      }, 150);
-    }
-    function buildUploadFolderOptions() {
-      const sel = document.getElementById('upload-folder');
-      if (!sel) return;
-      sel.innerHTML = (ORG_FOLDER_PATHS[selectedOrg.id] || []).map(p => `<option value="${p}">${translateFolderPath(p)}</option>`).join('');
-    }
-
-    // ═══════════════════════════════════════════
-    //  FILE GRID
-    // ═══════════════════════════════════════════
-    function getFileThumbnailHTML(m, customStyle = "") {
-      if (m.file_path) {
-        const ext = m.file_path.split('.').pop().toLowerCase();
-        const isImg = ['png', 'jpg', 'jpeg', 'webp', 'gif', 'svg'].includes(ext);
-        const fileUrl = m.file_path.startsWith('http') ? m.file_path : `${API_BASE}/${m.file_path}`;
-        if (isImg) {
-          return `<img src="${fileUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius);${customStyle}" alt="${m.name}" />`;
-        } else if (ext === 'pdf') {
-          if (customStyle.includes('font-size:16px')) {
-            return `<div style="display:flex;align-items:center;justify-content:center;height:100%;width:100%;font-size:10px;font-weight:700;color:var(--text3);${customStyle}">📕 PDF</div>`;
-          }
-          return `<iframe src="${fileUrl}#toolbar=0&navpanes=0&scrollbar=0" style="width:100%;height:100%;border:none;pointer-events:none;border-radius:var(--radius);${customStyle}"></iframe>`;
-        } else {
-          return `<div style="display:flex;align-items:center;justify-content:center;height:100%;width:100%;font-size:13px;font-weight:700;color:var(--text3);text-transform:uppercase;${customStyle}">📄 ${ext}</div>`;
-        }
-      }
-      return `<span style="font-size:24px;${customStyle}">${m.emoji}</span>`;
-    }
-
-    function buildFileGrid(filter = 'all', search = '') {
-      const grid = document.getElementById('file-grid');
-      let mats = materials();
-      if (currentFolderFilter) {
-        mats = mats.filter(m => m.folder === currentFolderFilter || m.folder.startsWith(currentFolderFilter + '/'));
-      }
-      if (filter === 'approved') mats = mats.filter(m => m.status === 'approved');
-      else if (filter !== 'all') mats = mats.filter(m => m.type === filter);
-      if (search) mats = mats.filter(m => translateMaterialName(m).toLowerCase().includes(search.toLowerCase()) || translateUserLabel(m.designer).toLowerCase().includes(search.toLowerCase()));
-
-      grid.innerHTML = mats.map(m => {
-        const path = m.file_path || 'uploads/sample.pdf';
-        const fileUrl = path.startsWith('http') ? path : `${API_BASE}/${path}`;
-        return `
-    <div class="file-card" onclick="openFile(${m.id})">
-      <div class="file-badge">${getStatusPill(m.status)}</div>
-      <div class="file-thumb ${m.type}" style="overflow:hidden;display:flex;align-items:center;justify-content:center">${getFileThumbnailHTML(m)}</div>
-      <div class="file-info">
-        <div class="file-name">${translateMaterialName(m)}</div>
-        <div class="file-meta">
-          <span>👤 ${translateUserLabel(m.designer).split(' (')[0]}</span>
-          <span>📅 ${m.date}</span>
-        </div>
-        <div class="file-meta" style="margin-top:2px;display:flex;justify-content:space-between;align-items:center;">
-          <span style="display:inline-flex;align-items:center;gap:8px;">
-            <span style="color:var(--text3)">📁 ${translateFolderPath(m.folder).split('/').pop()}</span>
-            <span style="color:var(--purple)">🤖 ${m.aiScore}/100</span>
-          </span>
-          <span style="display:inline-flex;align-items:center;gap:8px;">
-            <a href="${fileUrl}" download="${m.name}" onclick="event.stopPropagation();" style="color:var(--text1);text-decoration:none;font-size:14px;cursor:pointer;" title="Download Document">📥</a>
-            <span onclick="event.stopPropagation();openFile(${m.id});" style="color:var(--text1);font-size:14px;cursor:pointer;" title="View Document">👁️</span>
-          </span>
-        </div>
-      </div>
-    </div>`;
-      }).join('');
-    }
-    function getStatusPill(status) {
-      const map = { pending: '🕐', approved: '✅', revision: '⚠️', draft: '📝' };
-      const cls = { pending: 's-pending', approved: 's-approved', revision: 's-revision', draft: 's-draft' };
-      const lbl = { pending: t('pending'), approved: t('approved'), revision: t('revision'), draft: 'Draft' };
-      return `<span class="status-pill ${cls[status]}">${map[status]} ${lbl[status]}</span>`;
-    }
-    function filterMaterials(val) { buildFileGrid(currentFilter, val); }
-    function setFilter(el, val) {
-      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-      el.classList.add('active'); currentFilter = val; buildFileGrid(val);
-    }
-
-    // ═══════════════════════════════════════════
-    //  APPROVALS
-    // ═══════════════════════════════════════════
-    function buildApprovals(tab = 'pending') {
-      const list = document.getElementById('approval-list');
-      let mats = materials().filter(m => m.status === tab);
-      if (!mats.length) { list.innerHTML = `<div style="text-align:center;padding:36px;color:var(--text3)">${t('no_materials_stage')}</div>`; return; }
-      list.innerHTML = mats.map(m => {
-        const votes = Object.entries(m.votes).map(([role, v]) => `
-      <span class="vote ${v === 'approved' ? 'vote-approved' : v === 'revision' ? 'vote-revision' : 'vote-pending'}">
-        ${role.toUpperCase()} ${v === 'approved' ? '✅' : v === 'revision' ? '⚠️' : '⏳'}
-      </span>`).join('');
-        const canAct = m.votes[currentUser] === 'pending';
-        const path = m.file_path || 'uploads/sample.pdf';
-        const fileUrl = path.startsWith('http') ? path : `${API_BASE}/${path}`;
-
-        return `<div class="approval-item ${m.status === 'pending' ? 'urgent' : ''}">
-      <div class="ai-thumb" style="overflow:hidden;display:flex;align-items:center;justify-content:center">${getFileThumbnailHTML(m)}</div>
-      <div class="approval-meta">
-        <h3>${translateMaterialName(m)}</h3>
-        <p>👤 ${translateUserLabel(m.designer)} &nbsp;|&nbsp; 📅 ${m.date} &nbsp;|&nbsp; 📁 ${m.folder}</p>
-        <div class="approval-votes">${votes}</div>
-        <div style="font-size:11px;color:var(--purple)">🤖 AI: <strong style="color:${m.aiScore >= 80 ? 'var(--green)' : m.aiScore >= 60 ? 'var(--orange)' : 'var(--red)'}">${m.aiScore}/100</strong></div>
-      </div>
-      <div class="approval-actions">
-        <button class="btn btn-sm btn-secondary" onclick="openFile(${m.id})">${t('view')}</button>
-        <a href="${fileUrl}" download="${m.name}" class="btn btn-sm btn-secondary" style="padding:5px 8px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;" title="Download File">📥 Download</a>
-        ${canAct ? `
-          <button class="btn btn-sm btn-approve" onclick="castVote(${m.id},'approved')">✅ ${t('approve')}</button>
-          <button class="btn btn-sm btn-danger" onclick="openRevisionModal(${m.id})">⚠️</button>
-        `: m.votes[currentUser] === 'approved' ?
-            `<span style="color:var(--green);font-size:11px">✅ ${t('approved')}</span>` :
-            m.votes[currentUser] === 'revision' ? `<span style="color:var(--orange);font-size:11px">⚠️ ${t('flagged')}</span>` :
-              `<span style="font-size:11px;color:var(--text3)">${t('view_only')}</span>`}
-      </div>
-    </div>`;
-      }).join('');
-    }
-    function setApprovalTab(el, tab) {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      el.classList.add('active'); buildApprovals(tab);
-    }
-
-    // ═══════════════════════════════════════════
-    //  FILE DETAIL MODAL
-    // ═══════════════════════════════════════════
-    function openFile(id) {
-      const m = materials().find(x => x.id === id);
-      if (!m) return;
-      if (currentUser === 'admin') {
-        document.getElementById('modal-title').innerHTML = `
-          <span id="file-title-text" title="Double click to rename file" ondblclick="adminRenameMaterial(${m.id}, '${escapeForJsAttr(m.name)}')" style="cursor:pointer;">${translateMaterialName(m)}</span>
-          <span onclick="adminRenameMaterial(${m.id}, '${escapeForJsAttr(m.name)}')" style="font-size:14px;cursor:pointer;margin-left:8px;" title="Rename File">✏️</span>
-        `;
+    try {
+      const res = await fetch(`${API_BASE}/api/folders`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentToken}`
+        },
+        body: JSON.stringify({ org_id: selectedOrg.id, folder_tree: folderTree })
+      });
+      if (res.ok) {
+        setFoldersMap(prev => ({ ...prev, [selectedOrg.id]: folderTree }));
+        addToast('Folder created successfully', 'success');
       } else {
-        document.getElementById('modal-title').textContent = translateMaterialName(m);
+        const data = await res.json();
+        addToast(data.detail || 'Failed to save folder', 'error');
       }
-      const canAct = m.votes[currentUser] === 'pending';
+    } catch (e) {
+      console.error(e);
+      addToast('Error saving folder', 'error');
+    }
+  };
 
+  const handleRenameFolder = async (folderPath, currentName) => {
+    if (currentUser !== 'admin') return;
+    const newName = prompt(t('enter_rename_folder_name') || `Rename "${currentName}" to:`, currentName);
+    if (!newName) return;
+    const cleanName = newName.trim();
+    if (!cleanName || cleanName === currentName) return;
+
+    let folderTree = JSON.parse(JSON.stringify(currentOrgFolders));
+    function findAndRename(folders, targetPath, newFolderName) {
+      const parts = targetPath.split('/');
+      let currentLevel = folders;
+      for (let i = 0; i < parts.length; i++) {
+        const part = parts[i];
+        const found = currentLevel.find(f => f.name === part);
+        if (!found) return false;
+        if (i === parts.length - 1) {
+          found.name = newFolderName;
+          return true;
+        }
+        currentLevel = found.children || [];
+      }
+      return false;
+    }
+
+    const pathParts = folderPath.split('/');
+    pathParts[pathParts.length - 1] = cleanName;
+    const newFullPath = pathParts.join('/');
+
+    const success = findAndRename(folderTree, folderPath, cleanName);
+    if (!success) {
+      addToast('Folder not found', 'error');
+      return;
+    }
+
+    if (currentFolderFilter === folderPath) {
+      setCurrentFolderFilter(null);
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/api/folders/rename`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentToken}`
+        },
+        body: JSON.stringify({
+          org_id: selectedOrg.id,
+          old_path: folderPath,
+          new_path: newFullPath,
+          folder_tree: folderTree
+        })
+      });
+      if (res.ok) {
+        setFoldersMap(prev => ({ ...prev, [selectedOrg.id]: folderTree }));
+        loadMaterialsAndRefresh();
+        addToast('Folder renamed successfully', 'success');
+      } else {
+        const data = await res.json();
+        addToast(data.detail || 'Failed to rename folder', 'error');
+      }
+    } catch (e) {
+      console.error(e);
+      addToast('Error renaming folder', 'error');
+    }
+  };
+
+  const handleDeleteFolder = async (folderPath, folderName) => {
+    if (currentUser !== 'admin') return;
+    const confirmed = confirm(`Are you sure you want to delete folder "${folderName}" and all of its contents?\nThis will permanently delete all materials stored in this folder and its subfolders.`);
+    if (!confirmed) return;
+
+    let folderTree = JSON.parse(JSON.stringify(currentOrgFolders));
+    function removeFolderFromTree(folders, targetPath) {
+      const parts = targetPath.split('/');
+      let currentLevel = folders;
+      for (let i = 0; i < parts.length; i++) {
+        const part = parts[i];
+        const foundIdx = currentLevel.findIndex(f => f.name === part);
+        if (foundIdx === -1) return false;
+        if (i === parts.length - 1) {
+          currentLevel.splice(foundIdx, 1);
+          return true;
+        }
+        currentLevel = currentLevel[foundIdx].children || [];
+      }
+      return false;
+    }
+
+    const success = removeFolderFromTree(folderTree, folderPath);
+    if (!success) {
+      addToast('Folder not found', 'error');
+      return;
+    }
+
+    if (currentFolderFilter === folderPath || currentFolderFilter?.startsWith(folderPath + '/')) {
+      setCurrentFolderFilter(null);
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/api/folders/delete`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentToken}`
+        },
+        body: JSON.stringify({
+          org_id: selectedOrg.id,
+          folder_path: folderPath,
+          folder_tree: folderTree
+        })
+      });
+      if (res.ok) {
+        setFoldersMap(prev => ({ ...prev, [selectedOrg.id]: folderTree }));
+        loadMaterialsAndRefresh();
+        addToast('Folder and contents deleted successfully', 'success');
+      } else {
+        const data = await res.json();
+        addToast(data.detail || 'Failed to delete folder', 'error');
+      }
+    } catch (e) {
+      console.error(e);
+      addToast('Error deleting folder', 'error');
+    }
+  };
+
+  const handleRenameMaterial = async (materialId, currentName) => {
+    if (currentUser !== 'admin') return;
+    const newName = prompt('Enter new filename:', currentName);
+    if (!newName) return;
+    const cleanName = newName.trim();
+    if (!cleanName || cleanName === currentName) return;
+
+    try {
+      const res = await fetch(`${API_BASE}/api/materials/${materialId}/rename`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentToken}`
+        },
+        body: JSON.stringify({ name: cleanName })
+      });
+      if (res.ok) {
+        await loadMaterialsAndRefresh();
+        addToast('File renamed successfully', 'success');
+        // Re-open detail modal to reflect name change
+        setTimeout(() => handleOpenFile(materialId), 100);
+      } else {
+        const data = await res.json();
+        addToast(data.detail || 'Failed to rename file', 'error');
+      }
+    } catch (e) {
+      console.error(e);
+      addToast('Error renaming file', 'error');
+    }
+  };
+
+  const handleCastVote = async (id, decision) => {
+    if (!currentToken) return;
+    try {
+      const res = await fetch(`${API_BASE}/api/materials/${id}/vote`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentToken}`
+        },
+        body: JSON.stringify({ decision })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        await loadMaterialsAndRefresh();
+        if (data.status === 'approved') {
+          addToast(t('material_fully_approved', { material: data.name }), 'success');
+        } else if (data.status === 'revision') {
+          addToast(t('revision_requested', { material: data.name }), 'error');
+        } else {
+          addToast(decision === 'approved' ? t('approval_recorded') : t('revision_request_sent'), decision === 'approved' ? 'success' : 'info');
+        }
+        if (modal && modal.materialId === id) {
+          // Refresh open modal
+          setTimeout(() => handleOpenFile(id), 100);
+        }
+      } else {
+        const errData = await res.json();
+        addToast(errData.detail || 'Failed to submit vote', 'error');
+      }
+    } catch (e) {
+      console.error('Vote error:', e);
+      addToast('Network error while casting vote', 'error');
+    }
+  };
+
+  const handleSaveSuggestions = async (id, suggestions) => {
+    try {
+      const res = await fetch(`${API_BASE}/api/materials/${id}/suggestions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentToken}`
+        },
+        body: JSON.stringify({ suggestions })
+      });
+      if (res.ok) {
+        await loadMaterialsAndRefresh();
+        addToast('Suggestions updated successfully', 'success');
+        setTimeout(() => handleOpenFile(id), 100);
+      } else {
+        const errData = await res.json();
+        addToast(errData.detail || 'Failed to update suggestions', 'error');
+      }
+    } catch (e) {
+      console.error('Error saving suggestions:', e);
+      addToast('Failed to save suggestions due to network error', 'error');
+    }
+  };
+
+  const handleReupload = async (id, file) => {
+    if (!file) return;
+    const formData = new FormData();
+    formData.append('file', file);
+    addToast('Uploading revised document and running AI checks...', 'info');
+
+    try {
+      const res = await fetch(`${API_BASE}/api/materials/${id}/reupload`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${currentToken}` },
+        body: formData
+      });
+      if (res.ok) {
+        addToast('Revised version uploaded successfully!', 'success');
+        setModal(null);
+        await loadMaterialsAndRefresh();
+        setTimeout(() => handleOpenFile(id), 300);
+      } else {
+        const data = await res.json();
+        addToast(data.detail || 'Failed to upload revised document', 'error');
+      }
+    } catch (e) {
+      console.error(e);
+      addToast('Error uploading revised document', 'error');
+    }
+  };
+
+  const handleCreateUser = async (e) => {
+    e.preventDefault();
+    setRegError('');
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/users`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentToken}`
+        },
+        body: JSON.stringify({ name: regName, email: regEmail, role: regRole, password: regPassword })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setRegError(data.detail || data.error || 'Failed to create user.');
+        return;
+      }
+      addToast('User created successfully!', 'success');
+      setRegName(''); setRegEmail(''); setRegPassword('');
+      fetchUsers();
+    } catch (err) {
+      console.error('Error creating user:', err);
+      setRegError('Network error occurred.');
+    }
+  };
+
+  const handleEditUser = async (userId, name, role) => {
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentToken}`
+        },
+        body: JSON.stringify({ name, role })
+      });
+      if (res.ok) {
+        addToast('User profile updated successfully', 'success');
+        setModal(null);
+        fetchUsers();
+      } else {
+        const errData = await res.json();
+        addToast(errData.detail || 'Failed to update user', 'error');
+      }
+    } catch (e) {
+      console.error(e);
+      addToast('Network error during update', 'error');
+    }
+  };
+
+  const handleDeleteUser = async (userId, name) => {
+    if (!confirm(`Are you sure you want to delete user "${name}"? This action cannot be undone.`)) return;
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/users/${userId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${currentToken}` }
+      });
+      if (res.ok) {
+        addToast('User deleted successfully', 'success');
+        fetchUsers();
+      } else {
+        const errData = await res.json();
+        addToast(errData.detail || 'Failed to delete user', 'error');
+      }
+    } catch (e) {
+      console.error(e);
+      addToast('Network error during delete', 'error');
+    }
+  };
+
+  const handleUploadSubmit = async () => {
+    if (!uploadName) { addToast(t('enter_material_name'), 'error'); return; }
+    if (!selectedUploadFile) { addToast('Please select a file to upload', 'error'); return; }
+
+    const formData = new FormData();
+    formData.append('file', selectedUploadFile);
+    formData.append('name', uploadName);
+    formData.append('type', uploadType);
+    formData.append('campaign', uploadCampaign || '—');
+    formData.append('folder', uploadFolder);
+    formData.append('notes', uploadNotes);
+    formData.append('org_id', selectedOrg.id);
+
+    addToast(t('running_precheck', { org: translateOrgName(selectedOrg) }), 'info');
+
+    try {
+      const res = await fetch(`${API_BASE}/api/materials`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${currentToken}` },
+        body: formData
+      });
+
+      if (res.ok) {
+        const result = await res.json();
+        addToast(t('precheck_complete'), 'success');
+        if (result.material && result.material.aiRemarks) {
+          addToast(`🤖 AI Remarks: ${result.material.aiRemarks}`, 'info');
+        }
+        setTimeout(() => {
+          addToast(t('sent_to_approvers', { name: uploadName, org: translateOrgName(selectedOrg) }), 'success');
+          // Reset form
+          setUploadName(''); setUploadCampaign(''); setUploadNotes(''); setSelectedUploadFile(null);
+          loadMaterialsAndRefresh().then(() => setActivePage('approvals'));
+        }, 1200);
+      } else {
+        const errData = await res.json();
+        addToast(errData.detail || 'Upload failed', 'error');
+      }
+    } catch (e) {
+      console.error('Upload error:', e);
+      addToast('Network error during upload', 'error');
+    }
+  };
+
+  // Notification modal view & read-all trigger
+  const handleShowNotifications = async () => {
+    addToast('Marked all notifications as read', 'success');
+    setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+    setModal({ type: 'notifications' });
+    if (selectedOrg && currentToken) {
+      try {
+        await fetch(`${API_BASE}/api/notifications/read`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${currentToken}`
+          },
+          body: JSON.stringify({ org_id: selectedOrg.id })
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  };
+
+  // Document Modal Preview HTML helper
+  const getFileThumbnailHTML = (m, customStyle = "") => {
+    if (m.file_path) {
+      const ext = m.file_path.split('.').pop().toLowerCase();
+      const isImg = ['png', 'jpg', 'jpeg', 'webp', 'gif', 'svg'].includes(ext);
+      const fileUrl = m.file_path.startsWith('http') ? m.file_path : `${API_BASE}/${m.file_path}`;
+      if (isImg) {
+        return <img src={fileUrl} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'var(--radius)', ...customStyle }} alt={m.name} />;
+      } else if (ext === 'pdf') {
+        if (customStyle.fontSize === '16px') {
+          return <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', width: '100%', fontSize: '10px', fontWeight: '700', color: 'var(--text3)' }}>📕 PDF</div>;
+        }
+        return <iframe src={`${fileUrl}#toolbar=0&navpanes=0&scrollbar=0`} style={{ width: '100%', height: '100%', border: 'none', pointerEvents: 'none', borderRadius: 'var(--radius)', ...customStyle }} />;
+      } else {
+        return <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', width: '100%', fontSize: '13px', fontWeight: '700', color: 'var(--text3)', textTransform: 'uppercase' }}>📄 {ext}</div>;
+      }
+    }
+    return <span style={{ fontSize: '24px' }}>{m.emoji}</span>;
+  };
+
+  // Open Document detail modal
+  const handleOpenFile = (id) => {
+    const m = currentOrgMaterials.find(x => x.id === id);
+    if (!m) return;
+    setModal({ type: 'material_detail', materialId: id, material: m });
+  };
+
+  // File Download handler with auto extension correction and image-to-PDF conversion
+  const handleDownload = async (e, m) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const path = m.file_path || 'uploads/sample.pdf';
+    const ext = path.split('.').pop().toLowerCase();
+    const fileUrl = path.startsWith('http') ? path : `${API_BASE}/${path}`;
+    const downloadName = m.name.split('.')[0] || 'document';
+
+    if (ext === 'pdf') {
+      const link = document.createElement('a');
+      link.href = fileUrl;
+      link.download = `${downloadName}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else if (['doc', 'docx'].includes(ext)) {
+      const link = document.createElement('a');
+      link.href = fileUrl;
+      link.download = `${downloadName}.${ext}`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else if (['png', 'jpg', 'jpeg', 'webp', 'gif', 'svg'].includes(ext)) {
+      try {
+        addToast("Converting image to PDF for download...", "info");
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.src = fileUrl;
+        img.onload = () => {
+          const { jsPDF } = window.jspdf;
+          const pdf = new jsPDF({
+            orientation: img.width > img.height ? 'l' : 'p',
+            unit: 'px',
+            format: [img.width, img.height]
+          });
+          pdf.addImage(img, 'PNG', 0, 0, img.width, img.height);
+          pdf.save(`${downloadName}.pdf`);
+          addToast("PDF downloaded successfully!", "success");
+        };
+        img.onerror = () => {
+          // Fallback to original image download if canvas load fails
+          const link = document.createElement('a');
+          link.href = fileUrl;
+          link.download = `${downloadName}.png`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        };
+      } catch (err) {
+        console.error("PDF generation error:", err);
+        const link = document.createElement('a');
+        link.href = fileUrl;
+        link.download = `${downloadName}.${ext}`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    } else {
+      const link = document.createElement('a');
+      link.href = fileUrl;
+      link.download = `${downloadName}.${ext}`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
+  // Render Functions
+  const renderFolderNode = (node, pathPrefix = '') => {
+    const currentPath = pathPrefix ? `${pathPrefix}/${node.name}` : node.name;
+    const stats = getFolderStats(currentPath);
+    const isSelected = currentFolderFilter === currentPath;
+    const activeClass = isSelected ? ' active' : '';
+
+    const handleToggle = (e) => {
+      const ch = e.currentTarget.nextElementSibling;
+      const ar = e.currentTarget.querySelector('.folder-arrow');
+      if (ch && ar) {
+        const isOpen = ch.classList.toggle('open');
+        ar.textContent = isOpen ? '▼' : '▶';
+      }
+    };
+
+    const handleSelect = (e) => {
+      setActivePage('materials');
+      if (currentFolderFilter === currentPath) {
+        setCurrentFolderFilter(null);
+        addToast(t('all_folders'), 'info');
+      } else {
+        setCurrentFolderFilter(currentPath);
+        addToast((t('folder_label') || 'Folder') + ': ' + translateFolderPath(currentPath), 'info');
+      }
+    };
+
+    const adminActions = currentUser === 'admin' ? (
+      <span className="folder-actions" style={{ marginLeft: 'auto', display: 'inline-flex', gap: '6px', alignItems: 'center' }}>
+        <span className="folder-action-btn" title="Add Subfolder" onClick={(e) => { e.stopPropagation(); handleCreateFolder(currentPath); }} style={{ cursor: 'pointer', fontSize: '10px' }}>➕</span>
+        <span className="folder-action-btn" title="Delete Folder" onClick={(e) => { e.stopPropagation(); handleDeleteFolder(currentPath, node.name); }} style={{ cursor: 'pointer', fontSize: '10px' }}>🗑️</span>
+      </span>
+    ) : null;
+
+    if (node.children) {
+      return (
+        <div className="folder" key={currentPath}>
+          <div className="folder-name" onClick={handleToggle} onDoubleClick={(e) => { e.stopPropagation(); handleRenameFolder(currentPath, node.name); }} style={{ display: 'flex', alignItems: 'center', width: '100%', cursor: 'pointer' }} title={currentUser === 'admin' ? "Double-click to rename" : ""}>
+            <span className="folder-arrow" style={{ fontSize: '9px', color: 'var(--text3)', marginRight: '6px' }}>▶</span>
+            <span>📁</span> <span style={{ marginLeft: '4px', flexGrow: 1, textAlign: 'left' }}>{translateFolderName(node.name)}</span>
+            {adminActions}
+          </div>
+          <div className="folder-children">
+            {node.children.map(child => renderFolderNode(child, currentPath))}
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div className={`folder-file${activeClass}`} key={currentPath} onClick={handleSelect} onDoubleClick={(e) => { e.stopPropagation(); handleRenameFolder(currentPath, node.name); }} style={{ display: 'flex', alignItems: 'center', width: '100%', cursor: 'pointer' }} title={currentUser === 'admin' ? "Double-click to rename" : ""}>
+          <span>📂</span> <span style={{ marginLeft: '4px', flexGrow: 1, textAlign: 'left' }}>{translateFolderName(node.name)}</span>
+          <span className="count" style={{ marginLeft: '6px', marginRight: '6px' }}>{stats.count}</span>
+          {adminActions}
+        </div>
+      );
+    }
+  };
+
+  // Close dropdowns on outside click
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (!e.target.closest('.user-pill') && !e.target.closest('.user-switcher')) setSwitcherOpen(false);
+      if (!e.target.closest('#topbar-org-pill') && !e.target.closest('#org-dd')) setOrgDDOpen(false);
+      if (!e.target.closest('#topbar-lang-pill') && !e.target.closest('#lang-dd')) setLangDDOpen(false);
+    };
+    document.addEventListener('click', handleOutsideClick);
+    return () => document.removeEventListener('click', handleOutsideClick);
+  }, []);
+
+  // JSX Rendering for screens
+  if (!currentToken) {
+    // ── LOGIN SCREEN ──
+    const googleClientId = window.GOOGLE_CLIENT_ID || "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
+    const isSandboxMode = googleClientId.startsWith("YOUR_GOOGLE_CLIENT_ID") || googleClientId === "";
+    return (
+      <div className="select-screen" id="screen-login">
+        <div className="sel-logo">
+          <div className="sel-dot"></div>BrandPortal
+        </div>
+        <p className="sel-subtitle">{t('login_subtitle')}</p>
+        <div className="card" style={{ maxWidth: '360px', width: '100%', marginBottom: '14px' }}>
+          <div className="form-group">
+            <label className="form-label">{t('login_user')}</label>
+            <input className="form-control" type="email" placeholder="e.g. admin@example.com" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} onKeyPress={(e) => { if (e.key === 'Enter') handleLogin(e); }} />
+          </div>
+          <div className="form-group">
+            <label className="form-label">{t('login_password')}</label>
+            <input className="form-control" type="password" placeholder={t('login_password')} value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} onKeyPress={(e) => { if (e.key === 'Enter') handleLogin(e); }} />
+          </div>
+          {loginError && <div style={{ color: 'var(--red)', fontSize: '12px', minHeight: '18px', marginTop: '6px' }}>{loginError}</div>}
+        </div>
+        <button type="button" className="sel-btn" id="login-btn" onClick={handleLogin}>{t('login_button')}</button>
+
+        <div style={{ textAlign: 'center', margin: '18px 0 10px', fontSize: '12px', color: 'var(--text3)', display: 'flex', alignItems: 'center', gap: '10px', width: '100%', maxWidth: '360px' }}>
+          <div style={{ flex: 1, height: '1px', background: 'var(--border)' }}></div>
+          <span>or</span>
+          <div style={{ flex: 1, height: '1px', background: 'var(--border)' }}></div>
+        </div>
+
+        {!isSandboxMode ? (
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px', width: '100%', maxWidth: '360px' }}>
+            <div id="google-signin-btn" style={{ width: '100%' }}></div>
+          </div>
+        ) : (
+          <div style={{ width: '100%', maxWidth: '360px', display: 'flex', justifyContent: 'center' }}>
+            <button onClick={() => setModal({ type: 'sandbox_login' })} type="button" className="btn btn-secondary" style={{ width: '100%', height: '40px', justifyContent: 'center', gap: '10px', fontWeight: 500, border: '1.5px solid var(--border)', borderRadius: 'var(--radius)', cursor: 'pointer' }}>
+              <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" style={{ width: '18px', height: '18px' }} />
+              Sign in with Google (OAuth Sandbox)
+            </button>
+          </div>
+        )}
+        {renderModal()}
+        {renderToasts()}
+      </div>
+    );
+  }
+
+  if (!selectedOrg) {
+    // ── SCREEN 1 — SELECT ORGANISATION ──
+    return (
+      <div className="select-screen" id="screen-org">
+        <div className="sel-logo"><div className="sel-dot"></div>BrandPortal</div>
+        <p className="sel-subtitle">{t('select_org_subtitle')}</p>
+        <div className="sel-step">
+          <div className="step-dot active">1</div>
+          <div className="step-line"></div>
+          <div className="step-dot idle">2</div>
+          <span style={{ fontSize: '12px', color: 'var(--text2)', marginLeft: '8px' }}>Organisation → Portal</span>
+        </div>
+        <div className="sel-grid">
+          {ORGANISATIONS.map(o => (
+            <div className={`sel-card${tempOrg?.id === o.id ? ' selected' : ''}`} key={o.id} onClick={() => setTempOrg(o)}>
+              <div className="sel-card-icon">{o.icon}</div>
+              <div className="sel-card-name">{o.name}</div>
+            </div>
+          ))}
+        </div>
+        <button className="sel-btn" disabled={!tempOrg} onClick={() => {
+          setSelectedOrg(tempOrg);
+          setSelectedLang(LANGUAGES[0]);
+          addToast(`${tempOrg.icon} ${translateOrgName(tempOrg)} — ${LANGUAGES[0].flag} ${LANGUAGES[0].name}`, 'success');
+        }}>
+          {t('enter_portal')}
+        </button>
+        {renderToasts()}
+      </div>
+    );
+  }
+
+  // Helper inside modals
+  function renderModal() {
+    if (!modal) return null;
+    let modalTitle = "";
+    let modalBody = null;
+    let modalFooter = null;
+
+    const closeModal = () => setModal(null);
+
+    if (modal.type === 'sandbox_login') {
+      modalTitle = "Google OAuth Developer Sandbox";
+      modalBody = (
+        <div>
+          <p style={{ color: 'var(--text2)', fontSize: '13px', marginBottom: '16px' }}>You are running in Developer Sandbox mode. Enter the email address to login with:</p>
+          <div className="form-group" style={{ marginBottom: 0 }}>
+            <label className="form-label">Email Address</label>
+            <input type="email" className="form-control" value={sandboxEmail} onChange={(e) => setSandboxEmail(e.target.value)} placeholder="e.g. admin@example.com" onKeyPress={(e) => { if(e.key === 'Enter') { handleGoogleLogin({ credential: "mock_token_for_" + sandboxEmail.toLowerCase() }); closeModal(); } }} />
+          </div>
+        </div>
+      );
+      modalFooter = (
+        <div style={{ display: 'flex', gap: '8px', justifyContent: 'end', width: '100%' }}>
+          <button className="btn btn-secondary" onClick={closeModal}>Cancel</button>
+          <button className="btn btn-primary" onClick={() => { handleGoogleLogin({ credential: "mock_token_for_" + sandboxEmail.toLowerCase() }); closeModal(); }}>Sign in</button>
+        </div>
+      );
+    } else if (modal.type === 'notifications') {
+      modalTitle = t('notifications_title', { org: translateOrgName(selectedOrg) });
+      modalBody = notifications.length === 0 ? (
+        <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text3)', fontSize: '13px' }}>No notifications available.</div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+          {notifications.map((n, idx) => (
+            <div key={idx} style={{ padding: '12px', borderBottom: '1px solid var(--border)', display: 'flex', gap: '10px', alignItems: 'start', background: !n.isRead ? 'var(--blue-dim)' : 'transparent' }}>
+              <span style={{ fontSize: '18px' }}>{n.icon}</span>
+              <div style={{ flex: 1, fontSize: '13px' }}>{n.message}</div>
+              <span style={{ fontSize: '11px', color: 'var(--text3)', flexShrink: 0 }}>{n.time}</span>
+            </div>
+          ))}
+        </div>
+      );
+      modalFooter = <button className="btn btn-secondary" onClick={closeModal}>{t('close')}</button>;
+    } else if (modal.type === 'material_detail') {
+      const m = modal.material;
       const path = m.file_path || 'uploads/sample.pdf';
       const fileUrl = path.startsWith('http') ? path : `${API_BASE}/${path}`;
       const ext = path.split('.').pop().toLowerCase();
+      const canAct = m.votes[currentUser] === 'pending';
 
-      let previewHTML = '';
-      if (ext === 'pdf') {
-        previewHTML = `
-          <div style="margin-bottom:16px;">
-            <div style="font-size:11px;color:var(--text3);margin-bottom:8px">📄 PDF Document Preview</div>
-            <iframe src="${fileUrl}" style="width:100%;height:450px;border:1px solid var(--border);border-radius:var(--radius);background:white;" class="pdf-viewer"></iframe>
-          </div>
-        `;
-      }
+      const handleAddComment = (e) => {
+        if (e.key === 'Enter' || e.type === 'click') {
+          const inp = document.getElementById(`nc-comment-input`);
+          if (inp && inp.value.trim()) {
+            addToast(t('comment_added'), 'success');
+            inp.value = '';
+          }
+        }
+      };
 
-      let reuploadHTML = '';
-      if (m.status === 'revision') {
-        reuploadHTML = `
-          <div style="margin-top:16px; border: 1px dashed var(--orange); border-radius: var(--radius); padding: 12px; background: var(--bg3)">
-            <div style="font-weight:600; color:var(--orange); font-size:12px; margin-bottom:6px; display:flex; align-items:center; gap:6px;">
-              <span>⚠️</span> ${t('revision') || 'Needs Revision'}
+      modalTitle = (
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          {currentUser === 'admin' ? (
+            <span onDoubleClick={() => handleRenameMaterial(m.id, m.name)} style={{ cursor: 'pointer' }} title="Double click to rename">{translateMaterialName(m)}</span>
+          ) : (
+            <span>{translateMaterialName(m)}</span>
+          )}
+          {currentUser === 'admin' && (
+            <span onClick={() => handleRenameMaterial(m.id, m.name)} style={{ fontSize: '14px', cursor: 'pointer', marginLeft: '8px' }} title="Rename File">✏️</span>
+          )}
+        </div>
+      );
+
+      modalBody = (
+        <div>
+          <div className="two-col" style={{ gap: '14px', marginBottom: '18px' }}>
+            <div 
+              onClick={() => {
+                if (['png', 'jpg', 'jpeg', 'webp', 'gif', 'svg'].includes(ext)) {
+                  setLightboxUrl(fileUrl);
+                } else if (ext === 'pdf') {
+                  window.open(fileUrl, '_blank');
+                }
+              }}
+              style={{ background: 'var(--bg3)', borderRadius: 'var(--radius)', height: '180px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '56px', overflow: 'hidden', cursor: 'pointer' }}
+              title="Click to view full screen"
+            >
+              {getFileThumbnailHTML(m, { fontSize: '56px' })}
             </div>
-            <p style="font-size:11px; color:var(--text2); margin-bottom:8px;">A reviewer has requested revisions. Select and upload a revised document to update this material.</p>
-            <input type="file" id="reupload-file-input-${id}" style="display:none;" onchange="handleReupload(${id}, event)" />
-            <button class="btn btn-secondary btn-sm" onclick="document.getElementById('reupload-file-input-${id}').click()" style="padding:4px 8px; font-size:11px;">📎 Select Revised File</button>
+            <div>
+              <div style={{ fontSize: '11px', color: 'var(--text3)', marginBottom: '10px' }}>{t('metadata')}</div>
+              <table style={{ fontSize: '12px', width: '100%', borderCollapse: 'collapse' }}>
+                <tbody>
+                  <tr><td style={{ color: 'var(--text2)', padding: '3px 0' }}>{t('designed_by')}</td><td>{translateUserLabel(m.designer)}</td></tr>
+                  <tr><td style={{ color: 'var(--text2)', padding: '3px 0' }}>{t('uploaded')}</td><td>{m.date}</td></tr>
+                  <tr><td style={{ color: 'var(--text2)', padding: '3px 0' }}>{t('campaign')}</td><td>{m.campaign}</td></tr>
+                  <tr><td style={{ color: 'var(--text2)', padding: '3px 0' }}>{t('folder_label')}</td><td style={{ color: 'var(--text3)' }}>{translateFolderPath(m.folder)}</td></tr>
+                  <tr><td style={{ color: 'var(--text2)', padding: '3px 0' }}>{t('status')}</td><td>{getStatusPill(m.status)}</td></tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-        `;
-      }
 
-      document.getElementById('modal-body').innerHTML = `
-    <div class="two-col" style="gap:14px;margin-bottom:18px">
-      <div style="background:var(--bg3);border-radius:var(--radius);height:180px;display:flex;align-items:center;justify-content:center;font-size:56px;overflow:hidden">${getFileThumbnailHTML(m, "font-size:56px")}</div>
-      <div>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:10px">${t('metadata')}</div>
-        <table style="font-size:12px;width:100%;border-collapse:collapse">
-          <tr><td style="color:var(--text2);padding:3px 0">${t('designed_by')}</td><td>${translateUserLabel(m.designer)}</td></tr>
-          <tr><td style="color:var(--text2);padding:3px 0">${t('uploaded')}</td><td>${m.date}</td></tr>
-          <tr><td style="color:var(--text2);padding:3px 0">${t('campaign')}</td><td>${m.campaign}</td></tr>
-          <tr><td style="color:var(--text2);padding:3px 0">${t('folder_label')}</td><td style="color:var(--text3)">${translateFolderPath(m.folder)}</td></tr>
-          <tr><td style="color:var(--text2);padding:3px 0">${t('status')}</td><td>${getStatusPill(m.status)}</td></tr>
-        </table>
-      </div>
-    </div>
-    
-    ${previewHTML}
-    
-    <div style="margin-bottom:16px">
-      <div style="font-size:11px;color:var(--text3);margin-bottom:8px">${t('approval_status')}</div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        ${Object.entries(m.votes).map(([role, v]) => `
-          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:9px 12px;text-align:center;min-width:90px">
-            <div style="font-size:16px;margin-bottom:3px">${v === 'approved' ? '✅' : v === 'revision' ? '⚠️' : '⏳'}</div>
-            <div style="font-size:11px;font-weight:600;text-transform:uppercase">${role}</div>
-            <div style="font-size:10px;color:var(--text2);margin-top:2px">${v === 'pending' ? t('awaiting') : v === 'approved' ? t('approved') : t('revision')}</div>
-          </div>`).join('')}
-      </div>
-    </div>
-    <div class="ai-panel">
-      <h4>🤖 ${t('ai_brand_compliance')} — ${translateOrgName(selectedOrg)}</h4>
-      <div class="ai-checks">${m.aiInsights.map(k => `<div class="ai-check"><span>${t(k)}</span></div>`).join('')}</div>
-      <div class="ai-score" style="margin-bottom:12px;">
-        <span style="font-size:12px;color:var(--text2)">${t('brand_score')}</span>
-        <div class="score-bar"><div class="score-fill" style="width:${m.aiScore}%;background:${m.aiScore >= 80 ? 'var(--green)' : m.aiScore >= 60 ? 'var(--orange)' : 'var(--red)'}"></div></div>
-        <span style="font-size:14px;font-weight:700;color:${m.aiScore >= 80 ? 'var(--green)' : m.aiScore >= 60 ? 'var(--orange)' : 'var(--red)'}">${m.aiScore}/100</span>
-      </div>
-      ${m.aiRemarks ? `
-      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;font-size:12px;color:var(--text2);line-height:1.5;margin-top:12px;text-align:left;">
-        <div style="font-weight:600;margin-bottom:4px;color:var(--text)">🤖 AI Analysis Remarks:</div>
-        <div>${m.aiRemarks}</div>
-      </div>
-      ` : ''}
-      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;font-size:12px;color:var(--text2);line-height:1.5;margin-top:12px;text-align:left;">
-        <div style="font-weight:600;margin-bottom:6px;color:var(--text);display:flex;justify-content:space-between;align-items:center;">
-          <span>💡 Suggestions for Improvement:</span>
-          ${['admin', 'ceo', 'coo', 'director'].includes(currentUser) ? `<button class="btn btn-sm btn-secondary" id="edit-sugg-btn-${m.id}" onclick="toggleEditSuggestions(${m.id})" style="padding:2px 8px;font-size:10px;line-height:1;margin:0;">✏️ Edit</button>` : ''}
-        </div>
-        <div id="sugg-display-${m.id}" style="white-space:pre-wrap;margin-top:4px;">${m.aiSuggestions || 'No suggestions generated.'}</div>
-        ${['admin', 'ceo', 'coo', 'director'].includes(currentUser) ? `
-        <div id="sugg-edit-container-${m.id}" style="display:none;margin-top:6px;">
-          <textarea class="form-control" id="sugg-input-${m.id}" rows="3" style="width:100%;font-size:12px;font-family:inherit;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:6px;box-sizing:border-box;">${m.aiSuggestions || ''}</textarea>
-          <div style="display:flex;justify-content:end;gap:6px;margin-top:6px;">
-            <button class="btn btn-sm btn-secondary" onclick="toggleEditSuggestions(${m.id})" style="padding:2px 8px;font-size:10px;line-height:1;">Cancel</button>
-            <button class="btn btn-sm btn-approve" onclick="saveSuggestions(${m.id})" style="padding:2px 8px;font-size:10px;line-height:1;background:var(--green);color:white;border:none;">Save</button>
+          {ext === 'pdf' && (
+            <div style={{ marginBottom: '16px' }}>
+              <div style={{ fontSize: '11px', color: 'var(--text3)', marginBottom: '8px' }}>📄 PDF Document Preview</div>
+              <iframe src={fileUrl} style={{ width: '100%', height: '450px', border: '1px solid var(--border)', borderRadius: 'var(--radius)', background: 'white' }} className="pdf-viewer"></iframe>
+            </div>
+          )}
+
+          <div style={{ marginBottom: '16px' }}>
+            <div style={{ fontSize: '11px', color: 'var(--text3)', marginBottom: '8px' }}>{t('approval_status')}</div>
+            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+              {Object.entries(m.votes).map(([role, v]) => (
+                <div key={role} style={{ background: 'var(--bg3)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '9px 12px', textAlign: 'center', minWidth: '90px' }}>
+                  <div style={{ fontSize: '16px', marginBottom: '3px' }}>{v === 'approved' ? '✅' : v === 'revision' ? '⚠️' : '⏳'}</div>
+                  <div style={{ fontSize: '11px', fontWeight: '600', textTransform: 'uppercase' }}>{role}</div>
+                  <div style={{ fontSize: '10px', color: 'var(--text2)', marginTop: '2px' }}>{v === 'pending' ? t('awaiting') : v === 'approved' ? t('approved') : t('revision')}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="ai-panel">
+            <h4>🤖 {t('ai_brand_compliance')} — {translateOrgName(selectedOrg)}</h4>
+            <div className="ai-checks">
+              {m.aiInsights.map((k, idx) => <div className="ai-check" key={idx}><span>{t(k)}</span></div>)}
+            </div>
+            <div className="ai-score" style={{ marginBottom: '12px' }}>
+              <span style={{ fontSize: '12px', color: 'var(--text2)' }}>{t('brand_score')}</span>
+              <div className="score-bar">
+                <div className="score-fill" style={{ width: `${m.aiScore}%`, background: m.aiScore >= 80 ? 'var(--green)' : m.aiScore >= 60 ? 'var(--orange)' : 'var(--red)' }}></div>
+              </div>
+              <span style={{ fontSize: '14px', fontWeight: '700', color: m.aiScore >= 80 ? 'var(--green)' : m.aiScore >= 60 ? 'var(--orange)' : 'var(--red)' }}>{m.aiScore}/100</span>
+            </div>
+
+            {m.aiRemarks && (
+              <div style={{ background: 'var(--bg3)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '10px 12px', fontSize: '12px', color: 'var(--text2)', lineHeight: '1.5', marginTop: '12px' }}>
+                <div style={{ fontWeight: '600', marginBottom: '4px', color: 'var(--text)' }}>🤖 AI Analysis Remarks:</div>
+                <div>{m.aiRemarks}</div>
+              </div>
+            )}
+
+            <div style={{ background: 'var(--bg3)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '10px 12px', fontSize: '12px', color: 'var(--text2)', lineHeight: '1.5', marginTop: '12px' }}>
+              <div style={{ fontWeight: '600', marginBottom: '6px', color: 'var(--text)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span>💡 Suggestions for Improvement:</span>
+                {['admin', 'ceo', 'coo', 'director'].includes(currentUser) && (
+                  <button className="btn btn-sm btn-secondary" onClick={() => setIsEditingSuggestions(!isEditingSuggestions)} style={{ padding: '2px 8px', fontSize: '10px', margin: 0 }}>✏️ Edit</button>
+                )}
+              </div>
+              {!isEditingSuggestions ? (
+                <div style={{ whiteSpace: 'pre-wrap', marginTop: '4px' }}>{m.aiSuggestions || 'No suggestions generated.'}</div>
+              ) : (
+                <div style={{ marginTop: '6px' }}>
+                  <textarea className="form-control" rows="3" value={suggestionsVal} onChange={(e) => setSuggestionsVal(e.target.value)} style={{ width: '100%', fontSize: '12px', background: 'var(--bg2)', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '6px' }} />
+                  <div style={{ display: 'flex', justifyContent: 'end', gap: '6px', marginTop: '6px' }}>
+                    <button className="btn btn-sm btn-secondary" onClick={() => setIsEditingSuggestions(false)}>Cancel</button>
+                    <button className="btn btn-sm btn-approve" onClick={() => { handleSaveSuggestions(m.id, suggestionsVal); setIsEditingSuggestions(false); }} style={{ background: 'var(--green)', color: 'white', border: 'none' }}>Save</button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {m.status === 'revision' && (
+            <div style={{ marginTop: '16px', border: '1px dashed var(--orange)', borderRadius: 'var(--radius)', padding: '12px', background: 'var(--bg3)' }}>
+              <div style={{ fontWeight: '600', color: 'var(--orange)', fontSize: '12px', marginBottom: '6px' }}>⚠️ {t('revision')}</div>
+              <p style={{ fontSize: '11px', color: 'var(--text2)', marginBottom: '8px' }}>A reviewer has requested revisions. Select and upload a revised document to update this material.</p>
+              <input type="file" id={`reupload-file-input-${m.id}`} style={{ display: 'none' }} onChange={(e) => handleReupload(m.id, e.target.files[0])} />
+              <button className="btn btn-secondary btn-sm" onClick={() => document.getElementById(`reupload-file-input-${m.id}`).click()} style={{ padding: '4px 8px', fontSize: '11px' }}>📎 Select Revised File</button>
+            </div>
+          )}
+
+          <div style={{ marginTop: '16px' }}>
+            <div style={{ fontSize: '11px', color: 'var(--text3)', marginBottom: '8px' }}>{t('version_history')}</div>
+            {m.versions.map((v, idx) => (
+              <div className="version-row" key={idx}>
+                <div className="version-thumb" style={{ overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {getFileThumbnailHTML(m)}
+                </div>
+                <div className="version-info">
+                  <strong>{v.v} — {v.date}</strong><br />
+                  <span style={{ color: 'var(--text2)' }}>{t(v.note)}</span>
+                </div>
+                <button className="btn btn-sm btn-secondary" onClick={() => addToast(t('version_compare_info'), 'info')}>{t('compare')}</button>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ marginTop: '16px' }}>
+            <div style={{ fontSize: '11px', color: 'var(--text3)', marginBottom: '8px' }}>{t('comments')}</div>
+            <div className="comment">
+              <div className="comment-header"><span className="badge badge-coo">COO</span> Omar — {m.date}</div>
+              <div className="comment-text">{m.status === 'revision' ? t('comment_revision_text') : t('comment_approved_text')}</div>
+            </div>
+            <div style={{ marginTop: '10px', display: 'flex', gap: '7px' }}>
+              <input className="form-control" placeholder={t('add_comment_placeholder')} style={{ flex: 1 }} id="nc-comment-input" onKeyPress={handleAddComment} />
+              <button className="btn btn-secondary btn-sm" onClick={handleAddComment}>{t('post')}</button>
+            </div>
           </div>
         </div>
-        ` : ''}
-      </div>
-    </div>
-    ${reuploadHTML}
-    <div style="margin-top:16px">
-      <div style="font-size:11px;color:var(--text3);margin-bottom:8px">${t('version_history')}</div>
-      ${m.versions.map(v => `
-        <div class="version-row">
-          <div class="version-thumb" style="overflow:hidden;display:flex;align-items:center;justify-content:center">${getFileThumbnailHTML(m)}</div>
-          <div class="version-info"><strong>${v.v} — ${v.date}</strong><span style="color:var(--text2)">${t(v.note)}</span></div>
-          <button class="btn btn-sm btn-secondary" onclick="toast(t('version_compare_info'),'info')">${t('compare')}</button>
-        </div>`).join('')}
-    </div>
-    <div style="margin-top:16px">
-      <div style="font-size:11px;color:var(--text3);margin-bottom:8px">${t('comments')}</div>
-      <div class="comment">
-        <div class="comment-header"><span class="badge badge-coo">COO</span> Omar — ${m.date}</div>
-        <div class="comment-text">${m.status === 'revision' ? t('comment_revision_text') : t('comment_approved_text')}</div>
-      </div>
-      <div style="margin-top:10px;display:flex;gap:7px">
-        <input class="form-control" placeholder="${t('add_comment_placeholder')}" style="flex:1" id="nc-${id}">
-        <button class="btn btn-secondary btn-sm" onclick="addComment(${id})">${t('post')}</button>
-      </div>
-    </div>`;
+      );
 
-      const downloadBtn = `<a href="${fileUrl}" download="${m.name}" class="btn btn-secondary" style="display:inline-flex;align-items:center;gap:4px;text-decoration:none;">📥 Download Document</a>`;
+      const isReviewer = ['admin', 'ceo', 'coo', 'director'].includes(currentUser);
+      const showActions = isReviewer && m.status !== 'approved';
+      const showApprove = showActions && m.votes[currentUser] !== 'approved';
+      const showRevision = showActions;
 
-      document.getElementById('modal-footer').innerHTML = `
-        ${downloadBtn}
-        ${canAct ? `
-          <button class="btn btn-secondary" onclick="closeModalDirect()">${t('close')}</button>
-          <button class="btn btn-danger" onclick="openRevisionModal(${id})">⚠️ ${t('request_revision')}</button>
-          <button class="btn btn-approve" onclick="castVote(${id},'approved');closeModalDirect()">✅ ${t('approve')}</button>
-        ` : `<button class="btn btn-secondary" onclick="closeModalDirect()">${t('close')}</button>`}
-      `;
-      document.getElementById('modal-overlay').classList.add('open');
-    }
-
-    function openRevisionModal(id) {
-      document.getElementById('modal-title').textContent = t('request_revision');
-      document.getElementById('modal-body').innerHTML = `
-    <p style="color:var(--text2);margin-bottom:14px;font-size:13px">${t('revision_describe_text')}</p>
-    <div class="form-group">
-      <label class="form-label">${t('category')}</label>
-      <select class="form-control">
-        <option>${t('cat_brand_color')}</option><option>${t('cat_logo_violation')}</option>
-        <option>${t('cat_typography')}</option><option>${t('cat_messaging')}</option>
-        <option>${t('cat_layout')}</option><option>${t('cat_image_quality')}</option><option>${t('cat_other')}</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label class="form-label">${t('notes')}</label>
-      <textarea class="form-control" rows="4" placeholder="${t('revision_describe_placeholder')}"></textarea>
-    </div>
-    <div class="form-group">
-      <label class="form-label">${t('priority')}</label>
-      <select class="form-control">
-        <option>${t('priority_high')}</option>
-        <option>${t('priority_medium')}</option>
-        <option>${t('priority_low')}</option>
-      </select>
-    </div>`;
-      document.getElementById('modal-footer').innerHTML = `
-    <button class="btn btn-secondary" onclick="closeModalDirect()">${t('close')}</button>
-    <button class="btn btn-danger" onclick="castVote(${id},'revision');closeModalDirect()">${t('send_revision_request')}</button>`;
-    }
-
-    function toggleEditSuggestions(id) {
-      const displayDiv = document.getElementById(`sugg-display-${id}`);
-      const editDiv = document.getElementById(`sugg-edit-container-${id}`);
-      const editBtn = document.getElementById(`edit-sugg-btn-${id}`);
-      if (displayDiv.style.display === 'none') {
-        displayDiv.style.display = 'block';
-        editDiv.style.display = 'none';
-        editBtn.style.display = 'block';
-      } else {
-        displayDiv.style.display = 'none';
-        editDiv.style.display = 'block';
-        editBtn.style.display = 'none';
-      }
-    }
-
-    async function saveSuggestions(id) {
-      const input = document.getElementById(`sugg-input-${id}`);
-      if (!input) return;
-      const suggestions = input.value;
-
-      try {
-        const res = await fetch(`${API_BASE}/api/materials/${id}/suggestions`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${currentToken}`
-          },
-          body: JSON.stringify({ suggestions })
-        });
-
-        if (res.ok) {
-          toast('Suggestions updated successfully', 'success');
-          const m = materials().find(x => x.id === id);
-          if (m) {
-            m.aiSuggestions = suggestions;
-          }
-          document.getElementById(`sugg-display-${id}`).textContent = suggestions || 'No suggestions generated.';
-          toggleEditSuggestions(id);
-        } else {
-          const errData = await res.json();
-          toast(errData.detail || 'Failed to update suggestions', 'error');
-        }
-      } catch (e) {
-        console.error('Error saving suggestions:', e);
-        toast('Failed to save suggestions due to network error', 'error');
-      }
-    }
-
-    async function handleReupload(id, event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const formData = new FormData();
-      formData.append('file', file);
-
-      toast('Uploading revised document and running AI checks...', 'info');
-
-      try {
-        const res = await fetch(`${API_BASE}/api/materials/${id}/reupload`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${currentToken}`
-          },
-          body: formData
-        });
-
-        if (res.ok) {
-          toast('Revised version uploaded successfully!', 'success');
-          closeModalDirect();
-          await loadMaterialsAndRefresh();
-          // Re-open file modal to show the updated version details
-          setTimeout(() => {
-            openFile(id);
-          }, 300);
-        } else {
-          const data = await res.json();
-          toast(data.detail || 'Failed to upload revised document', 'error');
-        }
-      } catch (e) {
-        console.error(e);
-        toast('Error uploading revised document', 'error');
-      }
-    }
-
-    async function castVote(id, decision) {
-      const m = materials().find(x => x.id === id);
-      if (!m) return;
-
-      if (currentToken) {
-        try {
-          const res = await fetch(`${API_BASE}/api/materials/${id}/vote`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${currentToken}`
-            },
-            body: JSON.stringify({ decision })
-          });
-
-          if (res.ok) {
-            const data = await res.json();
-            m.votes = data.votes;
-            m.status = data.status;
-
-            if (m.status === 'approved') {
-              toast(t('material_fully_approved', { material: translateMaterialName(m) }), 'success');
-            } else if (m.status === 'revision') {
-              toast(t('revision_requested', { material: translateMaterialName(m) }), 'error');
-            } else {
-              toast(decision === 'approved' ? t('approval_recorded') : t('revision_request_sent'), decision === 'approved' ? 'success' : 'info');
-            }
-
-            buildApprovals('pending');
-            buildDashboard();
-            updateTopbar();
-            if (document.getElementById('modal-overlay').classList.contains('open')) {
-              openFile(id);
-            }
-          } else {
-            const errData = await res.json();
-            toast(errData.detail || 'Failed to submit vote', 'error');
-          }
-        } catch (e) {
-          console.error('Vote error:', e);
-          toast('Network error while casting vote', 'error');
-        }
-      } else {
-        m.votes[currentUser] = decision;
-        const allApproved = Object.values(m.votes).every(v => v === 'approved');
-        const anyRevision = Object.values(m.votes).some(v => v === 'revision');
-        if (allApproved) { m.status = 'approved'; toast(t('material_fully_approved', { material: translateMaterialName(m) }), 'success'); }
-        else if (anyRevision) { m.status = 'revision'; toast(t('revision_requested', { material: translateMaterialName(m) }), 'error'); }
-        else toast(decision === 'approved' ? t('approval_recorded') : t('revision_request_sent'), decision === 'approved' ? 'success' : 'info');
-        buildApprovals('pending'); buildDashboard(); updateTopbar();
-      }
-    }
-
-    // ═══════════════════════════════════════════
-    //  DASHBOARD
-    // ═══════════════════════════════════════════
-    function buildDashboard() {
-      document.getElementById('dash-subtitle').textContent = `${t('welcome')}, ${translateUserNameKey(currentUser)} — ${selectedOrg.icon} ${translateOrgName(selectedOrg)} ${t('overview')} (${selectedLang.flag} ${selectedLang.name})`;
-      const recent = document.getElementById('recent-files');
-      recent.innerHTML = materials().slice(0, 4).map(m => `
-    <div class="card-sm" onclick="openFile(${m.id})" style="cursor:pointer;display:flex;align-items:center;gap:10px">
-      <div style="font-size:22px;width:32px;height:32px;border-radius:var(--radius);overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--bg3);flex-shrink:0">${getFileThumbnailHTML(m, "font-size:16px")}</div>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${translateMaterialName(m)}</div>
-        <div style="font-size:11px;color:var(--text2)">${translateUserLabel(m.designer)} · ${m.date}</div>
-      </div>
-      ${getStatusPill(m.status)}
-    </div>`).join('');
-      const feed = document.getElementById('activity-feed');
-      feed.innerHTML = getActivityForOrg().slice(0, 5).map(a => `
-    <div class="activity-item">
-      <div class="activity-dot" style="background:${a.color}"></div>
-      <div class="activity-text">${translateActivityText(a)}</div>
-      <div class="activity-time">${a.time}</div>
-    </div>`).join('');
-    }
-
-    function getActivityForOrg() {
-      return BASE_ACTIVITY.map(a => ({ ...a }));
-    }
-
-    // ═══════════════════════════════════════════
-    //  PEOPLE
-    // ═══════════════════════════════════════════
-    function buildPeople() {
-      if (currentToken) {
-        fetchUsers();
-      } else {
-        document.getElementById('people-grid').innerHTML = Object.entries(USERS_DATA).map(([key, u]) => `
-      <div class="person-card">
-        <div class="person-av ${u.avClass}">${u.initials}</div>
-        <div class="person-name">${translateUserNameKey(key)}</div>
-        <div class="person-role">${translateRole(u.role)}</div>
-        <div style="font-size:11px;color:var(--text2);margin-bottom:8px">${translateOrgName(selectedOrg)}</div>
-        <div class="person-perms">${u.perms.map(p => `<span class="perm-tag">${translatePermission(p)}</span>`).join('')}</div>
-        ${currentUser === 'admin' ? `
-          <div style="display:flex;gap:6px;margin-top:10px;">
-            <button class="btn btn-sm btn-secondary" style="flex:1" onclick="editAccess('${key}')">${t('edit_access_button')}</button>
-            <button class="btn btn-sm btn-secondary" style="padding:4px 8px" onclick="editUserProfile('${key}', '${translateUserNameKey(key).replace(/'/g, "\\'")}', '${u.role}')" title="Edit Profile">✏️</button>
-            <button class="btn btn-sm btn-danger" style="padding:4px 8px" onclick="deleteUser('${key}', '${translateUserNameKey(key).replace(/'/g, "\\'")}')" title="Delete User">🗑️</button>
+      modalFooter = (
+        <div style={{ display: 'flex', width: '100%', justifyContent: 'end', gap: '8px' }}>
+          <button onClick={(e) => handleDownload(e, m)} className="btn btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>📥 Download Document</button>
+          {showApprove && (
+            <button className="btn btn-approve" onClick={() => { handleCastVote(m.id, 'approved'); closeModal(); }}>✅ {t('approve')}</button>
+          )}
+          {showRevision && (
+            <button className="btn btn-danger" onClick={() => setModal({ type: 'revision_vote', materialId: m.id })}>⚠️ {t('request_revision')}</button>
+          )}
+          <button className="btn btn-secondary" onClick={closeModal}>{t('close')}</button>
+        </div>
+      );
+    } else if (modal.type === 'revision_vote') {
+      const id = modal.materialId;
+      modalTitle = t('request_revision');
+      modalBody = (
+        <div>
+          <p style={{ color: 'var(--text2)', marginBottom: '14px', fontSize: '13px' }}>{t('revision_describe_text')}</p>
+          <div className="form-group">
+            <label className="form-label">{t('category')}</label>
+            <select className="form-control" id="vote-revision-cat">
+              <option>{t('cat_brand_color')}</option><option>{t('cat_logo_violation')}</option>
+              <option>{t('cat_typography')}</option><option>{t('cat_messaging')}</option>
+              <option>{t('cat_layout')}</option><option>{t('cat_image_quality')}</option><option>{t('cat_other')}</option>
+            </select>
           </div>
-        ` : ''}
-      </div>`).join('');
-      }
-    }
-    function editAccess(key, userName) {
-      const displayName = userName || translateUserNameKey(key);
-      document.getElementById('modal-title').textContent = t('edit_access_title', { user: displayName, org: translateOrgName(selectedOrg) });
-      const paths = ORG_FOLDER_PATHS[selectedOrg.id] || [];
-      document.getElementById('modal-body').innerHTML = `
-    <p style="color:var(--text2);font-size:12px;margin-bottom:14px">${t('configure_access_for', { org: translateOrgName(selectedOrg) })}</p>
-    ${paths.map(p => `
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px">
-        <span style="color:var(--text2)">${translateFolderPath(p)}</span>
-        <select id="user-access-select" class="form-control" style="width:auto;padding:3px 8px">
-          <option>${t('access_full')}</option><option>${t('access_view')}</option><option>${t('access_none')}</option>
-        </select>
-      </div>`).join('')}`;
-      document.getElementById('modal-footer').innerHTML = `
-    <button class="btn btn-secondary" onclick="closeModalDirect()">${t('close')}</button>
-    <button class="btn btn-primary" onclick="toast(t('access_saved'),'success');closeModalDirect()">${t('save_changes')}</button>`;
-      document.getElementById('modal-overlay').classList.add('open');
-    }
-
-    function editUserProfile(userId, name, role) {
-      document.getElementById('modal-title').textContent = "Edit User Profile";
-      const roles = ['Admin', 'CEO', 'COO', 'Director'];
-      const roleOptions = roles.map(r => `<option value="${r}" ${r === role ? 'selected' : ''}>${translateRole(r)}</option>`).join('');
-
-      document.getElementById('modal-body').innerHTML = `
-        <div class="form-group">
-          <label class="form-label">Full Name</label>
-          <input type="text" id="edit-user-name" class="form-control" value="${name}" required />
+          <div className="form-group">
+            <label className="form-label">{t('notes')}</label>
+            <textarea className="form-control" rows="4" placeholder={t('revision_describe_placeholder')} id="vote-revision-notes"></textarea>
+          </div>
+          <div className="form-group">
+            <label className="form-label">{t('priority')}</label>
+            <select className="form-control" id="vote-revision-priority">
+              <option>{t('priority_high')}</option>
+              <option>{t('priority_medium')}</option>
+              <option>{t('priority_low')}</option>
+            </select>
+          </div>
         </div>
-        <div class="form-group" style="margin-top: 12px;">
-          <label class="form-label">Role</label>
-          <select id="edit-user-role" class="form-control" required>
-            ${roleOptions}
-          </select>
+      );
+      modalFooter = (
+        <div style={{ display: 'flex', gap: '8px', justifyContent: 'end' }}>
+          <button className="btn btn-secondary" onClick={() => handleOpenFile(id)}>{t('close')}</button>
+          <button className="btn btn-danger" onClick={() => { handleCastVote(id, 'revision'); closeModal(); }}>{t('send_revision_request')}</button>
         </div>
-      `;
+      );
+    } else if (modal.type === 'edit_access') {
+      const userId = modal.userId;
+      modalTitle = t('edit_access_title', { user: modal.userName, org: translateOrgName(selectedOrg) });
+      modalBody = (
+        <div>
+          <p style={{ color: 'var(--text2)', fontSize: '12px', marginBottom: '14px' }}>{t('configure_access_for', { org: translateOrgName(selectedOrg) })}</p>
+          {currentOrgFolderLeafPaths.map(p => (
+            <div key={p} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '7px 0', borderBottom: '1px solid var(--border)', fontSize: '12px' }}>
+              <span style={{ color: 'var(--text2)' }}>{translateFolderPath(p)}</span>
+              <select className="form-control" style={{ width: 'auto', padding: '3px 8px' }} defaultValue={t('access_full')}>
+                <option>{t('access_full')}</option>
+                <option>{t('access_view')}</option>
+                <option>{t('access_none')}</option>
+              </select>
+            </div>
+          ))}
+        </div>
+      );
+      modalFooter = (
+        <div style={{ display: 'flex', gap: '8px', justifyContent: 'end' }}>
+          <button className="btn btn-secondary" onClick={closeModal}>{t('close')}</button>
+          <button className="btn btn-primary" onClick={() => { addToast(t('access_saved'), 'success'); closeModal(); }}>{t('save_changes')}</button>
+        </div>
+      );
+    } else if (modal.type === 'edit_profile') {
+      const userId = modal.userId;
 
-      document.getElementById('modal-footer').innerHTML = `
-        <button class="btn btn-secondary" onclick="closeModalDirect()">${t('close')}</button>
-        <button class="btn btn-primary" onclick="submitEditUser('${userId}')">${t('save_changes')}</button>
-      `;
-
-      document.getElementById('modal-overlay').classList.add('open');
+      modalTitle = "Edit User Profile";
+      modalBody = (
+        <div>
+          <div className="form-group">
+            <label className="form-label">Full Name</label>
+            <input type="text" className="form-control" value={editName} onChange={(e) => setEditName(e.target.value)} required />
+          </div>
+          <div className="form-group" style={{ marginTop: '12px' }}>
+            <label className="form-label">Role</label>
+            <select className="form-control" value={editRole} onChange={(e) => setEditRole(e.target.value)} required>
+              {rolesList.map(r => <option value={r} key={r}>{translateRole(r)}</option>)}
+            </select>
+          </div>
+        </div>
+      );
+      modalFooter = (
+        <div style={{ display: 'flex', gap: '8px', justifyContent: 'end' }}>
+          <button className="btn btn-secondary" onClick={closeModal}>{t('close')}</button>
+          <button className="btn btn-primary" onClick={() => handleEditUser(userId, editName, editRole)}>{t('save_changes')}</button>
+        </div>
+      );
     }
 
-    async function submitEditUser(userId) {
-      const name = document.getElementById('edit-user-name').value.trim();
-      const role = document.getElementById('edit-user-role').value;
-
-      if (!name) {
-        toast('Name cannot be empty', 'error');
-        return;
-      }
-
-      if (currentToken) {
-        try {
-          const res = await fetch(`${API_BASE}/api/admin/users/${userId}`, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${currentToken}`
-            },
-            body: JSON.stringify({ name, role })
-          });
-
-          if (res.ok) {
-            toast('User profile updated successfully', 'success');
-            closeModalDirect();
-            fetchUsers();
-          } else {
-            const errData = await res.json();
-            const errMsg = errData.detail || 'Failed to update user';
-            toast(errMsg, 'error');
-            if (res.status === 409) {
-              alert(errMsg);
-            }
-          }
-        } catch (e) {
-          console.error('Update error:', e);
-          toast('Network error during update', 'error');
-        }
-      } else {
-        // Offline mode
-        if (USERS_DATA[userId]) {
-          USERS_DATA[userId].name = name;
-          USERS_DATA[userId].role = role;
-          toast('User profile updated successfully (Offline)', 'success');
-          closeModalDirect();
-          buildPeople();
-        }
-      }
-    }
-
-    async function deleteUser(userId, name) {
-      if (!confirm(`Are you sure you want to delete user "${name}"? This action cannot be undone.`)) {
-        return;
-      }
-
-      if (currentToken) {
-        try {
-          const res = await fetch(`${API_BASE}/api/admin/users/${userId}`, {
-            method: 'DELETE',
-            headers: {
-              'Authorization': `Bearer ${currentToken}`
-            }
-          });
-
-          if (res.ok) {
-            toast('User deleted successfully', 'success');
-            fetchUsers();
-          } else {
-            const errData = await res.json();
-            toast(errData.detail || 'Failed to delete user', 'error');
-          }
-        } catch (e) {
-          console.error('Delete error:', e);
-          toast('Network error during delete', 'error');
-        }
-      } else {
-        // Offline mode
-        if (USERS_DATA[userId]) {
-          delete USERS_DATA[userId];
-          toast('User deleted successfully (Offline)', 'success');
-          buildPeople();
-        }
-      }
-    }
-
-    // ═══════════════════════════════════════════
-    //  BRAND GUIDELINES — per org
-    // ═══════════════════════════════════════════
-    function buildBrand() {
-      const colors = ORG_BRAND_COLORS[selectedOrg.id] || [];
-      document.getElementById('color-palette').innerHTML = colors.map(c => `
-    <div style="display:flex;align-items:center;gap:10px">
-      <div style="width:40px;height:40px;border-radius:var(--radius);background:${c.hex};flex-shrink:0"></div>
-      <div>
-        <div style="font-size:12px;font-weight:600">${c.name} <span style="font-family:monospace;font-size:10px;color:var(--text3)">${c.hex}</span></div>
-        <div style="font-size:11px;color:var(--text2)">${c.use}</div>
+    return (
+      <div className="modal-overlay open" onClick={(e) => { if(e.target.classList.contains('modal-overlay')) closeModal(); }}>
+        <div className="modal">
+          <div className="modal-header">
+            <h2>{modalTitle}</h2>
+            <button className="close-btn" onClick={closeModal}>×</button>
+          </div>
+          <div className="modal-body" style={{ maxHeight: '70vh', overflowY: 'auto' }}>{modalBody}</div>
+          <div className="modal-footer">{modalFooter}</div>
+        </div>
       </div>
-    </div>`).join('');
-      document.getElementById('brand-typography').innerHTML = `
-    <div><span style="color:var(--text2);font-size:10px">${t('brand_typography_display')}</span><br><span style="font-size:18px;font-weight:700;letter-spacing:-0.5px">${t('brand_typography_display_font', { org: translateOrgName(selectedOrg) })}</span></div>
-    <div><span style="color:var(--text2);font-size:10px">${t('brand_typography_body')}</span><br><span>${t('brand_typography_body_example')}</span></div>
-    <div><span style="color:var(--text2);font-size:10px">${t('brand_typography_caption')}</span><br><span style="font-size:11px;color:var(--text2)">${t('brand_typography_caption_example')}</span></div>`;
-      document.getElementById('brand-logo').innerHTML = `
-    <div>${t('brand_logo_clearspace')}</div>
-    <div>${t('brand_logo_minimum_size')}</div>
-    <div>${t('brand_logo_approved_bg')}</div>
-    <div>${t('brand_logo_no_stretch')}</div>
-    <div>${t('brand_logo_no_busy_bg')}</div>`;
-      document.getElementById('brand-imagery-item1').textContent = t('brand_imagery_quality');
-      document.getElementById('brand-imagery-item2').textContent = t('brand_imagery_values');
-      document.getElementById('brand-imagery-item3').textContent = t('brand_imagery_color_grade');
-      document.getElementById('brand-imagery-item4').textContent = t('brand_imagery_avoid_cliched');
-      document.getElementById('brand-imagery-item5').textContent = t('brand_imagery_no_watermark');
-    }
+    );
+  }
 
-    // ═══════════════════════════════════════════
-    //  ACTIVITY
-    // ═══════════════════════════════════════════
-    function buildActivity() {
-      document.getElementById('full-activity').innerHTML = getActivityForOrg().map(a => `
-    <div class="activity-item">
-      <div class="activity-dot" style="background:${a.color}"></div>
-      <div class="activity-text">${translateActivityText(a)}</div>
-      <div class="activity-time">${a.time}</div>
-    </div>`).join('');
-    }
+  function getStatusPill(status) {
+    const map = { pending: '🕐', approved: '✅', revision: '⚠️', draft: '📝' };
+    const cls = { pending: 's-pending', approved: 's-approved', revision: 's-revision', draft: 's-draft' };
+    const lbl = { pending: t('pending'), approved: t('approved'), revision: t('revision'), draft: 'Draft' };
+    return <span className={`status-pill ${cls[status]}`}>{map[status]} {lbl[status]}</span>;
+  }
 
-    // ═══════════════════════════════════════════
-    //  ACCESS MATRIX
-    // ═══════════════════════════════════════════
-    function buildAccessMatrix() {
-      const paths = ORG_FOLDER_PATHS[selectedOrg?.id] || [];
-      const levels = ['✅ Full', '👁 View', '✅ Full', '✅ Full'];
-      document.getElementById('access-matrix').innerHTML = paths.map((p, i) => `
-    <tr>
-      <td style="padding:7px 9px;color:var(--text2)">${translateFolderPath(p)}</td>
-      <td style="padding:7px 9px;text-align:center;color:var(--green)">${t('access_full_short')}</td>
-      <td style="padding:7px 9px;text-align:center;color:var(--blue)">${i % 3 === 2 ? t('access_full_short') : t('access_view_short')}</td>
-      <td style="padding:7px 9px;text-align:center;color:var(--blue)">${i % 2 === 0 ? t('access_full_short') : t('access_view_short')}</td>
-      <td style="padding:7px 9px;text-align:center;color:${i % 4 === 3 ? 'var(--text3)' : 'var(--green)'}">${i % 4 === 3 ? t('access_none_short') : t('access_full_short')}</td>
-    </tr>`).join('');
-    }
+  function renderToasts() {
+    return (
+      <div className="toast-container">
+        {toasts.map(to => (
+          <div className={`toast ${to.type}`} key={to.id} style={{ opacity: to.fade ? 0 : 1, transform: to.fade ? 'translateX(40px)' : 'none', transition: 'all .3s' }}>
+            {to.msg}
+          </div>
+        ))}
+      </div>
+    );
+  }
 
-    // ═══════════════════════════════════════════
-    //  UPLOAD
-    // ═══════════════════════════════════════════
-    let selectedUploadFile = null;
+  // ── MAIN PORTAL ──
+  const uData = USERS_DATA[currentUser] || USERS_DATA.admin;
+  
+  // Filter and search logic for materials
+  let filteredMaterials = currentOrgMaterials;
+  if (currentFolderFilter) {
+    filteredMaterials = filteredMaterials.filter(m => m.folder === currentFolderFilter || m.folder.startsWith(currentFolderFilter + '/'));
+  }
+  if (currentFilter === 'approved') {
+    filteredMaterials = filteredMaterials.filter(m => m.status === 'approved');
+  } else if (currentFilter !== 'all') {
+    filteredMaterials = filteredMaterials.filter(m => m.type === currentFilter);
+  }
+  if (searchQuery) {
+    filteredMaterials = filteredMaterials.filter(m => translateMaterialName(m).toLowerCase().includes(searchQuery.toLowerCase()) || translateUserLabel(m.designer).toLowerCase().includes(searchQuery.toLowerCase()));
+  }
 
-    function triggerFileInput() {
-      document.getElementById('upload-file-input').click();
-    }
+  return (
+    <div id="app" style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+      {/* TOPBAR */}
+      <div className="topbar">
+        <div className="logo"><div className="logo-dot"></div>BrandPortal</div>
+        
+        {/* Org Dropdown */}
+        <div style={{ position: 'relative' }}>
+          <div className="org-pill" id="topbar-org-pill" onClick={() => setOrgDDOpen(!orgDDOpen)}>
+            <span>{selectedOrg.icon}</span>
+            <span style={{ fontWeight: 600, marginLeft: '6px', marginRight: '6px' }}>{translateOrgName(selectedOrg)}</span>
+            <span style={{ color: 'var(--text3)', fontSize: '10px' }}>▼</span>
+          </div>
+          {orgDDOpen && (
+            <div className="topbar-dropdown open" id="org-dd">
+              <div style={{ padding: '8px 14px 6px', fontSize: '10px', color: 'var(--text3)', textTransform: 'uppercase', letterSpacing: '.6px' }}>{t('switch_org')}</div>
+              {ORGANISATIONS.map(o => (
+                <div className={`topbar-dd-item${o.id === selectedOrg.id ? ' selected-item' : ''}`} key={o.id} onClick={() => { setSelectedOrg(o); setOrgDDOpen(false); setCurrentFolderFilter(null); addToast(t('switched_to', { org: translateOrgName(o) }), 'info'); }}>
+                  <span style={{ fontSize: '20px' }}>{o.icon}</span>
+                  <div>
+                    <div style={{ fontSize: '13px', fontWeight: 500 }}>{translateOrgName(o)}</div>
+                  </div>
+                  {o.id === selectedOrg.id && <span style={{ marginLeft: 'auto', color: 'var(--green)', fontSize: '12px' }}>✓</span>}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
-    function handleFileSelected(e) {
+        {/* Language Dropdown */}
+        <div style={{ position: 'relative' }}>
+          <div className="lang-pill" id="topbar-lang-pill" onClick={() => setLangDDOpen(!langDDOpen)}>
+            <span>{selectedLang?.flag || '🌐'}</span>
+            <span style={{ fontWeight: 500, marginLeft: '6px', marginRight: '6px' }}>{selectedLang?.name || 'Language'}</span>
+            <span style={{ color: 'var(--text3)', fontSize: '10px' }}>▼</span>
+          </div>
+          {langDDOpen && (
+            <div className="topbar-dropdown open" id="lang-dd" style={{ minWidth: '200px' }}>
+              <div style={{ padding: '8px 14px 6px', fontSize: '10px', color: 'var(--text3)', textTransform: 'uppercase', letterSpacing: '.6px' }}>{t('switch_lang')}</div>
+              {LANGUAGES.map(l => (
+                <div className={`topbar-dd-item${l.id === selectedLang?.id ? ' selected-item' : ''}`} key={l.id} onClick={() => { setSelectedLang(l); setLangDDOpen(false); addToast(t('language_changed', { lang: `${l.flag} ${l.name}` }), 'success'); }}>
+                  <span style={{ fontSize: '20px' }}>{l.flag}</span>
+                  <div>
+                    <div style={{ fontSize: '13px', fontWeight: 500 }}>{l.name}</div>
+                    <div style={{ fontSize: '11px', color: 'var(--text2)' }}>{l.native}</div>
+                  </div>
+                  {l.id === selectedLang?.id && <span style={{ marginLeft: 'auto', color: 'var(--green)', fontSize: '12px' }}>✓</span>}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="nav-sep"></div>
+        
+        {/* Notifications Button */}
+        <button className="notif-btn" onClick={handleShowNotifications}>
+          🔔
+          {notifications.some(n => !n.isRead) && <span className="notif-dot" id="notif-dot"></span>}
+        </button>
+
+        {/* User Pill */}
+        <div className="user-pill" onClick={() => setSwitcherOpen(!switcherOpen)}>
+          <div className={`avatar ${uData.avClass}`}>{uData.initials}</div>
+          <span style={{ fontSize: '12px', fontWeight: 500, marginLeft: '6px', marginRight: '6px' }}>{currentUserName}</span>
+          <span className={`badge ${uData.badgeClass}`}>{translateRole(uData.role).toUpperCase()}</span>
+        </div>
+      </div>
+
+      {/* LAYOUT CONTAINER */}
+      <div className="layout">
+        
+        {/* SIDEBAR */}
+        <div className="sidebar">
+          <div className="sb-section">
+            <div className="sb-label">{translateOrgName(selectedOrg)}</div>
+            
+            <div className={`sb-item${activePage === 'dashboard' ? ' active' : ''}`} onClick={() => { setActivePage('dashboard'); setSwitcherOpen(false); }}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: '8px', width: '16px', height: '16px' }}><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /></svg>
+              {t('dashboard')}
+            </div>
+
+            <div className={`sb-item${activePage === 'materials' ? ' active' : ''}`} onClick={() => { setActivePage('materials'); setSwitcherOpen(false); }}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: '8px', width: '16px', height: '16px' }}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
+              {t('materials')}
+            </div>
+
+            <div className={`sb-item${activePage === 'approvals' ? ' active' : ''}`} onClick={() => { setActivePage('approvals'); setSwitcherOpen(false); }}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: '8px', width: '16px', height: '16px' }}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+              {t('approvals')}
+              <span className="sb-count">{currentOrgMaterials.filter(m => m.status === 'pending').length}</span>
+            </div>
+
+            <div className={`sb-item${activePage === 'upload' ? ' active' : ''}`} onClick={() => { setActivePage('upload'); setSwitcherOpen(false); }}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: '8px', width: '16px', height: '16px' }}><polyline points="16 16 12 12 8 16" /><line x1="12" y1="12" x2="12" y2="21" /><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" /></svg>
+              {t('upload')}
+            </div>
+          </div>
+
+          {/* FOLDERS SECTION */}
+          <div className="sb-section">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <div className="sb-label" style={{ margin: 0 }}>{t('folders')}</div>
+              {currentUser === 'admin' && (
+                <span onClick={() => handleCreateFolder('')} title="Create Root Folder" style={{ cursor: 'pointer', opacity: 0.6, fontSize: '12px', marginRight: '12px' }}>📁➕</span>
+              )}
+            </div>
+            <div className="folder-tree">
+              {currentOrgFolders.map(folder => renderFolderNode(folder))}
+            </div>
+          </div>
+
+          {/* ADMIN SECTION */}
+          {currentUser === 'admin' && (
+            <div className="sb-section">
+              <div className="sb-label">{t('admin_section')}</div>
+              
+              <div className={`sb-item${activePage === 'users' ? ' active' : ''}`} onClick={() => { setActivePage('users'); setSwitcherOpen(false); }}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: '8px', width: '16px', height: '16px' }}><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+                {t('users')}
+              </div>
+
+              <div className={`sb-item${activePage === 'brand' ? ' active' : ''}`} onClick={() => { setActivePage('brand'); setSwitcherOpen(false); }}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: '8px', width: '16px', height: '16px' }}><circle cx="12" cy="12" r="10" /><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32" /></svg>
+                {t('brand')}
+              </div>
+
+              <div className={`sb-item${activePage === 'activity' ? ' active' : ''}`} onClick={() => { setActivePage('activity'); setSwitcherOpen(false); }}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: '8px', width: '16px', height: '16px' }}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12" /></svg>
+                {t('activity')}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* MAIN WORKSPACE CONTENT */}
+        <div className="main">
+          <div className="content">
+            {activePage === 'dashboard' && renderDashboard()}
+            {activePage === 'materials' && renderMaterials()}
+            {activePage === 'approvals' && renderApprovals()}
+            {activePage === 'upload' && renderUpload()}
+            {activePage === 'users' && renderUsers()}
+            {activePage === 'brand' && renderBrand()}
+            {activePage === 'activity' && renderActivityPage()}
+            {activePage === 'register' && renderRegisterScreen()}
+          </div>
+        </div>
+      </div>
+
+      {/* USER SWITCHER MENU */}
+      {switcherOpen && (
+        <div className="user-switcher open" id="user-switcher">
+          <div className="us-title">{t('switch_user_view')}</div>
+          {Object.entries(USERS_DATA)
+            .filter(([key]) => key === currentUser)
+            .map(([key, value]) => {
+              const isUserMatch = key === currentUser;
+              return (
+                <div className={`us-item${isUserMatch ? ' current' : ''}`} key={key}>
+                  <div className={`avatar ${value.avClass}`}>{value.initials}</div>
+                  <div>
+                    <div style={{ fontSize: '12px', fontWeight: 500 }}>{translateUserLabel(value.name)}</div>
+                    <span className={`badge ${value.badgeClass}`}>{translateRole(value.role).toUpperCase()}</span>
+                  </div>
+                </div>
+              );
+            })}
+          <div className="us-item" onClick={handleLogout} style={{ justifyContent: 'center', fontWeight: 700, color: 'var(--orange)', borderTop: '1px solid var(--border)', marginTop: '8px', paddingTop: '12px' }}>
+            {t('logout')}
+          </div>
+        </div>
+      )}
+
+      {renderModal()}
+      {renderToasts()}
+
+      {lightboxUrl && (
+        <div className="lightbox-overlay" onClick={() => setLightboxUrl(null)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(0, 0, 0, 0.95)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10000, cursor: 'zoom-out' }}>
+          <img src={lightboxUrl} style={{ maxWidth: '95vw', maxHeight: '95vh', objectFit: 'contain', borderRadius: '4px', boxShadow: '0 8px 32px rgba(0,0,0,0.5)' }} />
+        </div>
+      )}
+    </div>
+  );
+
+  // Subpage renders
+  function renderDashboard() {
+    const totalMaterials = currentOrgMaterials.length;
+    const pendingApp = currentOrgMaterials.filter(m => m.status === 'pending').length;
+    const approvedApp = currentOrgMaterials.filter(m => m.status === 'approved').length;
+    const revisionApp = currentOrgMaterials.filter(m => m.status === 'revision').length;
+
+    return (
+      <div className="page active">
+        <div className="ph">
+          <h1>{t('dashboard')}</h1>
+          <p>{t('welcome')}, {translateUserNameKey(currentUser)} — {selectedOrg.icon} {translateOrgName(selectedOrg)} {t('overview')} ({selectedLang?.flag} {selectedLang?.name})</p>
+        </div>
+        <div className="stats">
+          <div className="stat">
+            <div className="stat-n" style={{ color: 'var(--blue)' }}>{totalMaterials}</div>
+            <div className="stat-l">{t('total')}</div>
+            <div className="stat-delta delta-up">↑ 3 this week</div>
+          </div>
+          <div className="stat">
+            <div className="stat-n" style={{ color: 'var(--orange)' }}>{pendingApp}</div>
+            <div className="stat-l">{t('pending')}</div>
+            <div className="stat-delta delta-pend">Needs review</div>
+          </div>
+          <div className="stat">
+            <div className="stat-n" style={{ color: 'var(--green)' }}>{approvedApp}</div>
+            <div className="stat-l">{t('approved')}</div>
+            <div className="stat-delta delta-up">↑ 75% rate</div>
+          </div>
+          <div className="stat">
+            <div className="stat-n" style={{ color: 'var(--red)' }}>{revisionApp}</div>
+            <div className="stat-l">{t('revision')}</div>
+            <div className="stat-delta" style={{ color: 'var(--text3)' }}>Flagged</div>
+          </div>
+        </div>
+        <div className="two-col" style={{ gap: '18px' }}>
+          <div>
+            <h2 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '12px' }}>{t('recent_materials')}</h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '7px' }}>
+              {currentOrgMaterials.slice(0, 4).map(m => (
+                <div className="card-sm" key={m.id} onClick={() => handleOpenFile(m.id)} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div style={{ fontSize: '22px', width: '32px', height: '32px', borderRadius: 'var(--radius)', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg3)', flexShrink: 0 }}>
+                    {getFileThumbnailHTML(m, { fontSize: '16px' })}
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: '12px', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{translateMaterialName(m)}</div>
+                    <div style={{ fontSize: '11px', color: 'var(--text2)' }}>{translateUserLabel(m.designer)} · {m.date}</div>
+                  </div>
+                  {getStatusPill(m.status)}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div>
+            <h2 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '12px' }}>{t('activity')}</h2>
+            <div className="activity-list">
+              {BASE_ACTIVITY.slice(0, 5).map((a, idx) => (
+                <div className="activity-item" key={idx}>
+                  <div className="activity-dot" style={{ background: a.color }}></div>
+                  <div className="activity-text">{translateActivityText(a)}</div>
+                  <div className="activity-time">{a.time}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  function renderMaterials() {
+    return (
+      <div className="page active">
+        <div className="ph">
+          <h1>{t('materials')}</h1>
+          <p>{selectedOrg.icon} {translateOrgName(selectedOrg)} — {selectedLang?.flag} {t('lang_name')}</p>
+          <div className="ph-actions">
+            <button className="btn btn-primary" onClick={() => setActivePage('upload')}>+ {t('upload_new')}</button>
+          </div>
+        </div>
+        <div className="search-bar">
+          <input type="text" placeholder={t('search_placeholder')} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+        </div>
+        <div className="filter-row">
+          <div className={`filter-chip${currentFilter === 'all' ? ' active' : ''}`} onClick={() => setCurrentFilter('all')}>{t('all_types')}</div>
+          <div className={`filter-chip${currentFilter === 'flyer' ? ' active' : ''}`} onClick={() => setCurrentFilter('flyer')}>{t('filter_flyers')}</div>
+          <div className={`filter-chip${currentFilter === 'brochure' ? ' active' : ''}`} onClick={() => setCurrentFilter('brochure')}>{t('filter_brochures')}</div>
+          <div className={`filter-chip${currentFilter === 'leaflet' ? ' active' : ''}`} onClick={() => setCurrentFilter('leaflet')}>{t('filter_leaflets')}</div>
+          <div className={`filter-chip${currentFilter === 'poster' ? ' active' : ''}`} onClick={() => setCurrentFilter('poster')}>{t('filter_posters')}</div>
+          <div className={`filter-chip${currentFilter === 'banner' ? ' active' : ''}`} onClick={() => setCurrentFilter('banner')}>{t('filter_banners')}</div>
+          <div className={`filter-chip${currentFilter === 'approved' ? ' active' : ''}`} onClick={() => setCurrentFilter('approved')} style={{ marginLeft: 'auto' }}>{t('filter_approved')}</div>
+        </div>
+        <div className="file-grid">
+          {filteredMaterials.map(m => {
+            const path = m.file_path || 'uploads/sample.pdf';
+            const fileUrl = path.startsWith('http') ? path : `${API_BASE}/${path}`;
+            return (
+              <div className="file-card" key={m.id} onClick={() => handleOpenFile(m.id)}>
+                <div className="file-badge">{getStatusPill(m.status)}</div>
+                <div className={`file-thumb ${m.type}`} style={{ overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {getFileThumbnailHTML(m)}
+                </div>
+                <div className="file-info">
+                  <div className="file-name">{translateMaterialName(m)}</div>
+                  <div className="file-meta">
+                    <span>👤 {translateUserLabel(m.designer).split(' (')[0]}</span>
+                    <span>📅 {m.date}</span>
+                  </div>
+                  <div className="file-meta" style={{ marginTop: '2px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ color: 'var(--text3)' }}>📁 {translateFolderPath(m.folder).split('/').pop()}</span>
+                      <span style={{ color: 'var(--purple)' }}>🤖 {m.aiScore}/100</span>
+                    </span>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                      <span onClick={(e) => handleDownload(e, m)} style={{ color: 'var(--text1)', fontSize: '14px', cursor: 'pointer' }} title="Download Document">📥</span>
+                      <span onClick={(e) => { e.stopPropagation(); handleOpenFile(m.id); }} style={{ color: 'var(--text1)', fontSize: '14px', cursor: 'pointer' }} title="View Document">👁️</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  function renderApprovals() {
+    const mats = currentOrgMaterials.filter(m => m.status === approvalTab);
+
+    return (
+      <div className="page active">
+        <div className="ph">
+          <h1>{t('approvals')}</h1>
+          <p>{selectedOrg.icon} {translateOrgName(selectedOrg)}</p>
+        </div>
+        <div className="tabs">
+          <div className={`tab${approvalTab === 'pending' ? ' active' : ''}`} onClick={() => setApprovalTab('pending')}>{t('pending')}</div>
+          <div className={`tab${approvalTab === 'revision' ? ' active' : ''}`} onClick={() => setApprovalTab('revision')}>{t('revision')}</div>
+          <div className={`tab${approvalTab === 'approved' ? ' active' : ''}`} onClick={() => setApprovalTab('approved')}>{t('approved')}</div>
+        </div>
+        <div className="approval-list">
+          {mats.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '36px', color: 'var(--text3)' }}>{t('no_materials_stage')}</div>
+          ) : (
+            mats.map(m => {
+              const votes = Object.entries(m.votes).map(([role, v]) => (
+                <span className={`vote ${v === 'approved' ? 'vote-approved' : v === 'revision' ? 'vote-revision' : 'vote-pending'}`} key={role}>
+                  {role.toUpperCase()} {v === 'approved' ? '✅' : v === 'revision' ? '⚠️' : '⏳'}
+                </span>
+              ));
+              const canAct = m.votes[currentUser] === 'pending';
+              const path = m.file_path || 'uploads/sample.pdf';
+              const fileUrl = path.startsWith('http') ? path : `${API_BASE}/${path}`;
+
+              return (
+                <div className={`approval-item${m.status === 'pending' ? ' urgent' : ''}`} key={m.id}>
+                  <div className="ai-thumb" style={{ overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    {getFileThumbnailHTML(m)}
+                  </div>
+                  <div className="approval-meta">
+                    <h3>{translateMaterialName(m)}</h3>
+                    <p>👤 {translateUserLabel(m.designer)} &nbsp;|&nbsp; 📅 {m.date} &nbsp;|&nbsp; 📁 {m.folder}</p>
+                    <div className="approval-votes">{votes}</div>
+                    <div style={{ fontSize: '11px', color: 'var(--purple)' }}>
+                      🤖 AI: <strong style={{ color: m.aiScore >= 80 ? 'var(--green)' : m.aiScore >= 60 ? 'var(--orange)' : 'var(--red)' }}>{m.aiScore}/100</strong>
+                    </div>
+                  </div>
+                  <div className="approval-actions">
+                    <button className="btn btn-sm btn-secondary" onClick={() => handleOpenFile(m.id)}>{t('view')}</button>
+                    <button onClick={(e) => handleDownload(e, m)} className="btn btn-sm btn-secondary" style={{ padding: '5px 8px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>📥 Download</button>
+                    {canAct ? (
+                      <>
+                        <button className="btn btn-sm btn-approve" onClick={() => handleCastVote(m.id, 'approved')}>✅ {t('approve')}</button>
+                        <button className="btn btn-sm btn-danger" onClick={() => setModal({ type: 'revision_vote', materialId: m.id })}>⚠️</button>
+                      </>
+                    ) : m.votes[currentUser] === 'approved' ? (
+                      <span style={{ color: 'var(--green)', fontSize: '11px' }}>✅ {t('approved')}</span>
+                    ) : m.votes[currentUser] === 'revision' ? (
+                      <span style={{ color: 'var(--orange)', fontSize: '11px' }}>⚠️ {t('flagged')}</span>
+                    ) : (
+                      <span style={{ fontSize: '11px', color: 'var(--text3)' }}>{t('view_only')}</span>
+                    )}
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  function renderUpload() {
+    const handleFileChange = (e) => {
       const file = e.target.files[0];
       if (!file) return;
-      selectedUploadFile = file;
-
-      const z = document.getElementById('upload-zone');
-      const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
-      const ext = file.name.split('.').pop().toUpperCase();
-
-      z.innerHTML = `<div style="color:var(--green);font-size:32px;margin-bottom:8px">✅</div><p style="font-weight:600">${file.name} ${t('selected')}</p><p style="font-size:11px;color:var(--text3)">${sizeMB} MB — ${ext}</p>`;
-      z.style.borderColor = 'var(--green)';
-      z.style.background = 'var(--green-dim)';
-
-      const nameInput = document.getElementById('upload-name');
-      if (!nameInput.value.trim()) {
-        const cleanName = file.name.split('.').slice(0, -1).join('.');
-        nameInput.value = cleanName;
+      setSelectedUploadFile(file);
+      if (!uploadName) {
+        setUploadName(file.name.split('.').slice(0, -1).join('.'));
       }
+      addToast(t('file_ready_submit'), 'info');
+    };
 
-      toast(t('file_ready_submit'), 'info');
-    }
+    const sizeMB = selectedUploadFile ? (selectedUploadFile.size / (1024 * 1024)).toFixed(1) : 0;
+    const ext = selectedUploadFile ? selectedUploadFile.name.split('.').pop().toUpperCase() : '';
 
-    async function submitUpload() {
-      const name = document.getElementById('upload-name').value.trim();
-      if (!name) { toast(t('enter_material_name'), 'error'); return; }
+    return (
+      <div className="page active">
+        <div className="ph">
+          <h1>{t('upload_title')}</h1>
+          <p>{t('upload_description')}</p>
+        </div>
+        <div className="two-col">
+          <div className="card">
+            <div className="upload-zone" onClick={() => document.getElementById('upload-file-input').click()} style={{ borderColor: selectedUploadFile ? 'var(--green)' : 'var(--border)', background: selectedUploadFile ? 'var(--green-dim)' : 'transparent' }}>
+              {selectedUploadFile ? (
+                <>
+                  <div style={{ color: 'var(--green)', fontSize: '32px', marginBottom: '8px' }}>✅</div>
+                  <p style={{ fontWeight: 600 }}>{selectedUploadFile.name} {t('selected')}</p>
+                  <p style={{ fontSize: '11px', color: 'var(--text3)' }}>{sizeMB} MB — {ext}</p>
+                </>
+              ) : (
+                <>
+                  <div style={{ fontSize: '34px', marginBottom: '10px' }}>📎</div>
+                  <p style={{ fontSize: '14px', fontWeight: 600, marginBottom: '5px' }}>{t('click_to_select')}</p>
+                  <p style={{ fontSize: '11px', color: 'var(--text3)' }}>{t('file_types_hint')}</p>
+                </>
+              )}
+            </div>
+            <input type="file" id="upload-file-input" style={{ display: 'none' }} onChange={handleFileChange} />
+            <div className="form-group" style={{ marginTop: '14px' }}>
+              <label className="form-label">{t('material_name')}</label>
+              <input className="form-control" type="text" value={uploadName} onChange={(e) => setUploadName(e.target.value)} placeholder="e.g. Summer Sale Flyer" />
+            </div>
+            <div className="form-group">
+              <label className="form-label">{t('type')}</label>
+              <select className="form-control" value={uploadType} onChange={(e) => setUploadType(e.target.value)}>
+                <option value="flyer">{t('type_flyer')}</option>
+                <option value="brochure">{t('type_brochure')}</option>
+                <option value="leaflet">{t('type_leaflet')}</option>
+                <option value="poster">{t('type_poster')}</option>
+                <option value="banner">{t('type_banner')}</option>
+                <option value="social">{t('type_social')}</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label className="form-label">{t('campaign_project')}</label>
+              <input className="form-control" type="text" value={uploadCampaign} onChange={(e) => setUploadCampaign(e.target.value)} placeholder="e.g. Q3 Product Launch" />
+            </div>
+            <div className="form-group">
+              <label className="form-label">{t('folder_location')}</label>
+              <select className="form-control" value={uploadFolder} onChange={(e) => setUploadFolder(e.target.value)}>
+                {currentOrgFolderLeafPaths.map(p => (
+                  <option value={p} key={p}>{translateFolderPath(p)}</option>
+                ))}
+              </select>
+            </div>
+            <div className="form-group">
+              <label className="form-label">{t('designer_notes')}</label>
+              <textarea className="form-control" value={uploadNotes} onChange={(e) => setUploadNotes(e.target.value)} placeholder="Key design decisions, palette choices, target audience…"></textarea>
+            </div>
+            <button className="btn btn-primary" style={{ width: '100%' }} onClick={handleUploadSubmit}>{t('submit')}</button>
+          </div>
+          <div>
+            <div className="card" style={{ marginBottom: '14px' }}>
+              <h3 style={{ fontSize: '13px', fontWeight: 600, marginBottom: '10px' }}>{t('precheck_title')}</h3>
+              <p style={{ fontSize: '12px', color: 'var(--text2)', marginBottom: '12px' }}>{t('precheck_description')}</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '7px', fontSize: '12px', color: 'var(--text2)' }}>
+                <div>{t('precheck_color_compliance')}</div>
+                <div>{t('precheck_logo_placement')}</div>
+                <div>{t('precheck_typography_consistency')}</div>
+                <div>{t('precheck_previous_approved')}</div>
+                <div>{t('precheck_score')}</div>
+              </div>
+            </div>
+            <div className="card">
+              <h3 style={{ fontSize: '13px', fontWeight: 600, marginBottom: '10px' }}>{t('workflow_title')}</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '9px', fontSize: '12px' }}>
+                <div style={{ display: 'flex', gap: '9px', alignItems: 'center' }}>
+                  <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: 'var(--blue-dim)', color: 'var(--blue)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '10px', flexShrink: 0 }}>1</div>
+                  <span style={{ color: 'var(--text2)' }}>{t('workflow_step1')}</span>
+                </div>
+                <div style={{ display: 'flex', gap: '9px', alignItems: 'center' }}>
+                  <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: 'var(--blue-dim)', color: 'var(--blue)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '10px', flexShrink: 0 }}>2</div>
+                  <span style={{ color: 'var(--text2)' }}>{t('workflow_step2')}</span>
+                </div>
+                <div style={{ display: 'flex', gap: '9px', alignItems: 'center' }}>
+                  <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: 'var(--blue-dim)', color: 'var(--blue)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '10px', flexShrink: 0 }}>3</div>
+                  <span style={{ color: 'var(--text2)' }}>{t('workflow_step3')}</span>
+                </div>
+                <div style={{ display: 'flex', gap: '9px', alignItems: 'center' }}>
+                  <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: 'var(--blue-dim)', color: 'var(--blue)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '10px', flexShrink: 0 }}>4</div>
+                  <span style={{ color: 'var(--text2)' }}>{t('workflow_step4')}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-      if (!selectedUploadFile) {
-        toast('Please select a file to upload', 'error');
-        return;
-      }
+  function renderUsers() {
+    const roleStyleMap = {
+      'Admin': { avClass: 'av-admin', initials: 'AD', perms: ['Upload', 'Approve', 'Delete', 'Manage Users', 'All Folders'] },
+      'CEO': { avClass: 'av-ceo', initials: 'CE', perms: ['View All', 'Approve', 'Final Approve'] },
+      'COO': { avClass: 'av-coo', initials: 'CO', perms: ['View All', 'Approve', 'Manage Campaigns'] },
+      'Director': { avClass: 'av-director', initials: 'DI', perms: ['Upload', 'Assigned Folders', 'View Brand Guide'] },
+      'User': { avClass: 'av-user', initials: 'US', perms: ['Upload', 'View Brand Guide'] }
+    };
 
-      const type = document.getElementById('upload-type').value || 'flyer';
-      const campaign = document.getElementById('upload-campaign').value.trim() || '—';
-      const folderEl = document.getElementById('upload-folder');
-      const folder = folderEl ? (folderEl.value || folderEl.options[folderEl.selectedIndex]?.text || '') : '';
-      const notes = document.getElementById('upload-notes').value.trim() || '';
+    return (
+      <div className="page active">
+        <div className="ph">
+          <h1>{t('user_access')}</h1>
+          <p>{selectedOrg.icon} {translateOrgName(selectedOrg)}</p>
+        </div>
 
-      const formData = new FormData();
-      formData.append('file', selectedUploadFile);
-      formData.append('name', name);
-      formData.append('type', type);
-      formData.append('campaign', campaign);
-      formData.append('folder', folder);
-      formData.append('notes', notes);
-      formData.append('org_id', selectedOrg.id);
+        {currentUser === 'admin' && (
+          <div className="card" style={{ marginBottom: '22px' }}>
+            <h3 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>👤 Create New User Account</h3>
+            <form onSubmit={handleCreateUser} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 20px', alignItems: 'end' }}>
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label className="form-label">Full Name</label>
+                <input type="text" className="form-control" placeholder="e.g. John Doe" value={regName} onChange={(e) => setRegName(e.target.value)} required />
+              </div>
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label className="form-label">Email Address</label>
+                <input type="email" className="form-control" placeholder="e.g. john@example.com" value={regEmail} onChange={(e) => setRegEmail(e.target.value)} required />
+              </div>
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label className="form-label">Role</label>
+                <select className="form-control" value={regRole} onChange={(e) => setRegRole(e.target.value)} required>
+                  {rolesList.map(r => <option value={r} key={r}>{translateRole(r)}</option>)}
+                </select>
+              </div>
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label className="form-label">Password (Optional for Google login)</label>
+                <input type="password" className="form-control" placeholder="Optional" value={regPassword} onChange={(e) => setRegPassword(e.target.value)} />
+              </div>
+              <button type="submit" className="btn btn-primary" style={{ height: '38px', gridColumn: '1 / -1', marginTop: '6px', justifyContent: 'center', width: '180px', justifySelf: 'center' }}>Create User</button>
+            </form>
+            {regError && <div style={{ color: 'var(--red)', fontSize: '12px', marginTop: '8px' }}>{regError}</div>}
+          </div>
+        )}
 
-      toast(t('running_precheck', { org: translateOrgName(selectedOrg) }), 'info');
+        <div className="people-grid">
+          {usersList.map(u => {
+            const meta = roleStyleMap[u.role] || roleStyleMap['Director'];
+            const initials = u.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || meta.initials;
 
-      try {
-        const res = await fetch(`${API_BASE}/api/materials`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${currentToken}`
-          },
-          body: formData
-        });
+            return (
+              <div className="person-card" key={u.id}>
+                <div className={`person-av ${meta.avClass}`}>{initials}</div>
+                <div className="person-name">{u.name} <div style={{ fontSize: '11px', color: 'var(--text3)', fontWeight: 400, marginTop: '2px' }}>{u.email}</div></div>
+                <div className="person-role">{translateRole(u.role)}</div>
+                <div style={{ fontSize: '11px', color: 'var(--text2)', marginBottom: '8px' }}>{translateOrgName(selectedOrg)}</div>
+                <div className="person-perms">
+                  {meta.perms.map(p => <span className="perm-tag" key={p}>{translatePermission(p)}</span>)}
+                </div>
+                {currentUser === 'admin' && (
+                  <div style={{ display: 'flex', gap: '6px', marginTop: '10px' }}>
+                    <button className="btn btn-sm btn-secondary" style={{ flex: 1 }} onClick={() => setModal({ type: 'edit_access', userId: u.id, userName: u.name })}>{t('edit_access_button')}</button>
+                    <button className="btn btn-sm btn-secondary" style={{ padding: '4px 8px' }} onClick={() => setModal({ type: 'edit_profile', userId: u.id, userName: u.name, userRole: u.role })} title="Edit Profile">✏️</button>
+                    <button className="btn btn-sm btn-danger" style={{ padding: '4px 8px' }} onClick={() => handleDeleteUser(u.id, u.name)} title="Delete User">🗑️</button>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
 
-        if (res.ok) {
-          const result = await res.json();
-          const uploadedMaterial = result.material;
-          toast(t('precheck_complete'), 'success');
+        {/* Matrix table */}
+        <div style={{ marginTop: '22px' }}>
+          <h2 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '12px' }}>{t('folder_access_matrix')}</h2>
+          <div className="card">
+            <table style={{ width: '100%', fontSize: '12px', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ color: 'var(--text2)' }}>
+                  <th style={{ textAlign: 'left', padding: '7px 9px', borderBottom: '1px solid var(--border)' }}>{t('folder_label')}</th>
+                  <th style={{ padding: '7px 9px', borderBottom: '1px solid var(--border)' }}>Admin</th>
+                  <th style={{ padding: '7px 9px', borderBottom: '1px solid var(--border)' }}>CEO</th>
+                  <th style={{ padding: '7px 9px', borderBottom: '1px solid var(--border)' }}>COO</th>
+                  <th style={{ padding: '7px 9px', borderBottom: '1px solid var(--border)' }}>Director</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentOrgFolderLeafPaths.map((p, idx) => (
+                  <tr key={p}>
+                    <td style={{ padding: '7px 9px', color: 'var(--text2)' }}>{translateFolderPath(p)}</td>
+                    <td style={{ padding: '7px 9px', textAlign: 'center', color: 'var(--green)' }}>{t('access_full_short')}</td>
+                    <td style={{ padding: '7px 9px', textAlign: 'center', color: 'var(--blue)' }}>{idx % 3 === 2 ? t('access_full_short') : t('access_view_short')}</td>
+                    <td style={{ padding: '7px 9px', textAlign: 'center', color: 'var(--blue)' }}>{idx % 2 === 0 ? t('access_full_short') : t('access_view_short')}</td>
+                    <td style={{ padding: '7px 9px', textAlign: 'center', color: idx % 4 === 3 ? 'var(--text3)' : 'var(--green)' }}>{idx % 4 === 3 ? t('access_none_short') : t('access_full_short')}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-          if (uploadedMaterial && uploadedMaterial.aiRemarks) {
-            toast(`🤖 AI Remarks: ${uploadedMaterial.aiRemarks}`, 'info');
-          }
+  function renderBrand() {
+    const colors = ORG_BRAND_COLORS[selectedOrg.id] || [];
 
-          setTimeout(() => {
-            toast(t('sent_to_approvers', { name, org: translateOrgName(selectedOrg) }), 'success');
+    return (
+      <div className="page active">
+        <div className="ph">
+          <h1>{t('brand_guidelines')}</h1>
+          <p>{selectedOrg.icon} {translateOrgName(selectedOrg)}</p>
+        </div>
+        <div className="two-col">
+          <div>
+            <div className="card" style={{ marginBottom: '14px' }}>
+              <h3 style={{ fontSize: '13px', fontWeight: 600, marginBottom: '12px' }}>{t('color_palette')}</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '9px' }}>
+                {colors.map((c, idx) => (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }} key={idx}>
+                    <div style={{ width: '40px', height: '40px', borderRadius: 'var(--radius)', background: c.hex, flexShrink: 0 }}></div>
+                    <div>
+                      <div style={{ fontSize: '12px', fontWeight: 600 }}>{c.name} <span style={{ fontFamily: 'monospace', fontSize: '10px', color: 'var(--text3)' }}>{c.hex}</span></div>
+                      <div style={{ fontSize: '11px', color: 'var(--text2)' }}>{c.use}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="card">
+              <h3 style={{ fontSize: '13px', fontWeight: 600, marginBottom: '12px' }}>{t('typography')}</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '9px', fontSize: '13px' }}>
+                <div><span style={{ color: 'var(--text2)', fontSize: '10px' }}>{t('brand_typography_display')}</span><br /><span style={{ fontSize: '18px', fontWeight: 700, letterSpacing: '-0.5px' }}>{t('brand_typography_display_font', { org: translateOrgName(selectedOrg) })}</span></div>
+                <div><span style={{ color: 'var(--text2)', fontSize: '10px' }}>{t('brand_typography_body')}</span><br /><span>{t('brand_typography_body_example')}</span></div>
+                <div><span style={{ color: 'var(--text2)', fontSize: '10px' }}>{t('brand_typography_caption')}</span><br /><span style={{ fontSize: '11px', color: 'var(--text2)' }}>{t('brand_typography_caption_example')}</span></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div className="card" style={{ marginBottom: '14px' }}>
+              <h3 style={{ fontSize: '13px', fontWeight: 600, marginBottom: '12px' }}>{t('logo_rules')}</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '7px', fontSize: '12px', color: 'var(--text2)' }}>
+                <div>{t('brand_logo_clearspace')}</div>
+                <div>{t('brand_logo_minimum_size')}</div>
+                <div>{t('brand_logo_approved_bg')}</div>
+                <div>{t('brand_logo_no_stretch')}</div>
+                <div>{t('brand_logo_no_busy_bg')}</div>
+              </div>
+            </div>
+            <div className="card">
+              <h3 style={{ fontSize: '13px', fontWeight: 600, marginBottom: '12px' }}>{t('imagery')}</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '7px', fontSize: '12px', color: 'var(--text2)' }}>
+                <div>{t('brand_imagery_quality')}</div>
+                <div>{t('brand_imagery_values')}</div>
+                <div>{t('brand_imagery_color_grade')}</div>
+                <div>{t('brand_imagery_avoid_cliched')}</div>
+                <div>{t('brand_imagery_no_watermark')}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-            // Reset form fields
-            document.getElementById('upload-name').value = '';
-            document.getElementById('upload-campaign').value = '';
-            document.getElementById('upload-notes').value = '';
-            selectedUploadFile = null;
+  function renderActivityPage() {
+    return (
+      <div className="page active">
+        <div className="ph">
+          <h1>{t('activity_log')}</h1>
+          <p>{selectedOrg.icon} {translateOrgName(selectedOrg)}</p>
+        </div>
+        <div className="card">
+          <div className="activity-list">
+            {BASE_ACTIVITY.map((a, idx) => (
+              <div className="activity-item" key={idx}>
+                <div className="activity-dot" style={{ background: a.color }}></div>
+                <div className="activity-text">{translateActivityText(a)}</div>
+                <div className="activity-time">{a.time}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-            // Reset upload zone HTML
-            const z = document.getElementById('upload-zone');
-            z.innerHTML = `<div style="font-size:34px;margin-bottom:10px">📎</div>
-                           <p id="upload-zone-title" style="font-size:14px;font-weight:600;margin-bottom:5px">Click to select a file</p>
-                           <p id="upload-zone-hint" style="font-size:11px;color:var(--text3)">PDF, PNG, JPG, AI, PSD — up to 50MB</p>`;
-            z.style.borderColor = 'var(--border)';
-            z.style.background = 'none';
-            document.getElementById('upload-file-input').value = '';
+  function renderRegisterScreen() {
+    return (
+      <div className="select-screen" style={{ position: 'relative', minHeight: '80vh', zIndex: 10 }}>
+        <div className="sel-logo"><div className="sel-dot"></div>BrandPortal</div>
+        <p className="sel-subtitle" style={{ marginBottom: '25px' }}>Create New User Account (Admin Only)</p>
+        <div className="card" style={{ maxWidth: '400px', width: '100%', marginBottom: '14px' }}>
+          <form onSubmit={handleCreateUser}>
+            <div className="form-group">
+              <label className="form-label">Full Name</label>
+              <input type="text" className="form-control" placeholder="e.g. John Doe" value={regName} onChange={(e) => setRegName(e.target.value)} required />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Email Address</label>
+              <input type="email" className="form-control" placeholder="e.g. john@example.com" value={regEmail} onChange={(e) => setRegEmail(e.target.value)} required />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Role</label>
+              <select className="form-control" value={regRole} onChange={(e) => setRegRole(e.target.value)} required>
+                {rolesList.map(r => <option value={r} key={r}>{translateRole(r)}</option>)}
+              </select>
+            </div>
+            <div className="form-group">
+              <label className="form-label">Password (Optional for Google login)</label>
+              <input type="password" className="form-control" placeholder="Optional" value={regPassword} onChange={(e) => setRegPassword(e.target.value)} />
+            </div>
+            <button type="submit" className="sel-btn" style={{ width: '100%', marginTop: '18px' }}>Register User</button>
+          </form>
+          {regError && <div style={{ color: 'var(--red)', fontSize: '12px', marginTop: '8px', minHeight: '18px' }}>{regError}</div>}
+        </div>
+        <button className="sel-back" onClick={() => { setActivePage('dashboard'); window.history.pushState({}, '', '/'); }}>← Back to Portal</button>
+      </div>
+    );
+  }
+}
 
-            loadMaterialsAndRefresh().then(() => {
-              goto('approvals');
-            });
-          }, 1200);
-        } else {
-          const errData = await res.json();
-          toast(errData.detail || 'Upload failed', 'error');
-        }
-      } catch (e) {
-        console.error('Upload error:', e);
-        toast('Network error during upload', 'error');
-      }
-    }
+const root = ReactDOM.createRoot(document.getElementById('react-root'));
+root.render(<App />);
 
-    // ═══════════════════════════════════════════
-    //  NOTIFICATIONS
-    // ═══════════════════════════════════════════
-    async function showNotifications() {
-      await loadNotifications();
-      document.getElementById('notif-dot').style.display = 'none';
-      document.getElementById('modal-title').textContent = t('notifications_title', { org: translateOrgName(selectedOrg) });
-
-      // Mark all as read on backend
-      if (currentToken && selectedOrg) {
-        try {
-          await fetch(`${API_BASE}/api/notifications/read`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${currentToken}`
-            },
-            body: JSON.stringify({ org_id: selectedOrg.id })
-          });
-          notificationsList.forEach(n => n.isRead = true);
-        } catch (e) {
-          console.error("Error marking notifications as read:", e);
-        }
-      }
-
-      if (notificationsList.length === 0) {
-        document.getElementById('modal-body').innerHTML = `
-          <div style="padding:24px;text-align:center;color:var(--text3);font-size:13px">
-            No notifications available.
-          </div>`;
-      } else {
-        document.getElementById('modal-body').innerHTML = `
-      <div style="display:flex;flex-direction:column;gap:0">
-        ${notificationsList.map(n => `
-          <div style="padding:12px;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:start;${!n.isRead ? 'background:var(--blue-dim);' : ''}">
-            <span style="font-size:18px">${n.icon}</span>
-            <div style="flex:1;font-size:13px">${n.message}</div>
-            <span style="font-size:11px;color:var(--text3);flex-shrink:0">${n.time}</span>
-          </div>`).join('')}
-      </div>`;
-      }
-      document.getElementById('modal-footer').innerHTML = `<button class="btn btn-secondary" onclick="closeModalDirect()">${t('close')}</button>`;
-      document.getElementById('modal-overlay').classList.add('open');
-    }
-
-    // ═══════════════════════════════════════════
-    //  MISC
-    // ═══════════════════════════════════════════
-    function addComment(id) {
-      const inp = document.getElementById(`nc-${id}`);
-      if (!inp || !inp.value.trim()) return;
-      toast(t('comment_added'), 'success'); inp.value = '';
-    }
-    function closeModal(e) { if (e.target === document.getElementById('modal-overlay')) closeModalDirect(); }
-    function closeModalDirect() { document.getElementById('modal-overlay').classList.remove('open'); }
-    function restrictSwitcherToCurrentUser() {
-      document.querySelectorAll('.us-item').forEach(item => {
-        const itemKey = item.id?.replace('us-', '');
-        if (itemKey && itemKey !== 'logout') {
-          item.style.display = itemKey === currentUser ? 'flex' : 'none';
-        }
-      });
-    }
-    function toggleSwitcher() { switcherOpen = !switcherOpen; document.getElementById('user-switcher').classList.toggle('open', switcherOpen); }
-    function closeSwitcher() { switcherOpen = false; document.getElementById('user-switcher').classList.remove('open'); }
-    function closeAllDD() { orgDDOpen = false; langDDOpen = false; document.getElementById('org-dd').classList.remove('open'); document.getElementById('lang-dd').classList.remove('open'); }
-    function switchUser(key) {
-      currentUser = key;
-      restrictSwitcherToCurrentUser();
-      document.querySelectorAll('.us-item').forEach(i => i.classList.remove('current'));
-      document.getElementById('us-' + key).classList.add('current');
-      updateTopbar(); buildDashboard(); buildPeople(); buildApprovals('pending');
-      closeSwitcher();
-      toast(t('viewing_as', { user: translateUserLabel(USERS_DATA[key].name) }), 'info');
-    }
-    function logout() {
-      localStorage.removeItem('bp_token');
-      localStorage.removeItem('bp_user');
-      currentToken = null;
-      document.getElementById('app').style.display = 'none';
-      document.getElementById('screen-login').classList.remove('hidden');
-      document.getElementById('screen-org').classList.add('hidden');
-      document.getElementById('screen-lang').classList.add('hidden');
-      selectedOrg = null;
-      selectedLang = null;
-      document.getElementById('org-next-btn').disabled = true;
-      document.getElementById('lang-next-btn').disabled = true;
-      document.querySelectorAll('.sel-card').forEach(c => c.classList.remove('selected'));
-
-      const emailInput = document.getElementById('login-email');
-      if (emailInput) emailInput.value = '';
-      document.getElementById('login-password').value = '';
-
-      closeSwitcher(); closeAllDD();
-      toast(t('logged_out'), 'info');
-    }
-    function toast(msg, type = 'info') {
-      const tc = document.getElementById('toasts');
-      const t = document.createElement('div');
-      t.className = `toast ${type}`;
-      t.innerHTML = msg;
-      tc.appendChild(t);
-      setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateX(40px)'; t.style.transition = 'all .3s'; setTimeout(() => t.remove(), 300); }, 3500);
-    }
-    document.addEventListener('click', e => {
-      if (!e.target.closest('.user-pill') && !e.target.closest('.user-switcher')) closeSwitcher();
-      if (!e.target.closest('#topbar-org-pill') && !e.target.closest('#org-dd')) { orgDDOpen = false; document.getElementById('org-dd').classList.remove('open'); }
-      if (!e.target.closest('#topbar-lang-pill') && !e.target.closest('#lang-dd')) { langDDOpen = false; document.getElementById('lang-dd').classList.remove('open'); }
-    });
-  </script>
-</body>
-
-</html>

@@ -33,6 +33,7 @@ if not os.path.exists(UPLOAD_DIR):
     os.makedirs(UPLOAD_DIR)
 
 app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
+app.mount("/frontend", StaticFiles(directory="../frontend"), name="frontend")
 
 @app.on_event("startup")
 def startup_event():
@@ -58,11 +59,20 @@ def startup_event():
                 file_path VARCHAR(255),
                 ai_remarks TEXT,
                 ai_suggestions TEXT,
+                user_id INTEGER REFERENCES users(user_id) ON DELETE SET NULL,
                 created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
             );
         """)
+        cur.execute("ALTER TABLE materials ADD COLUMN IF NOT EXISTS user_id INTEGER REFERENCES users(user_id) ON DELETE SET NULL;")
         cur.execute("ALTER TABLE materials ADD COLUMN IF NOT EXISTS ai_remarks TEXT;")
         cur.execute("ALTER TABLE materials ADD COLUMN IF NOT EXISTS ai_suggestions TEXT;")
+        
+        try:
+            cur.execute("INSERT INTO roles (role_name, description) VALUES ('User', 'Standard User') ON CONFLICT (role_name) DO NOTHING;")
+        except Exception as role_e:
+            print(f"Role seeding skipped/failed: {role_e}")
+            conn.rollback()
+        
         
         cur.execute("""
             CREATE TABLE IF NOT EXISTS notifications (
@@ -194,18 +204,20 @@ class EditUserRequest(BaseModel):
     name: str
     role: str
 
-# Serve the single-page application frontend
 @app.get("/", response_class=HTMLResponse)
 @app.get("/register", response_class=HTMLResponse)
 @app.get("/signup", response_class=HTMLResponse)
 def index():
-    if os.path.exists('brand-portal_progress.html'):
-        with open('brand-portal_progress.html', 'r', encoding='utf-8') as f:
+    index_path = '../frontend/index.html'
+    if os.path.exists(index_path):
+        with open(index_path, 'r', encoding='utf-8') as f:
             html = f.read()
         # Replace the placeholder with the environment variable
         html = html.replace('YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com', GOOGLE_CLIENT_ID)
+        # Add dynamic cache buster to frontend/app.js
+        html = html.replace('/frontend/app.js', f'/frontend/app.js?v={secrets.token_hex(4)}')
         return HTMLResponse(content=html, status_code=200)
-    return HTMLResponse(content="brand-portal_progress.html not found in the workspace.", status_code=404)
+    return HTMLResponse(content="index.html not found.", status_code=404)
 
 # Standard Password Login
 @app.post("/api/auth/login")
@@ -589,12 +601,20 @@ def get_roles(current_user=Depends(get_current_user), db=Depends(get_db)):
 def get_materials(org_id: str, current_user=Depends(get_current_user), db=Depends(get_db)):
     try:
         cur = db.cursor()
-        cur.execute("""
-            SELECT material_id as id, name, type, emoji, designer, campaign, folder, status, ai_score, ai_insights, votes, versions, created_at, file_path, ai_remarks, ai_suggestions
-            FROM materials
-            WHERE org_id = %s
-            ORDER BY material_id DESC
-        """, (org_id,))
+        if current_user['role'].lower() == 'user':
+            cur.execute("""
+                SELECT material_id as id, name, type, emoji, designer, campaign, folder, status, ai_score, ai_insights, votes, versions, created_at, file_path, ai_remarks, ai_suggestions
+                FROM materials
+                WHERE org_id = %s AND user_id = %s
+                ORDER BY material_id DESC
+            """, (org_id, int(current_user['sub'])))
+        else:
+            cur.execute("""
+                SELECT material_id as id, name, type, emoji, designer, campaign, folder, status, ai_score, ai_insights, votes, versions, created_at, file_path, ai_remarks, ai_suggestions
+                FROM materials
+                WHERE org_id = %s
+                ORDER BY material_id DESC
+            """, (org_id,))
         rows = cur.fetchall()
         cur.close()
         
@@ -770,13 +790,13 @@ async def upload_material(
         
         cur = db.cursor()
         cur.execute("""
-            INSERT INTO materials (name, type, emoji, designer, campaign, folder, status, ai_score, ai_insights, votes, versions, org_id, file_path, ai_remarks, ai_suggestions)
-            VALUES (%s, %s, %s, %s, %s, %s, 'pending', %s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO materials (name, type, emoji, designer, campaign, folder, status, ai_score, ai_insights, votes, versions, org_id, file_path, ai_remarks, ai_suggestions, user_id)
+            VALUES (%s, %s, %s, %s, %s, %s, 'pending', %s, %s, %s, %s, %s, %s, %s, %s, %s)
             RETURNING material_id as id
         """, (
             name, type, emoji, designer, campaign or '—', folder or '',
             ai_score, json.dumps(ai_insights), json.dumps(votes), json.dumps(versions),
-            org_id, file_path, ai_remarks, ai_suggestions
+            org_id, file_path, ai_remarks, ai_suggestions, int(current_user['sub'])
         ))
         
         new_id = cur.fetchone()['id']
@@ -827,6 +847,8 @@ class CastVoteRequest(BaseModel):
 @app.post("/api/materials/{material_id}/vote")
 def cast_vote(material_id: int, data: CastVoteRequest, current_user=Depends(get_current_user), db=Depends(get_db)):
     role_name = current_user['role'].lower()
+    if role_name not in ['admin', 'ceo', 'coo', 'director']:
+        raise HTTPException(status_code=403, detail="Not authorized to vote on materials")
     decision = data.decision.strip().lower()
     
     if decision not in ['approved', 'revision']:
@@ -926,13 +948,22 @@ def get_notifications(org_id: str, current_user=Depends(get_current_user), db=De
     role_name = current_user['role'].lower()
     try:
         cur = db.cursor()
-        cur.execute("""
-            SELECT n.notification_id as id, n.user_role, n.icon, n.message, n.material_id, n.is_read, n.created_at
-            FROM notifications n
-            JOIN materials m ON n.material_id = m.material_id
-            WHERE LOWER(n.user_role) = %s AND m.org_id = %s
-            ORDER BY n.notification_id DESC
-        """, (role_name, org_id))
+        if current_user['role'].lower() == 'user':
+            cur.execute("""
+                SELECT n.notification_id as id, n.user_role, n.icon, n.message, n.material_id, n.is_read, n.created_at
+                FROM notifications n
+                JOIN materials m ON n.material_id = m.material_id
+                WHERE LOWER(n.user_role) = %s AND m.org_id = %s AND m.user_id = %s
+                ORDER BY n.notification_id DESC
+            """, (role_name, org_id, int(current_user['sub'])))
+        else:
+            cur.execute("""
+                SELECT n.notification_id as id, n.user_role, n.icon, n.message, n.material_id, n.is_read, n.created_at
+                FROM notifications n
+                JOIN materials m ON n.material_id = m.material_id
+                WHERE LOWER(n.user_role) = %s AND m.org_id = %s
+                ORDER BY n.notification_id DESC
+            """, (role_name, org_id))
         rows = cur.fetchall()
         cur.close()
         
@@ -961,18 +992,34 @@ def mark_notifications_read(data: ReadNotificationRequest, current_user=Depends(
     try:
         cur = db.cursor()
         if data.notification_id:
-            cur.execute("""
-                UPDATE notifications 
-                SET is_read = TRUE 
-                WHERE notification_id = %s AND LOWER(user_role) = %s
-            """, (data.notification_id, role_name))
+            if current_user['role'].lower() == 'user':
+                cur.execute("""
+                    UPDATE notifications n
+                    SET is_read = TRUE
+                    FROM materials m
+                    WHERE n.notification_id = %s AND n.material_id = m.material_id AND LOWER(n.user_role) = %s AND m.user_id = %s
+                """, (data.notification_id, role_name, int(current_user['sub'])))
+            else:
+                cur.execute("""
+                    UPDATE notifications 
+                    SET is_read = TRUE 
+                    WHERE notification_id = %s AND LOWER(user_role) = %s
+                """, (data.notification_id, role_name))
         else:
-            cur.execute("""
-                UPDATE notifications n
-                SET is_read = TRUE
-                FROM materials m
-                WHERE n.material_id = m.material_id AND LOWER(n.user_role) = %s AND m.org_id = %s
-            """, (role_name, data.org_id))
+            if current_user['role'].lower() == 'user':
+                cur.execute("""
+                    UPDATE notifications n
+                    SET is_read = TRUE
+                    FROM materials m
+                    WHERE n.material_id = m.material_id AND LOWER(n.user_role) = %s AND m.org_id = %s AND m.user_id = %s
+                """, (role_name, data.org_id, int(current_user['sub'])))
+            else:
+                cur.execute("""
+                    UPDATE notifications n
+                    SET is_read = TRUE
+                    FROM materials m
+                    WHERE n.material_id = m.material_id AND LOWER(n.user_role) = %s AND m.org_id = %s
+                """, (role_name, data.org_id))
         db.commit()
         cur.close()
         return {'success': True, 'message': 'Notifications marked as read'}
@@ -1262,6 +1309,10 @@ async def reupload_material(
         if not m:
             cur.close()
             raise HTTPException(status_code=404, detail="Material not found")
+            
+        if current_user['role'].lower() == 'user' and m['user_id'] != int(current_user['sub']):
+            cur.close()
+            raise HTTPException(status_code=403, detail="Unauthorized. You can only re-upload your own materials.")
             
         file_ext = os.path.splitext(file.filename)[1]
         unique_filename = f"{secrets.token_hex(8)}{file_ext}"

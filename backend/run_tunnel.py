@@ -3,12 +3,12 @@ import time
 import sys
 
 def run_tunnel():
-    print("Starting localtunnel connection to port 5001 with subdomain 'cerevyn-brandportal'...")
+    print("Starting localtunnel connection to port 5001 with subdomain 'cerevyn-portal'...")
     while True:
         try:
             # Start py-localtunnel
             process = subprocess.Popen(
-                [sys.executable, "-m", "py_localtunnel.cli", "port", "5001", "-s", "cerevyn-brand-portal"],
+                [sys.executable, "-m", "py_localtunnel.cli", "port", "5001", "-s", "cerevyn-portal"],
 
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
